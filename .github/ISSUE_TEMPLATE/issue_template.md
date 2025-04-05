@@ -1,28 +1,11 @@
----
-name: issue template
-about: Describe this issue template's purpose here.
-title: ''
-labels: ''
-assignees: ''
 
----
+## 🍀 어떤 기능인가요?
+> 추가하려는 기능에 대해 간결하게 설명해주세요.
 
----
-name: issue template
-about: Describe this issue template's purpose here.
-title: ''
-labels: ''
-assignees: ''
+## ✅ 작업 상세 내용
+- [ ] 구현해야 할 핵심 기능을 작성하세요.
+- [ ] 필요한 API 명세가 있으면 추가하세요.
+- [ ] 예상되는 예외 처리나 추가 고려 사항이 있으면 작성하세요.
 
----
-
-### 🙌 설명
-
-- 앞으로 수행할 작업을 간단히 설명해주세요
-
----
-
-### ✅ 작업할 내용
-
-- [ ] 작업 내용 1
-- [ ] 작업 내용 2
+## 📌 ETC
+추가적으로 참고해야 할 사항이 있으면 작성해주세요.
