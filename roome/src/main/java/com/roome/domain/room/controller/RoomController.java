@@ -13,18 +13,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "방 관리 API", description = "방 조회, 테마 업데이트, 가구 활성화 및 비활성화 기능 제공")
 @RestController
@@ -70,11 +63,13 @@ public class RoomController {
   })
   @PutMapping("/{roomId}")
   public ResponseEntity<UpdateRoomThemeResponseDto> updateRoomTheme(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @Parameter(description = "변경할 방의 ID")
       @PathVariable Long roomId,
       @RequestBody UpdateRoomThemeRequestDto requestDto
   ) {
+    //userId 하드 코딩
+    long userId = 1L;
     String updatedTheme = roomService.updateRoomTheme(userId, roomId, requestDto.getThemeName());
 
     UpdateRoomThemeResponseDto responseDto = new UpdateRoomThemeResponseDto(roomId, updatedTheme);
@@ -88,16 +83,18 @@ public class RoomController {
   })
   @PostMapping("/{roomId}/purchase-theme")
   public ResponseEntity<PurchaseRoomThemeResponseDto> purchaseRoomTheme(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @PathVariable Long roomId,
       @RequestBody UpdateRoomThemeRequestDto requestDto
   ) {
+    //userId 하드 코딩
+    long userId = 1L;
     int remainingPoints = roomService.purchaseRoomTheme(userId, roomId, requestDto.getThemeName());
 
     PurchaseRoomThemeResponseDto responseDto = new PurchaseRoomThemeResponseDto(
-        roomId,
-        requestDto.getThemeName(),
-        remainingPoints
+            roomId,
+            requestDto.getThemeName(),
+            remainingPoints
     );
 
     return ResponseEntity.ok(responseDto);
@@ -111,16 +108,18 @@ public class RoomController {
   })
   @PutMapping("/{roomId}/furniture")
   public ResponseEntity<ToggleFurnitureResponseDto> toggleFurnitureVisibility(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @PathVariable Long roomId,
       @RequestBody FurnitureRequestDto furnitureRequestDto
   ) {
+    //userId 하드 코딩
+    long userId = 1L;
     String furnitureType = furnitureRequestDto.getFurnitureType();
     FurnitureResponseDto updatedFurniture = roomService.toggleFurnitureVisibility(userId, roomId,
-        furnitureType);
+            furnitureType);
 
     ToggleFurnitureResponseDto responseDto = new ToggleFurnitureResponseDto(roomId,
-        updatedFurniture);
+            updatedFurniture);
 
     return ResponseEntity.ok(responseDto);
   }
@@ -128,8 +127,10 @@ public class RoomController {
   @Operation(summary = "사용자가 잠금 해제한 테마 목록 조회", description = "해당 사용자가 잠금 해제한 방 테마 목록을 반환한다.")
   @GetMapping("/{userId}/unlocked-themes")
   public ResponseEntity<List<String>> getUnlockedThemes(
-      @AuthenticationPrincipal Long userId
+//      @AuthenticationPrincipal Long userId
   ) {
+    // userId 하드 코딩
+    Long userId = 1L;
     List<String> unlockedThemes = roomService.getUnlockedThemes(userId);
     return ResponseEntity.ok(unlockedThemes);
   }

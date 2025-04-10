@@ -4,7 +4,6 @@ import com.roome.domain.houseMate.dto.HousemateListResponse;
 import com.roome.domain.houseMate.dto.HousemateResponseDto;
 import com.roome.domain.houseMate.entity.AddedHousemate;
 import com.roome.domain.houseMate.service.HousemateService;
-import com.roome.global.auth.AuthenticatedUser;
 import com.roome.global.exception.ControllerException;
 import com.roome.global.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,13 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @Tag(name = "하우스메이트 API", description = "하우스메이트 관리를 위한 API - 서로의 방을 방문하고 소통할 수 있는 친구 시스템")
@@ -36,17 +29,20 @@ public class HousemateController {
 
   private final HousemateService housemateService;
 
+  // userId 하드 코딩
+  private final Long userId = 1L;
+
   @Operation(summary = "나를 추가한 메이트 목록 조회",
-      description = "현재 사용자를 하우스메이트로 추가한 사용자들의 목록을 조회합니다.")
+          description = "현재 사용자를 하우스메이트로 추가한 사용자들의 목록을 조회합니다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "메이트 목록 조회 성공"),
-      @ApiResponse(responseCode = "400", description = "잘못된 커서 형식 (INVALID_CURSOR_VALUE)"),
-      @ApiResponse(responseCode = "400", description = "유효하지 않은 limit 값 (INVALID_LIMIT_VALUE)"),
-      @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자")
+          @ApiResponse(responseCode = "200", description = "메이트 목록 조회 성공"),
+          @ApiResponse(responseCode = "400", description = "잘못된 커서 형식 (INVALID_CURSOR_VALUE)"),
+          @ApiResponse(responseCode = "400", description = "유효하지 않은 limit 값 (INVALID_LIMIT_VALUE)"),
+          @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자")
   })
   @GetMapping("/followers")
   public ResponseEntity<HousemateListResponse> getFollowers(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "페이지네이션 커서 (마지막으로 받은 하우스메이트 관계의 ID)", example = "10")
       @RequestParam(required = false) Long cursor,
       @Parameter(description = "한 페이지당 조회할 메이트 수(1-100)", example = "20")
@@ -74,7 +70,7 @@ public class HousemateController {
   })
   @GetMapping("/following")
   public ResponseEntity<HousemateListResponse> getFollowing(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "페이지네이션 커서 (마지막으로 받은 하우스메이트 관계의 ID)", example = "10")
       @RequestParam(required = false) Long cursor,
       @Parameter(description = "한 페이지당 조회할 메이트 수(1-100)", example = "20")
@@ -103,7 +99,7 @@ public class HousemateController {
   })
   @PostMapping("/{targetId}")
   public ResponseEntity<HousemateResponseDto> addHousemate(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "추가할 사용자의 ID", example = "1")
       @PathVariable Long targetId) {
 
@@ -130,7 +126,7 @@ public class HousemateController {
   })
   @DeleteMapping("/{targetId}")
   public ResponseEntity<Void> removeHousemate(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "삭제할 사용자의 ID", example = "1")
       @PathVariable Long targetId) {
 

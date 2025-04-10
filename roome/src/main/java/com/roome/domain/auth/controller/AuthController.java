@@ -15,8 +15,6 @@ import com.roome.global.exception.BusinessException;
 import com.roome.global.jwt.exception.InvalidJwtTokenException;
 import com.roome.global.jwt.exception.InvalidUserIdFormatException;
 import com.roome.global.jwt.exception.MissingUserIdFromTokenException;
-import com.roome.global.jwt.service.JwtTokenProvider;
-import com.roome.global.jwt.service.TokenService;
 import com.roome.global.service.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,20 +22,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -47,8 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "인증/인가 API", description = "인증/인가 관련 API")
 public class AuthController {
 
-  private final JwtTokenProvider jwtTokenProvider;
-  private final TokenService tokenService;
+  //  private final JwtTokenProvider jwtTokenProvider;
+//  private final TokenService tokenService;
   private final UserService userService;
   private final UserRepository userRepository;
   private final RedisService redisService;
@@ -64,9 +58,11 @@ public class AuthController {
       @RequestHeader("Authorization") String authHeader) {
     try {
       String accessToken = authHeader.substring(7);
-      Long userId = tokenService.getUserIdFromToken(accessToken);
+//      Long userId = tokenService.getUserIdFromToken(accessToken);
+      // userId 하드 코딩
+      Long userId = 1L;
       User user = userRepository.findById(userId)
-          .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+              .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
       RoomResponseDto roomInfo = roomService.getOrCreateRoomByUserId(userId);
 
       // 가구 레벨 정보 조회
@@ -87,9 +83,10 @@ public class AuthController {
       log.info("User ID: {}, Refresh Token: {}", userId, refreshToken);
 
       LoginResponse loginResponse = LoginResponse.builder()
-          .accessToken(accessToken)
-          .refreshToken(refreshToken)
-          .expiresIn(jwtTokenProvider.getAccessTokenExpirationTime() / 1000) // 초 단위로 변환
+              .accessToken(accessToken)
+              .refreshToken(refreshToken)
+//          .expiresIn(jwtTokenProvider.getAccessTokenExpirationTime() / 1000) // 초 단위로 변환
+              .expiresIn(10000000L)
           .user(LoginResponse.UserInfo.builder()
               .userId(user.getId())
               .nickname(user.getNickname())
@@ -120,11 +117,13 @@ public class AuthController {
     try {
       if (authHeader != null && authHeader.startsWith("Bearer ")) {
         String accessToken = authHeader.substring(7);
-        String userId = jwtTokenProvider.getUserIdFromToken(accessToken);
+//        String userId = jwtTokenProvider.getUserIdFromToken(accessToken);
 
         // 남은 유효 시간 계산
-        long expiration = jwtTokenProvider.getTokenTimeToLive(accessToken);
-
+//        long expiration = jwtTokenProvider.getTokenTimeToLive(accessToken);
+        // expiration, userId 하드 코딩
+        long expiration = 10000L;
+        String userId = "";
         // Refresh Token 삭제
         redisService.deleteRefreshToken(userId);
 
@@ -159,7 +158,7 @@ public class AuthController {
 
     // 1. 토큰 파싱 및 검증
     String accessToken;
-    Long userId;
+    Long userId = 1L;
 
     try {
       if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -173,25 +172,25 @@ public class AuthController {
       if (accessToken.isBlank()) {
         log.warn("[회원탈퇴] 빈 액세스 토큰");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(new MessageResponse("유효한 액세스 토큰이 필요합니다."));
+                .body(new MessageResponse("유효한 액세스 토큰이 필요합니다."));
       }
 
       // 액세스 토큰 검증
-      if (!jwtTokenProvider.validateAccessToken(accessToken)) {
-        log.warn("[회원탈퇴] 유효하지 않은 액세스 토큰: {}", maskToken(accessToken));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(new MessageResponse("유효하지 않은 액세스 토큰입니다."));
-      }
+//      if (!jwtTokenProvider.validateAccessToken(accessToken)) {
+//        log.warn("[회원탈퇴] 유효하지 않은 액세스 토큰: {}", maskToken(accessToken));
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//            .body(new MessageResponse("유효하지 않은 액세스 토큰입니다."));
+//      }
 
       // 유저 ID 추출
       try {
-        userId = tokenService.getUserIdFromToken(accessToken);
+//        userId = tokenService.getUserIdFromToken(accessToken);
         log.info("[회원탈퇴] 사용자 ID: {} 탈퇴 시작", userId);
       } catch (InvalidJwtTokenException | InvalidUserIdFormatException |
                MissingUserIdFromTokenException e) {
         log.warn("[회원탈퇴] 토큰에서 사용자 ID 추출 실패: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(new MessageResponse("토큰에서 사용자 정보를 추출할 수 없습니다: " + e.getMessage()));
+                .body(new MessageResponse("토큰에서 사용자 정보를 추출할 수 없습니다: " + e.getMessage()));
       }
 
     } catch (Exception e) {
@@ -207,7 +206,10 @@ public class AuthController {
       log.debug("[회원탈퇴] 리프레시 토큰 삭제 성공: userId={}", userId);
 
       // Access Token 블랙리스트 추가
-      long remainingTime = jwtTokenProvider.getTokenTimeToLive(accessToken);
+//      long remainingTime = jwtTokenProvider.getTokenTimeToLive(accessToken);
+
+      // remainingTime 하드 코딩
+      long remainingTime = 10000L;
       if (remainingTime > 0) {
         redisService.addToBlacklist(accessToken, remainingTime);
         log.debug("[회원탈퇴] 액세스 토큰 블랙리스트 추가 성공: userId={}, 남은시간={}ms", userId, remainingTime);

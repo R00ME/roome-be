@@ -10,18 +10,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -42,11 +36,13 @@ public class PaymentController {
   })
   @PostMapping("/request")
   public ResponseEntity<PaymentResponseDto> requestPayment(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @Valid @RequestBody PaymentRequestDto requestDto) {
 
+    //userId 하드코딩
+    long userId = 1L;
     log.info("결제 요청: userId={}, orderId={}, amount={}", userId, requestDto.getOrderId(),
-        requestDto.getAmount());
+            requestDto.getAmount());
 
     PaymentResponseDto response = paymentService.requestPayment(userId, requestDto);
     return ResponseEntity.ok(response);
@@ -61,11 +57,13 @@ public class PaymentController {
   })
   @PostMapping("/verify")
   public ResponseEntity<PaymentResponseDto> verifyPayment(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @Valid @RequestBody PaymentVerifyDto verifyDto) {
 
+    // userId 하드 코딩
+    long userId = 1L;
     log.info("결제 검증 요청: userId={}, orderId={}, paymentKey={}", userId, verifyDto.getOrderId(),
-        verifyDto.getPaymentKey());
+            verifyDto.getPaymentKey());
 
     PaymentResponseDto response = paymentService.verifyPayment(userId, verifyDto);
     return ResponseEntity.ok(response);
@@ -97,16 +95,18 @@ public class PaymentController {
   })
   @PostMapping("/cancel")
   public ResponseEntity<PaymentResponseDto> cancelPayment(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @RequestParam String paymentKey,
       @RequestParam(required = false, defaultValue = "전액 취소") String cancelReason,
       @RequestParam(required = false) Integer cancelAmount) {
 
+    //userId 하드코딩
+    long userId = 1L;
     log.info("결제 취소 요청: userId={}, paymentKey={}, cancelAmount={}", userId, paymentKey,
-        cancelAmount);
+            cancelAmount);
 
     PaymentResponseDto response = paymentService.cancelPayment(userId, paymentKey, cancelReason,
-        cancelAmount);
+            cancelAmount);
     return ResponseEntity.ok(response);
   }
 
@@ -118,10 +118,13 @@ public class PaymentController {
   })
   @GetMapping("/history")
   public ResponseEntity<List<PaymentLogResponseDto>> getPaymentHistory(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size
   ) {
+
+    //userId 하드코딩
+    long userId = 1L;
     List<PaymentLogResponseDto> paymentLogs = paymentService.getPaymentHistory(userId, page, size);
     return ResponseEntity.ok(paymentLogs);
   }

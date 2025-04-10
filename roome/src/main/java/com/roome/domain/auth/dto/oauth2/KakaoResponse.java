@@ -1,6 +1,5 @@
 package com.roome.domain.auth.dto.oauth2;
 
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 
 import java.util.Map;
 
@@ -15,12 +14,12 @@ public class KakaoResponse implements OAuth2Response {
 
         this.kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         if (this.kakaoAccount == null) {
-            throw new OAuth2AuthenticationException("카카오 계정 정보가 없습니다.");
+//            throw new OAuth2AuthenticationException("카카오 계정 정보가 없습니다.");
         }
 
         this.profile = (Map<String, Object>) kakaoAccount.get("profile");
         if (this.profile == null) {
-            throw new OAuth2AuthenticationException("카카오 프로필 정보가 없습니다.");
+//            throw new OAuth2AuthenticationException("카카오 프로필 정보가 없습니다.");
         }
     }
 
@@ -33,7 +32,7 @@ public class KakaoResponse implements OAuth2Response {
     public String getProviderId() {
         Object id = attributes.get("id");
         if (id == null) {
-            throw new OAuth2AuthenticationException("카카오 ID가 없습니다.");
+//            throw new OAuth2AuthenticationException("카카오 ID가 없습니다.");
         }
         return id.toString();
     }

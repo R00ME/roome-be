@@ -3,7 +3,6 @@ package com.roome.domain.event.controller;
 import com.roome.domain.event.dto.FirstComeEventResponse;
 import com.roome.domain.event.entity.FirstComeEvent;
 import com.roome.domain.event.service.FirstComeEventService;
-import com.roome.global.auth.AuthenticatedUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -34,8 +33,11 @@ public class FirstComeEventController {
   })
   @PostMapping("/{eventId}/join")
   public ResponseEntity<Void> joinEvent(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @PathVariable Long eventId) {
+
+    // userId 하드 코딩
+    long userId = 1L;
     firstComeEventService.joinEvent(userId, eventId);
     return ResponseEntity.noContent().build(); // 204 No Content 반환
   }

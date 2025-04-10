@@ -1,6 +1,5 @@
 package com.roome.domain.user.controller;
 
-import com.roome.domain.auth.security.OAuth2UserPrincipal;
 import com.roome.domain.user.dto.RecommendedUserDto;
 import com.roome.domain.user.dto.request.UpdateProfileRequest;
 import com.roome.domain.user.dto.response.ImageUploadResponseDto;
@@ -13,25 +12,17 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @Hidden
 @Slf4j
@@ -74,7 +65,7 @@ public class MockUserProfileController {
   @Operation(summary = "프로필 수정")
   @PatchMapping("/profile")
   public ResponseEntity<Map<String, String>> updateMockUserProfile(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+//      @AuthenticationPrincipal OAuth2UserPrincipal principal,
       @RequestBody UpdateProfileRequest request) {
     log.info("[Mock 프로필 수정] nickname: {}, bio: {}", request.getNickname(), request.getBio());
 
@@ -94,7 +85,7 @@ public class MockUserProfileController {
   })
   @RequestMapping(value = "/profile/image", method = {RequestMethod.POST, RequestMethod.PUT})
   public ResponseEntity<ImageUploadResponseDto> uploadMockProfileImage(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+//      @AuthenticationPrincipal OAuth2UserPrincipal principal,
       @Parameter(description = "업로드할 프로필 이미지 파일 (JPG, JPEG, PNG, GIF 형식, 최대 5MB)")
       @RequestParam("image") MultipartFile image) {
 
@@ -131,7 +122,7 @@ public class MockUserProfileController {
   })
   @DeleteMapping("/profile/image")
   public ResponseEntity<?> deleteMockProfileImage(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+//      @AuthenticationPrincipal OAuth2UserPrincipal principal,
       @Parameter(description = "삭제할 이미지의 S3 URL", example = "https://bucket-name.s3.amazonaws.com/profile/image.jpg")
       @RequestParam("imageUrl") String imageUrl) {
 

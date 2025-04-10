@@ -4,7 +4,6 @@ import com.roome.domain.notification.dto.NotificationReadResponse;
 import com.roome.domain.notification.dto.NotificationResponse;
 import com.roome.domain.notification.dto.NotificationSearchCondition;
 import com.roome.domain.notification.service.NotificationService;
-import com.roome.global.auth.AuthenticatedUser;
 import com.roome.global.exception.ControllerException;
 import com.roome.global.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,9 +49,13 @@ public class NotificationController {
       @RequestParam(required = false, defaultValue = "10") int limit,
 
       @Parameter(description = "읽음 상태로 필터링 (true: 읽은 알림, false: 읽지 않은 알림, null: 모든 알림)", example = "false")
-      @RequestParam(required = false) Boolean read,
+      @RequestParam(required = false) Boolean read
 
-      @AuthenticatedUser Long userId) {
+//      ,@AuthenticatedUser Long userId
+  ) {
+
+    // userId 하드 코딩
+    long userId = 1L;
 
     // 커서 검증
     if (cursor != null && cursor <= 0) {
@@ -89,9 +92,13 @@ public class NotificationController {
   @PatchMapping("/{notificationId}/read")
   public ResponseEntity<NotificationReadResponse> readNotification(
       @Parameter(description = "읽음 처리할 알림의 ID", example = "1")
-      @PathVariable Long notificationId,
+      @PathVariable Long notificationId
 
-      @AuthenticatedUser Long userId) {
+//      ,@AuthenticatedUser Long userId
+  ) {
+
+    //userId 하드 코딩
+    long userId = 1L;
 
     // 알림 ID 검증
     if (notificationId <= 0) {

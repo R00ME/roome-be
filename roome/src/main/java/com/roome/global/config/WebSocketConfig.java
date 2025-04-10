@@ -1,7 +1,5 @@
 package com.roome.global.config;
 
-import com.roome.global.jwt.interceptor.JwtWebSocketInterceptor;
-import com.roome.global.jwt.service.JwtTokenProvider;
 import com.roome.global.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +18,7 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
 
     @Override
@@ -57,7 +55,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         // JWT 토큰 검증을 위한 인터셉터 등록
-        registration.interceptors(new JwtWebSocketInterceptor(jwtTokenProvider, redisService));
+//        registration.interceptors(new JwtWebSocketInterceptor(jwtTokenProvider, redisService));
     }
 
     @Override

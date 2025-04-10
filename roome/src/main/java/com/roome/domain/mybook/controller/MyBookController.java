@@ -11,14 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "도서 책장 API", description = "사용자가 보유한 도서 관리 API - 등록, 조회, 삭제")
 @RestController
@@ -27,15 +20,18 @@ public class MyBookController {
 
   private final MyBookService myBookService;
 
+  // loginUserId 하드 코딩
+  private final Long loginUserId = 1L;
+
   @Operation(summary = "도서 등록", description = "사용자가 새로운 도서를 등록할 수 있다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "도서 등록 성공"),
-      @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터 (INVALID_REQUEST)"),
-      @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 (UNAUTHORIZED)")
+          @ApiResponse(responseCode = "200", description = "도서 등록 성공"),
+          @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터 (INVALID_REQUEST)"),
+          @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 (UNAUTHORIZED)")
   })
   @PostMapping("/api/mybooks")
   public ResponseEntity<MyBookResponse> create(
-      @AuthenticationPrincipal Long loginUserId,
+//      @AuthenticationPrincipal Long loginUserId,
       @RequestParam("userId") Long userId,
       @RequestBody MyBookCreateRequest request
   ) {
@@ -83,7 +79,7 @@ public class MyBookController {
   })
   @DeleteMapping("/api/mybooks")
   public ResponseEntity<Void> delete(
-      @AuthenticationPrincipal Long loginUserId,
+//      @AuthenticationPrincipal Long loginUserId,
       @RequestParam("userId") Long userId,
       @RequestParam String myBookIds
   ) {

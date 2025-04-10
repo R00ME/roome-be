@@ -5,27 +5,18 @@ import com.roome.domain.furniture.dto.FurnitureResponseDto;
 import com.roome.domain.furniture.dto.ToggleFurnitureResponseDto;
 import com.roome.domain.furniture.entity.FurnitureCapacity;
 import com.roome.domain.furniture.entity.FurnitureType;
-import com.roome.domain.room.dto.RoomResponseDto;
-import com.roome.domain.room.dto.StorageLimitsDto;
-import com.roome.domain.room.dto.UpdateRoomThemeRequestDto;
-import com.roome.domain.room.dto.UpdateRoomThemeResponseDto;
-import com.roome.domain.room.dto.UserStorageDto;
+import com.roome.domain.room.dto.*;
 import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Hidden
 @RestController
@@ -55,7 +46,7 @@ public class MockRoomController {
   @Operation(summary = "Mock - 사용자 방 조회", description = "주어진 사용자 ID에 해당하는 방 정보 조회")
   @GetMapping
   public ResponseEntity<RoomResponseDto> getRoomByUserId(
-      @AuthenticationPrincipal Long userId
+//      @AuthenticationPrincipal Long userId
   ) {
     RoomResponseDto roomResponseDto = createMockRoomResponse(1L, "forest");
     return ResponseEntity.ok(roomResponseDto);
@@ -64,7 +55,7 @@ public class MockRoomController {
   @Operation(summary = "Mock - 방 테마 업데이트", description = "사용자가 지정한 테마로 업데이트")
   @PutMapping("/{roomId}")
   public ResponseEntity<UpdateRoomThemeResponseDto> updateRoomTheme(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @PathVariable Long roomId,
       @RequestBody UpdateRoomThemeRequestDto requestDto
   ) {
@@ -77,7 +68,7 @@ public class MockRoomController {
   @Operation(summary = "Mock - 가구 활성화/비활성화", description = "주어진 방에서 특정 가구를 활성화하거나 비활성화함")
   @PutMapping("/{roomId}/furniture")
   public ResponseEntity<ToggleFurnitureResponseDto> toggleFurnitureVisibility(
-      @AuthenticationPrincipal Long userId,
+//      @AuthenticationPrincipal Long userId,
       @PathVariable Long roomId,
       @RequestBody FurnitureRequestDto requestDto
   ) {
@@ -128,7 +119,9 @@ public class MockRoomController {
 
   @Operation(summary = "Mock - 사용자가 잠금 해제한 테마 목록 조회", description = "해당 사용자가 잠금 해제한 방 테마 목록을 반환한다.")
   @GetMapping("/{userId}/unlocked-themes")
-  public ResponseEntity<List<String>> getUnlockedThemes(@AuthenticationPrincipal Long userId) {
+  public ResponseEntity<List<String>> getUnlockedThemes(
+//          @AuthenticationPrincipal Long userId
+  ) {
     List<String> unlockedThemes = List.of("basic", "forest", "marine");
 
     return ResponseEntity.ok(unlockedThemes);

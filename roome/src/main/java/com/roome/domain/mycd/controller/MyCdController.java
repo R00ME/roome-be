@@ -4,26 +4,19 @@ import com.roome.domain.mycd.dto.MyCdCreateRequest;
 import com.roome.domain.mycd.dto.MyCdListResponse;
 import com.roome.domain.mycd.dto.MyCdResponse;
 import com.roome.domain.mycd.service.MyCdService;
-import com.roome.global.auth.AuthenticatedUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Tag(name = "CD 컬렉션 API", description = "사용자의 CD 보관함 관리 API - CD 추가, 조회, 삭제")
@@ -42,9 +35,10 @@ public class MyCdController {
   })
   @PostMapping
   public ResponseEntity<MyCdResponse> addMyCd(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @RequestBody @Valid MyCdCreateRequest myCdRequest
   ) {
+    Long userId = 1L;
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(myCdService.addCdToMyList(userId, myCdRequest));
   }
@@ -58,7 +52,7 @@ public class MyCdController {
   })
   @GetMapping
   public ResponseEntity<MyCdListResponse> getMyCdList(
-      @AuthenticatedUser Long userId, // 로그인한 사용자 ID
+//      @AuthenticatedUser Long userId, // 로그인한 사용자 ID
       @RequestParam(value = "targetUserId", required = false) Long targetUserId, // 조회 대상 사용자 ID
       @Parameter(description = "커서 기반 페이지네이션 (마지막 조회한 CD ID)")
       @RequestParam(value = "cursor", required = false) Long cursor,
@@ -67,6 +61,7 @@ public class MyCdController {
       @Parameter(description = "CD 제목 또는 가수명으로 검색")
       @RequestParam(value = "keyword", required = false) String keyword
   ) {
+    Long userId = 1L;
     Long finalUserId = (targetUserId != null) ? targetUserId : userId; // targetUserId가 있으면 해당 유저 조회
 
     log.info("요청한 사용자 ID: {}, 조회 대상 사용자 ID: {}", userId, finalUserId);
@@ -83,7 +78,7 @@ public class MyCdController {
   })
   @GetMapping("/{myCdId}")
   public ResponseEntity<MyCdResponse> getMyCd(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @RequestParam(value = "targetUserId") Long targetUserId, // targetUserId를 필수로 받도록 변경
       @Parameter(description = "조회할 MyCd ID", example = "1")
       @PathVariable Long myCdId
@@ -100,10 +95,11 @@ public class MyCdController {
   })
   @DeleteMapping
   public ResponseEntity<Void> delete(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "삭제할 CD ID 목록", example = "[1, 2, 3]")
       @RequestParam List<Long> myCdIds
   ) {
+    Long userId = 1L;
     myCdService.delete(userId, myCdIds);
     return ResponseEntity.noContent().build();
   }

@@ -4,25 +4,18 @@ import com.roome.domain.cdcomment.dto.CdCommentCreateRequest;
 import com.roome.domain.cdcomment.dto.CdCommentListResponse;
 import com.roome.domain.cdcomment.dto.CdCommentResponse;
 import com.roome.domain.cdcomment.service.CdCommentService;
-import com.roome.global.auth.AuthenticatedUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Tag(name = "CD 댓글 API", description = "CD 댓글 관련 API - 댓글 작성, 조회, 삭제 기능 제공")
@@ -41,10 +34,12 @@ public class CdCommentController {
   })
   @PostMapping
   public ResponseEntity<CdCommentResponse> create(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "댓글을 추가할 CD의 ID", example = "1") @PathVariable Long myCdId,
       @RequestBody @Valid CdCommentCreateRequest request
   ) {
+    //userId 하드 코딩
+    long userId = 1L;
     CdCommentResponse response = cdCommentService.addComment(userId, myCdId, request);
     return ResponseEntity.ok(response);
   }
@@ -95,9 +90,10 @@ public class CdCommentController {
   })
   @DeleteMapping("/{commentId}")
   public ResponseEntity<Void> deleteComment(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "삭제할 댓글 ID", example = "1") @PathVariable Long commentId
   ) {
+    long userId = 1L;
     cdCommentService.deleteComment(userId, commentId);
     return ResponseEntity.noContent().build();
   }

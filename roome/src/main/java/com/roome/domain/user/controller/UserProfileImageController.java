@@ -2,7 +2,6 @@ package com.roome.domain.user.controller;
 
 import com.roome.domain.user.dto.response.ImageUploadResponseDto;
 import com.roome.domain.user.service.UserProfileImageService;
-import com.roome.global.auth.AuthenticatedUser;
 import com.roome.global.exception.ControllerException;
 import com.roome.global.exception.ErrorCode;
 import com.roome.global.service.S3Service;
@@ -11,19 +10,16 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Tag(name = "사용자 프로필 이미지 API", description = "사용자 프로필 이미지 관리를 위한 API")
 @Slf4j
@@ -55,11 +51,14 @@ public class UserProfileImageController {
   })
   @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
   public ResponseEntity<ImageUploadResponseDto> uploadProfileImage(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "업로드할 프로필 이미지 파일 (JPG, JPEG, PNG, GIF 형식, 최대 5MB)")
       @RequestParam("image") MultipartFile image) {
     // 이미지 파일 유효성 검증
     validateImageFile(image);
+
+    // userId 하드 코딩
+    long userId = 1L;
 
     try {
       // S3에 이미지 업로드된 기존 이미지 저장. 없으면 null
@@ -95,13 +94,17 @@ public class UserProfileImageController {
   })
   @DeleteMapping
   public ResponseEntity<?> deleteProfileImage(
-      @AuthenticatedUser Long userId,
+//      @AuthenticatedUser Long userId,
       @Parameter(description = "삭제할 이미지의 S3 URL", example = "https://bucket-name.s3.amazonaws.com/profile/image.jpg")
       @RequestParam("imageUrl") String imageUrl) {
+
+    // userId 하드 코딩
+    long userId = 1L;
+
     // URL 유효성 검증
     if (imageUrl == null || imageUrl
-        .trim()
-        .isEmpty() || !isValidImageUrl(imageUrl)) {
+            .trim()
+            .isEmpty() || !isValidImageUrl(imageUrl)) {
       throw new ControllerException(ErrorCode.INVALID_IMAGE_URL);
     }
 
