@@ -12,6 +12,7 @@ services:
       - redis
     networks:
       - app-network
+    restart: on-failure
 
   redis:
     image: redis:latest
@@ -21,6 +22,7 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD}
     networks:
       - app-network
+    restart: on-failure
 
 networks:
   app-network:
