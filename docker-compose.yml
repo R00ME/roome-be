@@ -2,7 +2,7 @@ version: '3'
 
 services:
   roome-app:
-    container_name: roome
+    container_name: roome-dev
     build: ./roome
     ports:
       - "8088:8080"
