@@ -1,10 +1,9 @@
 ---
-name: 이슈 생성 템플릿
-about: 해당 이슈 생성 템플릿을 사용하여 이슈를 생성해주세요.
-title: ''
-labels: ''
-assignees: ''
-
+name: 작업 이슈 템플릿
+about: 기능 구현, 버그 수정 등 모든 작업을 위한 이슈 양식입니다.
+title: ""
+labels: ""
+assignees: ""
 ---
 
 ## 🍀 어떤 기능인가요?
