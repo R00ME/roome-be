@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
+@Setter // 제거 예정
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -54,6 +54,8 @@ public class User extends BaseTimeEntity {
   @Column(length = 500)
   private String profileImage;
 
+  private UserRole userRole;
+  // 자기 소개
   @Column(length = 101)
   private String bio;
 

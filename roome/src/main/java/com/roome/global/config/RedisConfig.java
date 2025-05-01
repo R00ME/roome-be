@@ -8,7 +8,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.roome.domain.mycd.dto.MyCdListResponse;
 import com.roome.domain.mycd.dto.MyCdResponse;
 import jakarta.annotation.PreDestroy;
-import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -29,6 +28,8 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
 
 @EnableCaching
 @Slf4j
@@ -70,10 +71,32 @@ public class RedisConfig {
     return new StringRedisTemplate(redisConnectionFactory);
   }
 
+  // TempCode 전용 RedisTemplate
+  @Bean(name = "tempCodeRedisTemplate")
+  public RedisTemplate<String, String> tempCodeRedisTemplate(RedisConnectionFactory connectionFactory) {
+    RedisTemplate<String, String> template = new RedisTemplate<>();
+    template.setConnectionFactory(connectionFactory);
+    template.setKeySerializer(new StringRedisSerializer());
+    template.setValueSerializer(new StringRedisSerializer());
+    return template;
+  }
+
+  @Bean(name = "refreshTokenRedisTemplate")
+  public RedisTemplate<String, String> refreshTokenRedisTemplate(RedisConnectionFactory connectionFactory) {
+      RedisTemplate<String, String> template = new RedisTemplate<>();
+      template.setConnectionFactory(connectionFactory);
+
+      // key/value 직렬화 방식
+      template.setKeySerializer(new StringRedisSerializer());
+      template.setValueSerializer(new StringRedisSerializer());
+
+      return template;
+  }
+
   // 랭킹 시스템 전용 RedisTemplate (String 직렬화)
   @Bean("rankingRedisTemplate")
   public RedisTemplate<String, String> rankingRedisTemplate(
-      RedisConnectionFactory connectionFactory) {
+          RedisConnectionFactory connectionFactory) {
     RedisTemplate<String, String> template = new RedisTemplate<>();
     template.setConnectionFactory(connectionFactory);
 
