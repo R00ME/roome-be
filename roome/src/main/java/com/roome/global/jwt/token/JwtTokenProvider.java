@@ -6,6 +6,7 @@ import com.roome.global.oauth.user.model.CustomOAuth2User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -138,6 +139,26 @@ public class JwtTokenProvider implements InitializingBean {
         Claims claims = Jwts.parserBuilder().setSigningKey(refreshKey).build()
                 .parseClaimsJws(refreshToken).getBody();
         return Long.parseLong(claims.getSubject());
+    }
+
+    public String resolveToken(HttpServletRequest request) {
+        String bearer = request.getHeader("Authorization");
+        if(bearer != null && bearer.startsWith("Bearer ")) return bearer.substring(7);
+
+        return null;
+    }
+
+    public long getExpiration(String token) {
+        Claims claims = getClaims(token);
+        return claims.getExpiration().getTime() - System.currentTimeMillis();
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     // 토큰의 유효성 검증을 수행

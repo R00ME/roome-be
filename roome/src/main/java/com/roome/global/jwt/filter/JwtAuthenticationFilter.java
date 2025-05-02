@@ -1,5 +1,6 @@
 package com.roome.global.jwt.filter;
 
+import com.roome.global.jwt.exception.UserNotFoundException;
 import com.roome.global.jwt.token.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -22,36 +25,35 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends GenericFilterBean { // JwtFilter 요청마다 JWT 검증
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-    public static final String AUTHORIZATION_HEADER = "Authorization";
     private final JwtTokenProvider jwtTokenProvider;
+    @Qualifier("blacklistRedisTemplate")
+    private final RedisTemplate<String, String> blacklistRedisTemplate;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        String jwt = resolveToken(httpServletRequest);
+        String jwt = jwtTokenProvider.resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
 
-        // StringUtils.hasText(jwt) -> 스프링에서 제공하는 유틸 클래스/ null 아닌지, 공백아닌 문자열인지 확인
-        if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+        if (StringUtils.hasText(jwt)) {
+            // 블랙리스트 확인
+            if (blacklistRedisTemplate.hasKey("blacklist:" + jwt)) {
+                logger.warn("블랙리스트에 등록된 토큰입니다. uri: {}", requestURI);
+                throw new UserNotFoundException(); // 에러 추후 관리 예정
+            }
 
-            // Security에서 인증 완료한 사용자 정보 저장 -> 이후 controller에서 @AuthenticationPrincipal로 현재 사용자 정보 다룰 수 있음
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+            // 유효성 검사 후 인증 객체 설정
+            if (jwtTokenProvider.validateToken(jwt)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+            } else {
+                logger.debug("JWT 토큰이 유효하지 않습니다, uri: {}", requestURI);
+            }
         } else {
-            logger.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            logger.debug("JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-
-        return null;
     }
 }

@@ -1,14 +1,16 @@
 package com.roome.global.config;
 
 import com.roome.global.jwt.token.JwtTokenProvider;
-import com.roome.global.oauth.user.service.CustomOAuth2UserService;
 import com.roome.global.oauth.client.KakaoAuthorizationCodeTokenResponseClient;
 import com.roome.global.oauth.user.handler.OAuth2AuthenticationFailureHandler;
 import com.roome.global.oauth.user.handler.OAuth2AuthenticationSuccessHandler;
+import com.roome.global.oauth.user.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -29,6 +31,8 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    @Qualifier("blacklistRedisTemplate")
+    private final RedisTemplate<String, String> blacklistRedisTemplate;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,7 +47,7 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        JwtSecurityConfig jwtSecurityConfig = new JwtSecurityConfig(jwtTokenProvider);
+        JwtSecurityConfig jwtSecurityConfig = new JwtSecurityConfig(jwtTokenProvider,blacklistRedisTemplate);
 
         httpSecurity
                 // csrf 는 로그인 유저 올바른지 판단하기 위한 csrf 토큰 방식 -> rest api 구조 + JWT 사용으로 닫아놓음

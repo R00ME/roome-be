@@ -93,6 +93,15 @@ public class RedisConfig {
       return template;
   }
 
+  @Bean(name = "blacklistRedisTemplate")
+  public RedisTemplate<String, String> blacklistRedisTemplate(RedisConnectionFactory connectionFactory) {
+    RedisTemplate<String, String> template = new RedisTemplate<>();
+    template.setConnectionFactory(connectionFactory);
+    template.setKeySerializer(new StringRedisSerializer());
+    template.setValueSerializer(new StringRedisSerializer());
+    return template;
+  }
+
   // 랭킹 시스템 전용 RedisTemplate (String 직렬화)
   @Bean("rankingRedisTemplate")
   public RedisTemplate<String, String> rankingRedisTemplate(
