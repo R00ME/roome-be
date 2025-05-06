@@ -6,6 +6,7 @@ import com.roome.domain.notification.dto.NotificationSearchCondition;
 import com.roome.domain.notification.service.NotificationService;
 import com.roome.global.exception.ControllerException;
 import com.roome.global.exception.ErrorCode;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,13 +15,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -42,20 +39,17 @@ public class NotificationController {
   })
   @GetMapping
   public ResponseEntity<NotificationResponse> getNotifications(
-      @Parameter(description = "페이지네이션 커서 (마지막으로 받은 알림 ID)", example = "10")
-      @RequestParam(required = false) Long cursor,
+          @Parameter(description = "페이지네이션 커서 (마지막으로 받은 알림 ID)", example = "10")
+          @RequestParam(required = false) Long cursor,
 
-      @Parameter(description = "한 페이지당 조회할 알림 수(1-100)", example = "10")
-      @RequestParam(required = false, defaultValue = "10") int limit,
+          @Parameter(description = "한 페이지당 조회할 알림 수(1-100)", example = "10")
+          @RequestParam(required = false, defaultValue = "10") int limit,
 
-      @Parameter(description = "읽음 상태로 필터링 (true: 읽은 알림, false: 읽지 않은 알림, null: 모든 알림)", example = "false")
-      @RequestParam(required = false) Boolean read
+          @Parameter(description = "읽음 상태로 필터링 (true: 읽은 알림, false: 읽지 않은 알림, null: 모든 알림)", example = "false")
+          @RequestParam(required = false) Boolean read,
 
-//      ,@AuthenticatedUser Long userId
+          @AuthenticationPrincipal CustomUser user
   ) {
-
-    // userId 하드 코딩
-    long userId = 1L;
 
     // 커서 검증
     if (cursor != null && cursor <= 0) {
@@ -74,7 +68,7 @@ public class NotificationController {
         .cursor(cursor)
         .limit(limit)
         .read(read)
-        .receiverId(userId)
+        .receiverId(user.getUserId())
         .build();
 
     return ResponseEntity.ok(notificationService.getNotifications(condition));
@@ -92,20 +86,15 @@ public class NotificationController {
   @PatchMapping("/{notificationId}/read")
   public ResponseEntity<NotificationReadResponse> readNotification(
       @Parameter(description = "읽음 처리할 알림의 ID", example = "1")
-      @PathVariable Long notificationId
-
-//      ,@AuthenticatedUser Long userId
+      @PathVariable Long notificationId,
+      @AuthenticationPrincipal CustomUser user
   ) {
-
-    //userId 하드 코딩
-    long userId = 1L;
-
     // 알림 ID 검증
     if (notificationId <= 0) {
       throw new ControllerException(ErrorCode.INVALID_CURSOR_VALUE);
     }
     NotificationReadResponse response = notificationService.readNotification(notificationId,
-        userId);
+        user.getUserId());
     return ResponseEntity.ok(response);
   }
 }

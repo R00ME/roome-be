@@ -4,6 +4,7 @@ import com.roome.domain.mybookreview.service.MyBookReviewService;
 import com.roome.domain.mybookreview.service.request.MyBookReviewCreateRequest;
 import com.roome.domain.mybookreview.service.request.MyBookReviewUpdateRequest;
 import com.roome.domain.mybookreview.service.response.MyBookReviewResponse;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "서평 API", description = "사용자가 보유한 도서에 대한 서평 관리 API - 등록, 조회, 수정, 삭제)")
@@ -19,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class MyBookReviewController {
 
   private final MyBookReviewService myBookReviewService;
-  // 하드 코딩
-  private final Long loginUserId = 1L;
 
   @Operation(summary = "서평 등록", description = "서평을 등록할 수 있다.")
   @ApiResponses(value = {
@@ -31,12 +31,12 @@ public class MyBookReviewController {
   })
   @PostMapping("/api/mybooks/{myBookId}/review")
   public ResponseEntity<MyBookReviewResponse> create(
-//      @AuthenticationPrincipal Long loginUserId,
-      @Parameter(description = "서평을 등록할 책 ID")
-      @PathVariable("myBookId") Long myBookId,
-      @RequestBody MyBookReviewCreateRequest request
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "서평을 등록할 책 ID")
+          @PathVariable("myBookId") Long myBookId,
+          @RequestBody MyBookReviewCreateRequest request
   ) {
-    MyBookReviewResponse response = myBookReviewService.create(loginUserId, myBookId, request);
+    MyBookReviewResponse response = myBookReviewService.create(user.getUserId(), myBookId, request);
     return ResponseEntity.ok(response);
   }
 
@@ -64,12 +64,12 @@ public class MyBookReviewController {
   })
   @PatchMapping("/api/mybooks/{myBookId}/review")
   public ResponseEntity<MyBookReviewResponse> update(
-//      @AuthenticationPrincipal Long loginUserId,
-      @Parameter(description = "수정할 책 ID")
-      @PathVariable("myBookId") Long myBookId,
-      @RequestBody MyBookReviewUpdateRequest request
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "수정할 책 ID")
+          @PathVariable("myBookId") Long myBookId,
+          @RequestBody MyBookReviewUpdateRequest request
   ) {
-    MyBookReviewResponse response = myBookReviewService.update(loginUserId, myBookId, request);
+    MyBookReviewResponse response = myBookReviewService.update(user.getUserId(), myBookId, request);
     return ResponseEntity.ok(response);
   }
 
@@ -82,11 +82,11 @@ public class MyBookReviewController {
   })
   @DeleteMapping("/api/mybooks/{myBookId}/review")
   public ResponseEntity<Void> delete(
-//      @AuthenticationPrincipal Long loginUserId,
-      @Parameter(description = "삭제할 책 ID")
-      @PathVariable("myBookId") Long myBookId
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "삭제할 책 ID")
+          @PathVariable("myBookId") Long myBookId
   ) {
-    myBookReviewService.delete(loginUserId, myBookId);
+    myBookReviewService.delete(user.getUserId(), myBookId);
     return ResponseEntity.ok().build();
   }
 }

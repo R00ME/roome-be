@@ -4,6 +4,7 @@ import com.roome.domain.mybook.service.MyBookService;
 import com.roome.domain.mybook.service.request.MyBookCreateRequest;
 import com.roome.domain.mybook.service.response.MyBookResponse;
 import com.roome.domain.mybook.service.response.MyBooksResponse;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "도서 책장 API", description = "사용자가 보유한 도서 관리 API - 등록, 조회, 삭제")
@@ -20,9 +22,6 @@ public class MyBookController {
 
   private final MyBookService myBookService;
 
-  // loginUserId 하드 코딩
-  private final Long loginUserId = 1L;
-
   @Operation(summary = "도서 등록", description = "사용자가 새로운 도서를 등록할 수 있다.")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "도서 등록 성공"),
@@ -31,11 +30,11 @@ public class MyBookController {
   })
   @PostMapping("/api/mybooks")
   public ResponseEntity<MyBookResponse> create(
-//      @AuthenticationPrincipal Long loginUserId,
-      @RequestParam("userId") Long userId,
-      @RequestBody MyBookCreateRequest request
+          @AuthenticationPrincipal CustomUser user,
+          @RequestParam("userId") Long userId,
+          @RequestBody MyBookCreateRequest request
   ) {
-    MyBookResponse response = myBookService.create(loginUserId, userId, request);
+    MyBookResponse response = myBookService.create(user.getUserId(), userId, request);
     return ResponseEntity.ok(response);
   }
 
@@ -79,11 +78,11 @@ public class MyBookController {
   })
   @DeleteMapping("/api/mybooks")
   public ResponseEntity<Void> delete(
-//      @AuthenticationPrincipal Long loginUserId,
-      @RequestParam("userId") Long userId,
-      @RequestParam String myBookIds
+          @AuthenticationPrincipal CustomUser user,
+          @RequestParam("userId") Long userId,
+          @RequestParam String myBookIds
   ) {
-    myBookService.delete(loginUserId, userId, myBookIds);
+    myBookService.delete(user.getUserId(), userId, myBookIds);
     return ResponseEntity.ok().build();
   }
 }

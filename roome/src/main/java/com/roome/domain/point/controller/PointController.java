@@ -3,6 +3,7 @@ package com.roome.domain.point.controller;
 import com.roome.domain.point.dto.PointBalanceResponse;
 import com.roome.domain.point.dto.PointHistoryResponse;
 import com.roome.domain.point.service.PointService;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,14 +34,12 @@ public class PointController {
   })
   @GetMapping("/history")
   public ResponseEntity<PointHistoryResponse> getPointHistory(
-//      @AuthenticatedUser Long userId,
-      @RequestParam(required = false) @Parameter(description = "마지막 조회한 날짜 (YYYY-MM-DD 형식)") String dayCursor,
-      @RequestParam(required = false) @Parameter(description = "마지막 조회한 포인트 내역 ID") Long itemCursor,
-      @RequestParam @Parameter(description = "한 번에 조회할 포인트 내역 개수") int size) {
+          @AuthenticationPrincipal CustomUser user,
+          @RequestParam(required = false) @Parameter(description = "마지막 조회한 날짜 (YYYY-MM-DD 형식)") String dayCursor,
+          @RequestParam(required = false) @Parameter(description = "마지막 조회한 포인트 내역 ID") Long itemCursor,
+          @RequestParam @Parameter(description = "한 번에 조회할 포인트 내역 개수") int size) {
 
-    //userId 하드 코딩
-    long userId = 1L;
-    PointHistoryResponse response = pointService.getPointHistory(userId, dayCursor, itemCursor,
+    PointHistoryResponse response = pointService.getPointHistory(user.getUserId(), dayCursor, itemCursor,
         size);
     return ResponseEntity.ok(response);
   }

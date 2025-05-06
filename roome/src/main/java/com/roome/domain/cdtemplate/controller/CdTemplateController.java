@@ -3,6 +3,7 @@ package com.roome.domain.cdtemplate.controller;
 import com.roome.domain.cdtemplate.dto.CdTemplateRequest;
 import com.roome.domain.cdtemplate.dto.CdTemplateResponse;
 import com.roome.domain.cdtemplate.service.CdTemplateService;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "CD 템플릿 API", description = "CD 템플릿 관련 API")
@@ -30,13 +32,11 @@ public class CdTemplateController {
   })
   @PostMapping
   public ResponseEntity<CdTemplateResponse> createTemplate(
-//      @AuthenticatedUser Long userId,
-      @Parameter(description = "템플릿을 추가할 CD의 ID", example = "1") @PathVariable Long myCdId,
-      @RequestBody CdTemplateRequest request
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "템플릿을 추가할 CD의 ID", example = "1") @PathVariable Long myCdId,
+          @RequestBody CdTemplateRequest request
   ) {
-    // userId 하드 코딩
-    long userId = 1L;
-    return ResponseEntity.ok(cdTemplateService.createTemplate(myCdId, userId, request));
+    return ResponseEntity.ok(cdTemplateService.createTemplate(myCdId, user.getUserId(), request));
   }
 
   @Operation(summary = "CD 템플릿 조회", description = "특정 CD의 템플릿을 조회합니다.")
@@ -63,13 +63,11 @@ public class CdTemplateController {
   })
   @PatchMapping
   public ResponseEntity<CdTemplateResponse> updateTemplate(
-//      @AuthenticatedUser Long userId,
-      @Parameter(description = "수정할 CD의 ID", example = "1") @PathVariable Long myCdId,
-      @RequestBody CdTemplateRequest request
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "수정할 CD의 ID", example = "1") @PathVariable Long myCdId,
+          @RequestBody CdTemplateRequest request
   ) {
-    //userId 하드 코딩
-    long userId = 1L;
-    return ResponseEntity.ok(cdTemplateService.updateTemplate(myCdId, userId, request));
+    return ResponseEntity.ok(cdTemplateService.updateTemplate(myCdId, user.getUserId(), request));
   }
 
   @Operation(summary = "CD 템플릿 삭제", description = "사용자가 특정 CD의 템플릿을 삭제합니다.")
@@ -81,12 +79,10 @@ public class CdTemplateController {
   })
   @DeleteMapping
   public ResponseEntity<Void> deleteTemplate(
-//      @AuthenticatedUser Long userId,
-      @Parameter(description = "삭제할 CD의 ID", example = "1") @PathVariable Long myCdId
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "삭제할 CD의 ID", example = "1") @PathVariable Long myCdId
   ) {
-    // userId 하드 코딩
-    long userId = 1L;
-    cdTemplateService.deleteTemplate(myCdId, userId);
+    cdTemplateService.deleteTemplate(myCdId, user.getUserId());
     return ResponseEntity.noContent().build();
   }
 }

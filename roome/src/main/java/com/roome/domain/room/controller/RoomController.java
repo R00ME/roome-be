@@ -8,6 +8,7 @@ import com.roome.domain.room.dto.RoomResponseDto;
 import com.roome.domain.room.dto.UpdateRoomThemeRequestDto;
 import com.roome.domain.room.dto.UpdateRoomThemeResponseDto;
 import com.roome.domain.room.service.RoomService;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,14 +65,12 @@ public class RoomController {
   })
   @PutMapping("/{roomId}")
   public ResponseEntity<UpdateRoomThemeResponseDto> updateRoomTheme(
-//      @AuthenticationPrincipal Long userId,
-      @Parameter(description = "변경할 방의 ID")
-      @PathVariable Long roomId,
-      @RequestBody UpdateRoomThemeRequestDto requestDto
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "변경할 방의 ID")
+          @PathVariable Long roomId,
+          @RequestBody UpdateRoomThemeRequestDto requestDto
   ) {
-    //userId 하드 코딩
-    long userId = 1L;
-    String updatedTheme = roomService.updateRoomTheme(userId, roomId, requestDto.getThemeName());
+    String updatedTheme = roomService.updateRoomTheme(user.getUserId(), roomId, requestDto.getThemeName());
 
     UpdateRoomThemeResponseDto responseDto = new UpdateRoomThemeResponseDto(roomId, updatedTheme);
     return ResponseEntity.ok(responseDto);
@@ -83,13 +83,11 @@ public class RoomController {
   })
   @PostMapping("/{roomId}/purchase-theme")
   public ResponseEntity<PurchaseRoomThemeResponseDto> purchaseRoomTheme(
-//      @AuthenticationPrincipal Long userId,
-      @PathVariable Long roomId,
-      @RequestBody UpdateRoomThemeRequestDto requestDto
+          @AuthenticationPrincipal CustomUser user,
+          @PathVariable Long roomId,
+          @RequestBody UpdateRoomThemeRequestDto requestDto
   ) {
-    //userId 하드 코딩
-    long userId = 1L;
-    int remainingPoints = roomService.purchaseRoomTheme(userId, roomId, requestDto.getThemeName());
+    int remainingPoints = roomService.purchaseRoomTheme(user.getUserId(), roomId, requestDto.getThemeName());
 
     PurchaseRoomThemeResponseDto responseDto = new PurchaseRoomThemeResponseDto(
             roomId,
@@ -108,14 +106,12 @@ public class RoomController {
   })
   @PutMapping("/{roomId}/furniture")
   public ResponseEntity<ToggleFurnitureResponseDto> toggleFurnitureVisibility(
-//      @AuthenticationPrincipal Long userId,
-      @PathVariable Long roomId,
-      @RequestBody FurnitureRequestDto furnitureRequestDto
+          @AuthenticationPrincipal CustomUser user,
+          @PathVariable Long roomId,
+          @RequestBody FurnitureRequestDto furnitureRequestDto
   ) {
-    //userId 하드 코딩
-    long userId = 1L;
     String furnitureType = furnitureRequestDto.getFurnitureType();
-    FurnitureResponseDto updatedFurniture = roomService.toggleFurnitureVisibility(userId, roomId,
+    FurnitureResponseDto updatedFurniture = roomService.toggleFurnitureVisibility(user.getUserId(), roomId,
             furnitureType);
 
     ToggleFurnitureResponseDto responseDto = new ToggleFurnitureResponseDto(roomId,
@@ -127,11 +123,9 @@ public class RoomController {
   @Operation(summary = "사용자가 잠금 해제한 테마 목록 조회", description = "해당 사용자가 잠금 해제한 방 테마 목록을 반환한다.")
   @GetMapping("/{userId}/unlocked-themes")
   public ResponseEntity<List<String>> getUnlockedThemes(
-//      @AuthenticationPrincipal Long userId
+          @AuthenticationPrincipal CustomUser user
   ) {
-    // userId 하드 코딩
-    Long userId = 1L;
-    List<String> unlockedThemes = roomService.getUnlockedThemes(userId);
+    List<String> unlockedThemes = roomService.getUnlockedThemes(user.getUserId());
     return ResponseEntity.ok(unlockedThemes);
   }
 

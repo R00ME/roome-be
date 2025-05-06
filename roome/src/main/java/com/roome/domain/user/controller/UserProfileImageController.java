@@ -4,6 +4,7 @@ import com.roome.domain.user.dto.response.ImageUploadResponseDto;
 import com.roome.domain.user.service.UserProfileImageService;
 import com.roome.global.exception.ControllerException;
 import com.roome.global.exception.ErrorCode;
+import com.roome.global.security.jwt.principal.CustomUser;
 import com.roome.global.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,31 +43,28 @@ public class UserProfileImageController {
 
 
   @Operation(summary = "프로필 이미지 업로드",
-      description = "사용자의 프로필 이미지를 업로드합니다. PUT과 POST 모두 지원합니다.")
+          description = "사용자의 프로필 이미지를 업로드합니다. PUT과 POST 모두 지원합니다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "이미지 업로드 성공"),
-      @ApiResponse(responseCode = "400", description = "이미지 파일이 없거나 비어 있음 (IMAGE_NOT_FOUND)"),
-      @ApiResponse(responseCode = "400", description = "지원되지 않는 이미지 형식 (INVALID_IMAGE_FORMAT)"),
-      @ApiResponse(responseCode = "400", description = "이미지 크기가 제한(5MB)을 초과함 (IMAGE_SIZE_EXCEEDED)"),
-      @ApiResponse(responseCode = "500", description = "이미지 업로드 중 오류 발생 (S3_UPLOAD_ERROR)")
+          @ApiResponse(responseCode = "200", description = "이미지 업로드 성공"),
+          @ApiResponse(responseCode = "400", description = "이미지 파일이 없거나 비어 있음 (IMAGE_NOT_FOUND)"),
+          @ApiResponse(responseCode = "400", description = "지원되지 않는 이미지 형식 (INVALID_IMAGE_FORMAT)"),
+          @ApiResponse(responseCode = "400", description = "이미지 크기가 제한(5MB)을 초과함 (IMAGE_SIZE_EXCEEDED)"),
+          @ApiResponse(responseCode = "500", description = "이미지 업로드 중 오류 발생 (S3_UPLOAD_ERROR)")
   })
   @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
   public ResponseEntity<ImageUploadResponseDto> uploadProfileImage(
-//      @AuthenticatedUser Long userId,
-      @Parameter(description = "업로드할 프로필 이미지 파일 (JPG, JPEG, PNG, GIF 형식, 최대 5MB)")
-      @RequestParam("image") MultipartFile image) {
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "업로드할 프로필 이미지 파일 (JPG, JPEG, PNG, GIF 형식, 최대 5MB)")
+          @RequestParam("image") MultipartFile image) {
     // 이미지 파일 유효성 검증
     validateImageFile(image);
 
-    // userId 하드 코딩
-    long userId = 1L;
-
     try {
       // S3에 이미지 업로드된 기존 이미지 저장. 없으면 null
-      String originProfileImageUrl = userService.getProfileImageUrl(userId);
+      String originProfileImageUrl = userService.getProfileImageUrl(user.getUserId());
       // 새로운 프로필 이미지 업로드
       String imageUrl = s3Service.uploadImage(image, "profile");
-      userService.updateProfileImage(userId, imageUrl);
+      userService.updateProfileImage(user.getUserId(), imageUrl);
       log.info("프로필 이미지 업로드 완료: {}", imageUrl);
       //기존 프로필 이미지 삭제
       if (originProfileImageUrl != null && !originProfileImageUrl.isEmpty()) {
@@ -94,12 +93,9 @@ public class UserProfileImageController {
   })
   @DeleteMapping
   public ResponseEntity<?> deleteProfileImage(
-//      @AuthenticatedUser Long userId,
-      @Parameter(description = "삭제할 이미지의 S3 URL", example = "https://bucket-name.s3.amazonaws.com/profile/image.jpg")
-      @RequestParam("imageUrl") String imageUrl) {
-
-    // userId 하드 코딩
-    long userId = 1L;
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "삭제할 이미지의 S3 URL", example = "https://bucket-name.s3.amazonaws.com/profile/image.jpg")
+          @RequestParam("imageUrl") String imageUrl) {
 
     // URL 유효성 검증
     if (imageUrl == null || imageUrl
@@ -110,7 +106,7 @@ public class UserProfileImageController {
 
     try {
       s3Service.deleteImage(imageUrl);
-      userService.deleteProfileImage(userId);
+      userService.deleteProfileImage(user.getUserId());
 
       return ResponseEntity.ok(imageUrl);
     } catch (Exception e) {

@@ -5,6 +5,7 @@ import com.roome.domain.user.dto.response.UserProfileResponse;
 import com.roome.domain.user.service.UserProfileService;
 import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,12 +38,10 @@ public class UserProfileController {
   @GetMapping("/{userId}/profile")
   public ResponseEntity<UserProfileResponse> getUserProfile(
           @Parameter(description = "조회할 사용자의 ID", example = "1")
-          @PathVariable Long userId
-//      ,@AuthenticatedUser Long authUserId
+          @PathVariable Long userId,
+          @AuthenticationPrincipal CustomUser user
   ) {
-    //authUserId 하드 코딩
-    long authUserId = 1L;
-    UserProfileResponse response = userProfileService.getUserProfile(userId, authUserId);
+    UserProfileResponse response = userProfileService.getUserProfile(userId, user.getUserId());
     return ResponseEntity.ok(response);
   }
 
@@ -57,15 +57,13 @@ public class UserProfileController {
   @PatchMapping("/profile")
   public ResponseEntity<UserProfileResponse> updateProfile(
           @Parameter(description = "수정할 프로필 정보")
-          @Valid @RequestBody UpdateProfileRequest request
-//      ,@AuthenticatedUser Long userId
+          @Valid @RequestBody UpdateProfileRequest request,
+          @AuthenticationPrincipal CustomUser user
   ) {
     validateNickname(request.getNickname());
     validateBio(request.getBio());
-    //userId 하드 코딩
-    long userId = 1L;
     log.info("[프로필 수정] nickname: {}, bio: {}", request.getNickname(), request.getBio());
-    UserProfileResponse response = userProfileService.updateProfile(userId, request);
+    UserProfileResponse response = userProfileService.updateProfile(user.getUserId(), request);
     return ResponseEntity.ok(response);
   }
 

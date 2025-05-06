@@ -1,10 +1,12 @@
 package com.roome.domain.furniture.controller;
 
 import com.roome.domain.furniture.service.FurnitureService;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,22 +22,20 @@ public class FurnitureController {
   @Operation(summary = "책장 레벨 업그레이드", description = "책장 레벨을 업그레이드 할 수 있다.")
   @PostMapping("/api/rooms/{roomId}/furniture/bookshelf/upgrade")
   public ResponseEntity<Void> upgradeBookshelf(
-//      @AuthenticationPrincipal Long loginUserId,
+          @AuthenticationPrincipal CustomUser user,
           @PathVariable("roomId") Long roomId
   ) {
-    Long loginUserId = 1L;
-    furnitureService.upgradeBookshelf(loginUserId, roomId);
+    furnitureService.upgradeBookshelf(user.getUserId(), roomId);
     return ResponseEntity.ok().build();
   }
 
   @Operation(summary = "CD 랙 레벨 업그레이드", description = "CD 랙 레벨을 업그레이드 할 수 있다.")
   @PatchMapping("/api/rooms/{roomId}/furniture/cd-rack/upgrade")
   public ResponseEntity<Void> upgradeCdRack(
-//      @AuthenticatedUser Long userId,
-      @PathVariable("roomId") Long roomId
+          @AuthenticationPrincipal CustomUser user,
+          @PathVariable("roomId") Long roomId
   ) {
-    Long userId = 1L;
-    furnitureService.upgradeCdRack(userId, roomId);
+    furnitureService.upgradeCdRack(user.getUserId(), roomId);
     return ResponseEntity.noContent().build();
   }
 

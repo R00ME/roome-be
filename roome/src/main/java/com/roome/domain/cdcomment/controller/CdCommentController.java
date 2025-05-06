@@ -4,6 +4,7 @@ import com.roome.domain.cdcomment.dto.CdCommentCreateRequest;
 import com.roome.domain.cdcomment.dto.CdCommentListResponse;
 import com.roome.domain.cdcomment.dto.CdCommentResponse;
 import com.roome.domain.cdcomment.service.CdCommentService;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,13 +36,11 @@ public class CdCommentController {
   })
   @PostMapping
   public ResponseEntity<CdCommentResponse> create(
-//      @AuthenticatedUser Long userId,
-      @Parameter(description = "댓글을 추가할 CD의 ID", example = "1") @PathVariable Long myCdId,
-      @RequestBody @Valid CdCommentCreateRequest request
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "댓글을 추가할 CD의 ID", example = "1") @PathVariable Long myCdId,
+          @RequestBody @Valid CdCommentCreateRequest request
   ) {
-    //userId 하드 코딩
-    long userId = 1L;
-    CdCommentResponse response = cdCommentService.addComment(userId, myCdId, request);
+    CdCommentResponse response = cdCommentService.addComment(user.getUserId(), myCdId, request);
     return ResponseEntity.ok(response);
   }
 
@@ -90,11 +90,10 @@ public class CdCommentController {
   })
   @DeleteMapping("/{commentId}")
   public ResponseEntity<Void> deleteComment(
-//      @AuthenticatedUser Long userId,
-      @Parameter(description = "삭제할 댓글 ID", example = "1") @PathVariable Long commentId
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "삭제할 댓글 ID", example = "1") @PathVariable Long commentId
   ) {
-    long userId = 1L;
-    cdCommentService.deleteComment(userId, commentId);
+    cdCommentService.deleteComment(user.getUserId(), commentId);
     return ResponseEntity.noContent().build();
   }
 }

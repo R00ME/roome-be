@@ -4,6 +4,7 @@ import com.roome.domain.mycd.dto.MyCdCreateRequest;
 import com.roome.domain.mycd.dto.MyCdListResponse;
 import com.roome.domain.mycd.dto.MyCdResponse;
 import com.roome.domain.mycd.service.MyCdService;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,12 +37,11 @@ public class MyCdController {
   })
   @PostMapping
   public ResponseEntity<MyCdResponse> addMyCd(
-//      @AuthenticatedUser Long userId,
-      @RequestBody @Valid MyCdCreateRequest myCdRequest
+          @AuthenticationPrincipal CustomUser user,
+          @RequestBody @Valid MyCdCreateRequest myCdRequest
   ) {
-    Long userId = 1L;
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(myCdService.addCdToMyList(userId, myCdRequest));
+            .body(myCdService.addCdToMyList(user.getUserId(), myCdRequest));
   }
 
   @Operation(summary = "CD 목록 조회", description = "특정 사용자의 CD 보관함을 조회합니다. 키워드 검색을 지원합니다.")
@@ -52,19 +53,18 @@ public class MyCdController {
   })
   @GetMapping
   public ResponseEntity<MyCdListResponse> getMyCdList(
-//      @AuthenticatedUser Long userId, // 로그인한 사용자 ID
-      @RequestParam(value = "targetUserId", required = false) Long targetUserId, // 조회 대상 사용자 ID
-      @Parameter(description = "커서 기반 페이지네이션 (마지막 조회한 CD ID)")
-      @RequestParam(value = "cursor", required = false) Long cursor,
-      @Parameter(description = "한 번에 가져올 개수 (기본값: 15)", example = "15")
-      @RequestParam(value = "size", defaultValue = "15") int size,
-      @Parameter(description = "CD 제목 또는 가수명으로 검색")
-      @RequestParam(value = "keyword", required = false) String keyword
+          @AuthenticationPrincipal CustomUser user,
+          @RequestParam(value = "targetUserId", required = false) Long targetUserId, // 조회 대상 사용자 ID
+          @Parameter(description = "커서 기반 페이지네이션 (마지막 조회한 CD ID)")
+          @RequestParam(value = "cursor", required = false) Long cursor,
+          @Parameter(description = "한 번에 가져올 개수 (기본값: 15)", example = "15")
+          @RequestParam(value = "size", defaultValue = "15") int size,
+          @Parameter(description = "CD 제목 또는 가수명으로 검색")
+          @RequestParam(value = "keyword", required = false) String keyword
   ) {
-    Long userId = 1L;
-    Long finalUserId = (targetUserId != null) ? targetUserId : userId; // targetUserId가 있으면 해당 유저 조회
+    Long finalUserId = (targetUserId != null) ? targetUserId : user.getUserId(); // targetUserId가 있으면 해당 유저 조회
 
-    log.info("요청한 사용자 ID: {}, 조회 대상 사용자 ID: {}", userId, finalUserId);
+    log.info("요청한 사용자 ID: {}, 조회 대상 사용자 ID: {}", user.getUserId(), finalUserId);
 
     return ResponseEntity.ok(myCdService.getMyCdList(finalUserId, keyword, cursor, size));
   }
@@ -78,10 +78,10 @@ public class MyCdController {
   })
   @GetMapping("/{myCdId}")
   public ResponseEntity<MyCdResponse> getMyCd(
-//      @AuthenticatedUser Long userId,
-      @RequestParam(value = "targetUserId") Long targetUserId, // targetUserId를 필수로 받도록 변경
-      @Parameter(description = "조회할 MyCd ID", example = "1")
-      @PathVariable Long myCdId
+          @AuthenticationPrincipal CustomUser user,
+          @RequestParam(value = "targetUserId") Long targetUserId, // targetUserId를 필수로 받도록 변경
+          @Parameter(description = "조회할 MyCd ID", example = "1")
+          @PathVariable Long myCdId
   ) {
     return ResponseEntity.ok(myCdService.getMyCd(targetUserId, myCdId));
   }
@@ -95,12 +95,11 @@ public class MyCdController {
   })
   @DeleteMapping
   public ResponseEntity<Void> delete(
-//      @AuthenticatedUser Long userId,
-      @Parameter(description = "삭제할 CD ID 목록", example = "[1, 2, 3]")
-      @RequestParam List<Long> myCdIds
+          @AuthenticationPrincipal CustomUser user,
+          @Parameter(description = "삭제할 CD ID 목록", example = "[1, 2, 3]")
+          @RequestParam List<Long> myCdIds
   ) {
-    Long userId = 1L;
-    myCdService.delete(userId, myCdIds);
+    myCdService.delete(user.getUserId(), myCdIds);
     return ResponseEntity.noContent().build();
   }
 }
