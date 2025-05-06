@@ -22,6 +22,12 @@ public class TempTokenService {
     private static final long EXPIRATION_MINUTES = 3;
     private final JwtTokenProvider jwtTokenProvider;
 
+    public String generateTempCode(String accessToken) {
+        String tempCode = UUID.randomUUID().toString();
+        tempCodeRedisTemplate.opsForValue().set(tempCode, accessToken, Duration.ofMinutes(EXPIRATION_MINUTES));
+        return tempCode;
+    }
+
     public void exchangeTempCode(GetAccessTokenByTempCodeRequest getAccessTokenByTempCodeRequest,
                                  HttpServletResponse response) {
         String accessToken = getAccessTokenByTempCode(getAccessTokenByTempCodeRequest.getTempCode());
@@ -41,14 +47,7 @@ public class TempTokenService {
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
-
-    public String generateTempCode(String accessToken) {
-        String tempCode = UUID.randomUUID().toString();
-        tempCodeRedisTemplate.opsForValue().set(tempCode, accessToken, Duration.ofMinutes(EXPIRATION_MINUTES));
-        return tempCode;
-    }
-
-    public String getAccessTokenByTempCode(String tempCode) {
+    private String getAccessTokenByTempCode(String tempCode) {
         String accessTokenFromRedis = tempCodeRedisTemplate.opsForValue().get(tempCode);
         if(accessTokenFromRedis == null) throw new IllegalArgumentException("유효하지 않은 임시 코드입니다.");
         tempCodeRedisTemplate.delete(tempCode);

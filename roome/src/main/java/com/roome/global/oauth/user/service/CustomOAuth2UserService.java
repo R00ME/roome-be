@@ -27,7 +27,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // provider 정보 가져오기
         String provider = userRequest.getClientRegistration().getRegistrationId();
 
-        // 사용자 정보 attributes 가져오기
+        // 사용자 정보 attributes 가져오기(소설 정보)
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 

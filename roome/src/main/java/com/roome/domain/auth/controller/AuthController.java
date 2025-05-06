@@ -105,49 +105,7 @@ public class AuthController {
     }
   }
 
-//  @Operation(summary = "로그아웃", description = "사용자를 로그아웃 처리하고 토큰을 무효화합니다.", security = @SecurityRequirement(name = "bearerAuth"))
-//  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "로그아웃 성공"),
-//      @ApiResponse(responseCode = "500", description = "서버 내부 오류")})
-//  @Transactional
-//  @PostMapping("/logout")
-//  public ResponseEntity<?> logout(
-//      @RequestHeader(value = "Authorization", required = false) String authHeader,
-//      HttpServletResponse response) {
-//    ResponseEntity<?> result;
-//    try {
-//      if (authHeader != null && authHeader.startsWith("Bearer ")) {
-//        String accessToken = authHeader.substring(7);
-////        String userId = jwtTokenProvider.getUserIdFromToken(accessToken);
-//
-//        // 남은 유효 시간 계산
-////        long expiration = jwtTokenProvider.getTokenTimeToLive(accessToken);
-//        // expiration, userId 하드 코딩
-//        long expiration = 10000L;
-//        String userId = "";
-//        // Refresh Token 삭제
-//        redisService.deleteRefreshToken(userId);
-//
-//        // Access Token 블랙리스트 추가 (남은 유효 시간만큼 유지)
-//        if (expiration > 0) {
-//          redisService.addToBlacklist(accessToken, expiration);
-//        }
-//
-//        // 리프레시 토큰 쿠키 삭제
-//        ResponseCookie cookie = ResponseCookie.from("refresh_token", "").maxAge(0).path("/")
-//            .build();
-//        response.addHeader("Set-Cookie", cookie.toString());
-//      }
-//
-//      result = ResponseEntity.ok(Map.of("message", "로그아웃 되었습니다."));
-//    } catch (Exception e) {
-//      log.error("로그아웃 중 오류 발생: ", e);
-//      result = ResponseEntity.internalServerError()
-//          .body(Map.of("message", "로그아웃 처리 중 오류가 발생했습니다."));
-//    }
-//    return result;
-//  }
-
-
+  // logout
   @PostMapping("/logout")
   public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
     authService.logout(request, response);
