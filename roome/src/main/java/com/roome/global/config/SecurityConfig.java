@@ -1,10 +1,10 @@
 package com.roome.global.config;
 
-import com.roome.global.jwt.token.JwtTokenProvider;
-import com.roome.global.oauth.client.KakaoAuthorizationCodeTokenResponseClient;
-import com.roome.global.oauth.user.handler.OAuth2AuthenticationFailureHandler;
-import com.roome.global.oauth.user.handler.OAuth2AuthenticationSuccessHandler;
-import com.roome.global.oauth.user.service.CustomOAuth2UserService;
+import com.roome.global.security.jwt.token.JwtTokenProvider;
+import com.roome.global.security.oauth.client.KakaoAuthorizationCodeTokenResponseClient;
+import com.roome.global.security.oauth.user.handler.OAuth2AuthenticationFailureHandler;
+import com.roome.global.security.oauth.user.handler.OAuth2AuthenticationSuccessHandler;
+import com.roome.global.security.oauth.user.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;

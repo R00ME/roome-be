@@ -13,7 +13,7 @@ import com.roome.domain.point.repository.PointHistoryRepository;
 import com.roome.domain.point.repository.PointRepository;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
-import com.roome.global.jwt.exception.UserNotFoundException;
+import com.roome.global.security.jwt.exception.UserNotFoundException;
 import com.roome.global.service.RedisLockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

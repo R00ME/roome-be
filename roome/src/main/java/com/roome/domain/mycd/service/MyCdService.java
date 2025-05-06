@@ -32,7 +32,7 @@ import com.roome.domain.room.exception.RoomNoFoundException;
 import com.roome.domain.room.repository.RoomRepository;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
-import com.roome.global.jwt.exception.UserNotFoundException;
+import com.roome.global.security.jwt.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.util.List;

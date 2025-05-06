@@ -10,7 +10,7 @@ import com.roome.domain.point.entity.PointReason;
 import com.roome.domain.point.service.PointService;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
-import com.roome.global.jwt.exception.UserNotFoundException;
+import com.roome.global.security.jwt.exception.UserNotFoundException;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

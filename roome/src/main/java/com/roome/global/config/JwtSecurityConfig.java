@@ -1,7 +1,7 @@
 package com.roome.global.config;
 
-import com.roome.global.jwt.filter.JwtAuthenticationFilter;
-import com.roome.global.jwt.token.JwtTokenProvider;
+import com.roome.global.security.filter.JwtAuthenticationFilter;
+import com.roome.global.security.jwt.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;

@@ -2,7 +2,7 @@ package com.roome.domain.user.repository;
 
 import com.roome.domain.user.entity.Provider;
 import com.roome.domain.user.entity.User;
-import com.roome.global.jwt.exception.UserNotFoundException;
+import com.roome.global.security.jwt.exception.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

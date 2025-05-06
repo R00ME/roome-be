@@ -1,6 +1,6 @@
 package com.roome.domain.auth.service;
 
-import com.roome.global.jwt.token.JwtTokenProvider;
+import com.roome.global.security.jwt.token.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

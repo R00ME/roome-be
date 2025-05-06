@@ -16,7 +16,7 @@ import com.roome.domain.rank.service.UserActivityService;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
 import com.roome.global.exception.ForbiddenException;
-import com.roome.global.jwt.exception.UserNotFoundException;
+import com.roome.global.security.jwt.exception.UserNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
