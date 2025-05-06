@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth/token")
 public class TokenController {
 
-    private final TempTokenService tempTokenService;
-    private final TokenService tokenService;
+	private final TempTokenService tempTokenService;
+	private final TokenService tokenService;
 
-    @PostMapping("/temp")
-    public ResponseEntity<Void> exchangeTempCode(@RequestBody GetAccessTokenByTempCodeRequest getAccessTokenByTempCodeRequest,
-                                                 HttpServletResponse response) {
-        tempTokenService.exchangeTempCode(getAccessTokenByTempCodeRequest, response);
-        return ResponseEntity.ok().build();
-    }
+	@PostMapping("/temp")
+	public ResponseEntity<Void> exchangeTempCode(@RequestBody GetAccessTokenByTempCodeRequest getAccessTokenByTempCodeRequest,
+												 HttpServletResponse response) {
+		tempTokenService.exchangeTempCode(getAccessTokenByTempCodeRequest, response);
+		return ResponseEntity.ok().build();
+	}
 
-    @PostMapping("/refresh")
-    public ResponseEntity<Void> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        tokenService.refreshAccessToken(request, response);
-        return ResponseEntity.ok().build();
-    }
+	@PostMapping("/refresh")
+	public ResponseEntity<Void> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+		tokenService.refreshAccessToken(request, response);
+		return ResponseEntity.ok().build();
+	}
 }

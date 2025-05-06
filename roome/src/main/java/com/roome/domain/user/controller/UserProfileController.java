@@ -27,60 +27,60 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserProfileController {
 
-  private final UserProfileService userProfileService;
+	private final UserProfileService userProfileService;
 
-  @Operation(summary = "프로필 조회",
-          description = "특정 사용자의 프로필 정보를 조회합니다.")
-  @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "프로필 조회 성공"),
-          @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 (USER_NOT_FOUND)")
-  })
-  @GetMapping("/{userId}/profile")
-  public ResponseEntity<UserProfileResponse> getUserProfile(
-          @Parameter(description = "조회할 사용자의 ID", example = "1")
-          @PathVariable Long userId,
-          @AuthenticationPrincipal CustomUser user
-  ) {
-    UserProfileResponse response = userProfileService.getUserProfile(userId, user.getUserId());
-    return ResponseEntity.ok(response);
-  }
+	@Operation(summary = "프로필 조회",
+			description = "특정 사용자의 프로필 정보를 조회합니다.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "프로필 조회 성공"),
+			@ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 (USER_NOT_FOUND)")
+	})
+	@GetMapping("/{userId}/profile")
+	public ResponseEntity<UserProfileResponse> getUserProfile(
+			@Parameter(description = "조회할 사용자의 ID", example = "1")
+			@PathVariable Long userId,
+			@AuthenticationPrincipal CustomUser user
+	) {
+		UserProfileResponse response = userProfileService.getUserProfile(userId, user.getUserId());
+		return ResponseEntity.ok(response);
+	}
 
-  @Operation(summary = "프로필 수정",
-      description = "로그인한 사용자의 프로필 정보(닉네임, 자기소개)를 수정합니다.")
-  @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "프로필 수정 성공"),
-          @ApiResponse(responseCode = "400", description = "잘못된 요청 형식 또는 유효하지 않은 데이터"),
-          @ApiResponse(responseCode = "400", description = "닉네임 형식이 올바르지 않음 (INVALID_NICKNAME_FORMAT)"),
-          @ApiResponse(responseCode = "400", description = "자기소개가 비어 있음 (INVALID_BIO_NULL)"),
-          @ApiResponse(responseCode = "400", description = "자기소개가 100자를 초과함 (INVALID_BIO_LENGTH)")
-  })
-  @PatchMapping("/profile")
-  public ResponseEntity<UserProfileResponse> updateProfile(
-          @Parameter(description = "수정할 프로필 정보")
-          @Valid @RequestBody UpdateProfileRequest request,
-          @AuthenticationPrincipal CustomUser user
-  ) {
-    validateNickname(request.getNickname());
-    validateBio(request.getBio());
-    log.info("[프로필 수정] nickname: {}, bio: {}", request.getNickname(), request.getBio());
-    UserProfileResponse response = userProfileService.updateProfile(user.getUserId(), request);
-    return ResponseEntity.ok(response);
-  }
+	@Operation(summary = "프로필 수정",
+			description = "로그인한 사용자의 프로필 정보(닉네임, 자기소개)를 수정합니다.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "프로필 수정 성공"),
+			@ApiResponse(responseCode = "400", description = "잘못된 요청 형식 또는 유효하지 않은 데이터"),
+			@ApiResponse(responseCode = "400", description = "닉네임 형식이 올바르지 않음 (INVALID_NICKNAME_FORMAT)"),
+			@ApiResponse(responseCode = "400", description = "자기소개가 비어 있음 (INVALID_BIO_NULL)"),
+			@ApiResponse(responseCode = "400", description = "자기소개가 100자를 초과함 (INVALID_BIO_LENGTH)")
+	})
+	@PatchMapping("/profile")
+	public ResponseEntity<UserProfileResponse> updateProfile(
+			@Parameter(description = "수정할 프로필 정보")
+			@Valid @RequestBody UpdateProfileRequest request,
+			@AuthenticationPrincipal CustomUser user
+	) {
+		validateNickname(request.getNickname());
+		validateBio(request.getBio());
+		log.info("[프로필 수정] nickname: {}, bio: {}", request.getNickname(), request.getBio());
+		UserProfileResponse response = userProfileService.updateProfile(user.getUserId(), request);
+		return ResponseEntity.ok(response);
+	}
 
-  // 닉네임 유효성 검증
-  private void validateNickname(String nickname) {
-    if (!nickname.matches("^[가-힣a-zA-Z0-9]{2,20}$")) {
-      throw new BusinessException(ErrorCode.INVALID_NICKNAME_FORMAT);
-    }
-  }
+	// 닉네임 유효성 검증
+	private void validateNickname(String nickname) {
+		if (!nickname.matches("^[가-힣a-zA-Z0-9]{2,20}$")) {
+			throw new BusinessException(ErrorCode.INVALID_NICKNAME_FORMAT);
+		}
+	}
 
-  // 자기소개 유효성 검증
-  private void validateBio(String bio) {
-    if (bio == null) {
-      throw new BusinessException(ErrorCode.INVALID_BIO_NULL);
-    }
-    if (bio.length() > 100) {
-      throw new BusinessException(ErrorCode.INVALID_BIO_LENGTH);
-    }
-  }
+	// 자기소개 유효성 검증
+	private void validateBio(String bio) {
+		if (bio == null) {
+			throw new BusinessException(ErrorCode.INVALID_BIO_NULL);
+		}
+		if (bio.length() > 100) {
+			throw new BusinessException(ErrorCode.INVALID_BIO_LENGTH);
+		}
+	}
 }

@@ -12,25 +12,25 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyBookCount {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private Long count;
+	private Long count;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    private Room room;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_id")
+	private Room room;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    public static MyBookCount init(Room room, User user) {
-        MyBookCount myBookCount = new MyBookCount();
-        myBookCount.count = 1L;
-        myBookCount.room = room;
-        myBookCount.user = user;
-        return myBookCount;
-    }
+	public static MyBookCount init(Room room, User user) {
+		MyBookCount myBookCount = new MyBookCount();
+		myBookCount.count = 1L;
+		myBookCount.room = room;
+		myBookCount.user = user;
+		return myBookCount;
+	}
 }

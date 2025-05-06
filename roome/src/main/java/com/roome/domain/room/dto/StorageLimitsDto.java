@@ -9,13 +9,13 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class StorageLimitsDto {
-    private int maxMusic;
-    private int maxBooks;
+	private int maxMusic;
+	private int maxBooks;
 
-    public static StorageLimitsDto from(Room room) {
-        return StorageLimitsDto.builder()
-                .maxMusic(room.getMaxMusic())
-                .maxBooks(room.getMaxBooks())
-                .build();
-    }
+	public static StorageLimitsDto from(Room room) {
+		return StorageLimitsDto.builder()
+				.maxMusic(room.getMaxMusic())
+				.maxBooks(room.getMaxBooks())
+				.build();
+	}
 }

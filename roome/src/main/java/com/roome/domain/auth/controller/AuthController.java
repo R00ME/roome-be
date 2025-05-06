@@ -40,172 +40,170 @@ import java.util.List;
 @Tag(name = "인증/인가 API", description = "인증/인가 관련 API")
 public class AuthController {
 
-  //  private final JwtTokenProvider jwtTokenProvider;
-//  private final TokenService tokenService;
-  private final UserService userService;
-  private final UserRepository userRepository;
-  private final RedisService redisService;
-  private final RoomService roomService;
-  private final UserStatusService userStatusService;
-  private final FurnitureRepository furnitureRepository;
-  private final AuthService authService;
+	private final UserService userService;
+	private final UserRepository userRepository;
+	private final RedisService redisService;
+	private final RoomService roomService;
+	private final UserStatusService userStatusService;
+	private final FurnitureRepository furnitureRepository;
+	private final AuthService authService;
 
-  @Operation(summary = "사용자 정보 조회", description = "Access Token으로 사용자 정보를 조회합니다.", security = @SecurityRequirement(name = "bearerAuth"))
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공"),
-      @ApiResponse(responseCode = "401", description = "인증 실패 또는 유효하지 않은 토큰")})
-  @GetMapping("/user")
-  public ResponseEntity<LoginResponse> getUserInfo(
-      @RequestHeader("Authorization") String authHeader) {
-    try {
-      String accessToken = authHeader.substring(7);
+	@Operation(summary = "사용자 정보 조회", description = "Access Token으로 사용자 정보를 조회합니다.", security = @SecurityRequirement(name = "bearerAuth"))
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공"),
+			@ApiResponse(responseCode = "401", description = "인증 실패 또는 유효하지 않은 토큰")})
+	@GetMapping("/user")
+	public ResponseEntity<LoginResponse> getUserInfo(
+			@RequestHeader("Authorization") String authHeader) {
+		try {
+			String accessToken = authHeader.substring(7);
 //      Long userId = tokenService.getUserIdFromToken(accessToken);
-      // userId 하드 코딩
-      Long userId = 1L;
-      User user = userRepository.findById(userId)
-              .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-      RoomResponseDto roomInfo = roomService.getOrCreateRoomByUserId(userId);
+			// userId 하드 코딩
+			Long userId = 1L;
+			User user = userRepository.findById(userId)
+					.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+			RoomResponseDto roomInfo = roomService.getOrCreateRoomByUserId(userId);
 
-      // 가구 레벨 정보 조회
-      Integer bookshelfLevel = 1;
-      Integer cdRackLevel = 1;
+			// 가구 레벨 정보 조회
+			Integer bookshelfLevel = 1;
+			Integer cdRackLevel = 1;
 
-      // 사용자의 방에 있는 가구 정보 조회
-      List<Furniture> furnitures = furnitureRepository.findByRoomId(roomInfo.getRoomId());
-      for (Furniture furniture : furnitures) {
-        if (furniture.getFurnitureType() == FurnitureType.BOOKSHELF) {
-          bookshelfLevel = furniture.getLevel();
-        } else if (furniture.getFurnitureType() == FurnitureType.CD_RACK) {
-          cdRackLevel = furniture.getLevel();
-        }
-      }
+			// 사용자의 방에 있는 가구 정보 조회
+			List<Furniture> furnitures = furnitureRepository.findByRoomId(roomInfo.getRoomId());
+			for (Furniture furniture : furnitures) {
+				if (furniture.getFurnitureType() == FurnitureType.BOOKSHELF) {
+					bookshelfLevel = furniture.getLevel();
+				} else if (furniture.getFurnitureType() == FurnitureType.CD_RACK) {
+					cdRackLevel = furniture.getLevel();
+				}
+			}
 
-      String refreshToken = redisService.getRefreshToken(userId.toString());
-      log.info("User ID: {}, Refresh Token: {}", userId, refreshToken);
+			String refreshToken = redisService.getRefreshToken(userId.toString());
+			log.info("User ID: {}, Refresh Token: {}", userId, refreshToken);
 
-      LoginResponse loginResponse = LoginResponse.builder()
-              .accessToken(accessToken)
-              .refreshToken(refreshToken)
+			LoginResponse loginResponse = LoginResponse.builder()
+					.accessToken(accessToken)
+					.refreshToken(refreshToken)
 //          .expiresIn(jwtTokenProvider.getAccessTokenExpirationTime() / 1000) // 초 단위로 변환
-              .expiresIn(10000000L)
-          .user(LoginResponse.UserInfo.builder()
-              .userId(user.getId())
-              .nickname(user.getNickname())
-              .email(user.getEmail())
-              .roomId(roomInfo.getRoomId())
-              .profileImage(user.getProfileImage())
-              .bookshelfLevel(bookshelfLevel)
-              .cdRackLevel(cdRackLevel)
-              .build())
-          .build();
+					.expiresIn(10000000L)
+					.user(LoginResponse.UserInfo.builder()
+							.userId(user.getId())
+							.nickname(user.getNickname())
+							.email(user.getEmail())
+							.roomId(roomInfo.getRoomId())
+							.profileImage(user.getProfileImage())
+							.bookshelfLevel(bookshelfLevel)
+							.cdRackLevel(cdRackLevel)
+							.build())
+					.build();
 
-      return ResponseEntity.ok(loginResponse);
-    } catch (Exception e) {
-      log.error("사용자 정보 조회 중 오류: ", e);
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-    }
-  }
+			return ResponseEntity.ok(loginResponse);
+		} catch (Exception e) {
+			log.error("사용자 정보 조회 중 오류: ", e);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+		}
+	}
 
-  // logout
-  @PostMapping("/logout")
-  public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
-    authService.logout(request, response);
-    return ResponseEntity.ok().build();
-  }
+	// logout
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+		authService.logout(request, response);
+		return ResponseEntity.ok().build();
+	}
 
-  @Operation(summary = "회원 탈퇴", description = "현재 로그인된 사용자 계정을 삭제합니다.", security = @SecurityRequirement(name = "bearerAuth"))
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
-      @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-      @ApiResponse(responseCode = "401", description = "인증 실패 또는 유효하지 않은 토큰"),
-      @ApiResponse(responseCode = "500", description = "서버 내부 오류")})
-  @DeleteMapping("/withdraw")
-  public ResponseEntity<MessageResponse> withdraw(
-      @RequestHeader("Authorization") String authHeader) {
+	@Operation(summary = "회원 탈퇴", description = "현재 로그인된 사용자 계정을 삭제합니다.", security = @SecurityRequirement(name = "bearerAuth"))
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
+			@ApiResponse(responseCode = "400", description = "잘못된 요청"),
+			@ApiResponse(responseCode = "401", description = "인증 실패 또는 유효하지 않은 토큰"),
+			@ApiResponse(responseCode = "500", description = "서버 내부 오류")})
+	@DeleteMapping("/withdraw")
+	public ResponseEntity<MessageResponse> withdraw(
+			@RequestHeader("Authorization") String authHeader) {
 
-    // 1. 토큰 파싱 및 검증
-    String accessToken;
-    Long userId = 1L;
+		// 1. 토큰 파싱 및 검증
+		String accessToken;
+		Long userId = 1L;
 
-    try {
-      if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        log.warn("[회원탈퇴] 유효하지 않은 인증 헤더 형식");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(new MessageResponse("유효한 인증 토큰이 필요합니다."));
-      }
+		try {
+			if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+				log.warn("[회원탈퇴] 유효하지 않은 인증 헤더 형식");
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+						.body(new MessageResponse("유효한 인증 토큰이 필요합니다."));
+			}
 
-      accessToken = authHeader.substring(7);
+			accessToken = authHeader.substring(7);
 
-      if (accessToken.isBlank()) {
-        log.warn("[회원탈퇴] 빈 액세스 토큰");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new MessageResponse("유효한 액세스 토큰이 필요합니다."));
-      }
+			if (accessToken.isBlank()) {
+				log.warn("[회원탈퇴] 빈 액세스 토큰");
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+						.body(new MessageResponse("유효한 액세스 토큰이 필요합니다."));
+			}
 
-      // 액세스 토큰 검증
+			// 액세스 토큰 검증
 //      if (!jwtTokenProvider.validateAccessToken(accessToken)) {
 //        log.warn("[회원탈퇴] 유효하지 않은 액세스 토큰: {}", maskToken(accessToken));
 //        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 //            .body(new MessageResponse("유효하지 않은 액세스 토큰입니다."));
 //      }
 
-      // 유저 ID 추출
-      try {
+			// 유저 ID 추출
+			try {
 //        userId = tokenService.getUserIdFromToken(accessToken);
-        log.info("[회원탈퇴] 사용자 ID: {} 탈퇴 시작", userId);
-      } catch (InvalidJwtTokenException | InvalidUserIdFormatException |
-               MissingUserIdFromTokenException e) {
-        log.warn("[회원탈퇴] 토큰에서 사용자 ID 추출 실패: {}", e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new MessageResponse("토큰에서 사용자 정보를 추출할 수 없습니다: " + e.getMessage()));
-      }
+				log.info("[회원탈퇴] 사용자 ID: {} 탈퇴 시작", userId);
+			} catch (InvalidJwtTokenException | InvalidUserIdFormatException |
+					 MissingUserIdFromTokenException e) {
+				log.warn("[회원탈퇴] 토큰에서 사용자 ID 추출 실패: {}", e.getMessage());
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+						.body(new MessageResponse("토큰에서 사용자 정보를 추출할 수 없습니다: " + e.getMessage()));
+			}
 
-    } catch (Exception e) {
-      log.error("[회원탈퇴] 토큰 처리 중 예상치 못한 오류: {}", e.getMessage(), e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(new MessageResponse("인증 처리 중 오류가 발생했습니다."));
-    }
+		} catch (Exception e) {
+			log.error("[회원탈퇴] 토큰 처리 중 예상치 못한 오류: {}", e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new MessageResponse("인증 처리 중 오류가 발생했습니다."));
+		}
 
-    // 2. Redis 작업 - 토큰 관련 처리
-    try {
-      // Refresh Token 삭제
-      redisService.deleteRefreshToken(userId.toString());
-      log.debug("[회원탈퇴] 리프레시 토큰 삭제 성공: userId={}", userId);
+		// 2. Redis 작업 - 토큰 관련 처리
+		try {
+			// Refresh Token 삭제
+			redisService.deleteRefreshToken(userId.toString());
+			log.debug("[회원탈퇴] 리프레시 토큰 삭제 성공: userId={}", userId);
 
-      // Access Token 블랙리스트 추가
+			// Access Token 블랙리스트 추가
 //      long remainingTime = jwtTokenProvider.getTokenTimeToLive(accessToken);
 
-      // remainingTime 하드 코딩
-      long remainingTime = 10000L;
-      if (remainingTime > 0) {
-        redisService.addToBlacklist(accessToken, remainingTime);
-        log.debug("[회원탈퇴] 액세스 토큰 블랙리스트 추가 성공: userId={}, 남은시간={}ms", userId, remainingTime);
-      }
-    } catch (Exception e) {
-      // Redis 작업 실패는 기록하고 계속 진행
-      log.warn("[회원탈퇴] Redis 작업 실패 (계속 진행): userId={}, 사유={}", userId, e.getMessage());
-    }
+			// remainingTime 하드 코딩
+			long remainingTime = 10000L;
+			if (remainingTime > 0) {
+				redisService.addToBlacklist(accessToken, remainingTime);
+				log.debug("[회원탈퇴] 액세스 토큰 블랙리스트 추가 성공: userId={}, 남은시간={}ms", userId, remainingTime);
+			}
+		} catch (Exception e) {
+			// Redis 작업 실패는 기록하고 계속 진행
+			log.warn("[회원탈퇴] Redis 작업 실패 (계속 진행): userId={}, 사유={}", userId, e.getMessage());
+		}
 
-    // 3. DB 작업 (사용자 데이터 삭제) - 트랜잭션 경계를 서비스 메서드 내로 이동
-    try {
-      userService.deleteUser(userId);
-      log.info("[회원탈퇴] DB 작업 성공: userId={}", userId);
-    } catch (BusinessException e) {
-      log.error("[회원탈퇴] 비즈니스 예외: 코드={}, 메시지={}", e.getErrorCode(), e.getMessage());
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(new MessageResponse(e.getMessage()));
-    } catch (Exception e) {
-      log.error("[회원탈퇴] DB 작업 실패: userId={}, 사유={}", userId, e.getMessage(), e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(new MessageResponse("회원 탈퇴 처리 중 오류가 발생했습니다: " + e.getMessage()));
-    }
+		// 3. DB 작업 (사용자 데이터 삭제) - 트랜잭션 경계를 서비스 메서드 내로 이동
+		try {
+			userService.deleteUser(userId);
+			log.info("[회원탈퇴] DB 작업 성공: userId={}", userId);
+		} catch (BusinessException e) {
+			log.error("[회원탈퇴] 비즈니스 예외: 코드={}, 메시지={}", e.getErrorCode(), e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new MessageResponse(e.getMessage()));
+		} catch (Exception e) {
+			log.error("[회원탈퇴] DB 작업 실패: userId={}, 사유={}", userId, e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new MessageResponse("회원 탈퇴 처리 중 오류가 발생했습니다: " + e.getMessage()));
+		}
 
-    return ResponseEntity.ok(new MessageResponse("회원 탈퇴가 완료되었습니다."));
-  }
+		return ResponseEntity.ok(new MessageResponse("회원 탈퇴가 완료되었습니다."));
+	}
 
-  // 토큰 마스킹 (로그 보안)
-  private String maskToken(String token) {
-    if (token == null || token.length() < 10) {
-      return "[too short to mask]";
-    }
-    return token.substring(0, 5) + "..." + token.substring(token.length() - 5);
-  }
+	// 토큰 마스킹 (로그 보안)
+	private String maskToken(String token) {
+		if (token == null || token.length() < 10) {
+			return "[too short to mask]";
+		}
+		return token.substring(0, 5) + "..." + token.substring(token.length() - 5);
+	}
 }

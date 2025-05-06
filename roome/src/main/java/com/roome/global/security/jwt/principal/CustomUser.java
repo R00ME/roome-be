@@ -11,33 +11,42 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CustomUser implements UserDetails {
 
-    private final Long userId;
-    private final String email;
-    private final Collection<? extends GrantedAuthority> authorities;
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+	private final Long userId;
+	private final String email;
+	private final Collection<? extends GrantedAuthority> authorities;
 
-    @Override
-    public String getPassword() {
-        return null;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 
-    @Override
-    public String getUsername() {
-        return email;
-    }
+	@Override
+	public String getPassword() {
+		return null;
+	}
 
-    @Override
-    public boolean isAccountNonExpired() { return UserDetails.super.isAccountNonExpired(); }
+	@Override
+	public String getUsername() {
+		return email;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() { return UserDetails.super.isAccountNonLocked(); }
+	@Override
+	public boolean isAccountNonExpired() {
+		return UserDetails.super.isAccountNonExpired();
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() { return UserDetails.super.isCredentialsNonExpired(); }
+	@Override
+	public boolean isAccountNonLocked() {
+		return UserDetails.super.isAccountNonLocked();
+	}
 
-    @Override
-    public boolean isEnabled() { return UserDetails.super.isEnabled(); }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return UserDetails.super.isCredentialsNonExpired();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return UserDetails.super.isEnabled();
+	}
 }

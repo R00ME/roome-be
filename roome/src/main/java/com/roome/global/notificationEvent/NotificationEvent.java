@@ -6,15 +6,16 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 public abstract class NotificationEvent extends ApplicationEvent {
-    private final Long senderId;
-    private final Long receiverId;
+	private final Long senderId;
+	private final Long receiverId;
 
-    public NotificationEvent(Object source, Long senderId, Long receiverId) {
-        super(source);
-        this.senderId = senderId;
-        this.receiverId = receiverId;
-    }
+	public NotificationEvent(Object source, Long senderId, Long receiverId) {
+		super(source);
+		this.senderId = senderId;
+		this.receiverId = receiverId;
+	}
 
-    public abstract Long getTargetId();
-    public abstract NotificationType getType();
+	public abstract Long getTargetId();
+
+	public abstract NotificationType getType();
 }

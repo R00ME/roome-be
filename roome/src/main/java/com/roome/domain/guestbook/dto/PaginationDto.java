@@ -8,7 +8,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class PaginationDto {
-    private int page;
-    private int size;
-    private int totalPages;
+	private int page;
+	private int size;
+	private int totalPages;
 }

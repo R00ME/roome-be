@@ -13,28 +13,28 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyCd {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "room_id", nullable = false)
-  private Room room;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_id", nullable = false)
+	private Room room;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "cd_id", nullable = false)
-  private Cd cd;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cd_id", nullable = false)
+	private Cd cd;
 
-  public static MyCd create(User user, Room room, Cd cd) {
-    return MyCd.builder()
-        .user(user)
-        .room(room)
-        .cd(cd)
-        .build();
-  }
+	public static MyCd create(User user, Room room, Cd cd) {
+		return MyCd.builder()
+				.user(user)
+				.room(room)
+				.cd(cd)
+				.build();
+	}
 
 }

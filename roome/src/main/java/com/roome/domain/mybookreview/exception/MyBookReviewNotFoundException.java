@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class MyBookReviewNotFoundException extends BusinessException {
 
-    public MyBookReviewNotFoundException() {
-        super(ErrorCode.MY_BOOK_REVIEW_NOT_FOUND);
-    }
+	public MyBookReviewNotFoundException() {
+		super(ErrorCode.MY_BOOK_REVIEW_NOT_FOUND);
+	}
 }

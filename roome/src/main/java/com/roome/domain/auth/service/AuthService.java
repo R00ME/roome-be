@@ -16,31 +16,32 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final JwtTokenProvider jwtTokenProvider;
+	private final JwtTokenProvider jwtTokenProvider;
 
-    @Qualifier("blacklistRedisTemplate")
-    private final RedisTemplate<String, String> blacklistRedisTemplate;
-    public void  logout(HttpServletRequest request, HttpServletResponse response) {
+	@Qualifier("blacklistRedisTemplate")
+	private final RedisTemplate<String, String> blacklistRedisTemplate;
 
-        String accessToken = jwtTokenProvider.resolveToken(request);
-        if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
-            Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+	public void logout(HttpServletRequest request, HttpServletResponse response) {
 
-            // 1. RefreshToken 삭제
-            blacklistRedisTemplate.delete("refreshToken:" + userId);
+		String accessToken = jwtTokenProvider.resolveToken(request);
+		if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
+			Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 
-            // 2. AccessToken 블랙리스트 등록
-            long expiration = jwtTokenProvider.getExpiration(accessToken);
-            blacklistRedisTemplate.opsForValue().set("blacklist:" + accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
-        }
+			// 1. RefreshToken 삭제
+			blacklistRedisTemplate.delete("refreshToken:" + userId);
 
-        ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(0)
-                .build();
-        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
-    }
+			// 2. AccessToken 블랙리스트 등록
+			long expiration = jwtTokenProvider.getExpiration(accessToken);
+			blacklistRedisTemplate.opsForValue().set("blacklist:" + accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+		}
+
+		ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
+				.httpOnly(true)
+				.secure(true)
+				.sameSite("None")
+				.path("/")
+				.maxAge(0)
+				.build();
+		response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+	}
 }

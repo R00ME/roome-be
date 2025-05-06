@@ -4,7 +4,7 @@ import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
 
 public class InvalidRefreshTokenException extends BusinessException {
-    public InvalidRefreshTokenException() {
-        super(ErrorCode.INVALID_REFRESH_TOKEN);
-    }
+	public InvalidRefreshTokenException() {
+		super(ErrorCode.INVALID_REFRESH_TOKEN);
+	}
 }

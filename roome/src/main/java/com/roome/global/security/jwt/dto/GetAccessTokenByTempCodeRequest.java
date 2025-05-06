@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetAccessTokenByTempCodeRequest {
 
-    private String tempCode;
+	private String tempCode;
 }

@@ -17,28 +17,28 @@ import java.io.IOException;
 @Component
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final TempTokenService tempTokenService;
-    private final RefreshTokenService refreshTokenService;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final TempTokenService tempTokenService;
+	private final RefreshTokenService refreshTokenService;
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
-        Long userId = ((CustomOAuth2User) authentication.getPrincipal()).getId();
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+										Authentication authentication) throws IOException {
+		Long userId = ((CustomOAuth2User) authentication.getPrincipal()).getId();
 
-        // Token 코드 발급
-        String accessToken = jwtTokenProvider.createToken(authentication);
-        String refreshToken = jwtTokenProvider.createRefreshToken(userId);
+		// Token 코드 발급
+		String accessToken = jwtTokenProvider.createToken(authentication);
+		String refreshToken = jwtTokenProvider.createRefreshToken(userId);
 
-        // 임시 코드 발급 -> url 로 전달
-        String tempCode = tempTokenService.generateTempCode(accessToken);
+		// 임시 코드 발급 -> url 로 전달
+		String tempCode = tempTokenService.generateTempCode(accessToken);
 
-        // refreshToken redis 에 저장
-        refreshTokenService.saveRefreshToken(userId, refreshToken);
+		// refreshToken redis 에 저장
+		refreshTokenService.saveRefreshToken(userId, refreshToken);
 
-        //redirectUrl 로 tempCode 반환
-        String redirectUrl = "http://localhost:8080/callback?temp_code=" + tempCode;
-        System.out.println("🔁 Redirecting to: " + redirectUrl);
-        response.sendRedirect(redirectUrl);
-    }
+		//redirectUrl 로 tempCode 반환
+		String redirectUrl = "http://localhost:8080/callback?temp_code=" + tempCode;
+		System.out.println("🔁 Redirecting to: " + redirectUrl);
+		response.sendRedirect(redirectUrl);
+	}
 }

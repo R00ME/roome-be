@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class InsufficientPointsException extends BusinessException {
 
-  public InsufficientPointsException() {
-    super(ErrorCode.INSUFFICIENT_POINTS);
-  }
+	public InsufficientPointsException() {
+		super(ErrorCode.INSUFFICIENT_POINTS);
+	}
 }

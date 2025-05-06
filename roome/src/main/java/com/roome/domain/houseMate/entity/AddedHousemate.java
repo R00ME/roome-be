@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "added_housemates")
 public class AddedHousemate extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @JoinColumn(name = "user_id")
-    private Long userId;
+	@JoinColumn(name = "user_id")
+	private Long userId;
 
-    @JoinColumn(name = "added_id")
-    private Long addedId;
+	@JoinColumn(name = "added_id")
+	private Long addedId;
 
-    @Builder
-    public AddedHousemate(Long userId, Long addedId) {
-        this.userId = userId;
-        this.addedId = addedId;
-    }
+	@Builder
+	public AddedHousemate(Long userId, Long addedId) {
+		this.userId = userId;
+		this.addedId = addedId;
+	}
 }

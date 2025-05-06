@@ -6,22 +6,22 @@ import lombok.Getter;
 
 @Getter
 public enum RoomTheme {
-    BASIC("basic"),
-    FOREST("forest"),
-    MARINE("marine");
+	BASIC("basic"),
+	FOREST("forest"),
+	MARINE("marine");
 
-    private final String themeName;
+	private final String themeName;
 
-    RoomTheme(String themeName) {
-        this.themeName = themeName;
-    }
+	RoomTheme(String themeName) {
+		this.themeName = themeName;
+	}
 
-    public static RoomTheme fromString(String theme) {
-        for (RoomTheme t : values()) {
-            if (t.themeName.equalsIgnoreCase(theme)) {
-                return t;
-            }
-        }
-        throw new BusinessException(ErrorCode.INVALID_ROOM_THEME);
-    }
+	public static RoomTheme fromString(String theme) {
+		for (RoomTheme t : values()) {
+			if (t.themeName.equalsIgnoreCase(theme)) {
+				return t;
+			}
+		}
+		throw new BusinessException(ErrorCode.INVALID_ROOM_THEME);
+	}
 }

@@ -12,50 +12,49 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static java.util.function.Function.*;
-import static java.util.stream.Collectors.*;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 
 @Repository
 @RequiredArgsConstructor
 public class MyBookQueryModelRedisRepository {
 
-    private final StringRedisTemplate redisTemplate;
+	private static final String KEY_FORMAT = "mybook::%s";
+	private final StringRedisTemplate redisTemplate;
 
-    private static final String KEY_FORMAT = "mybook::%s";
+	public void create(MyBookQueryModel myBookQueryModel, Duration ttl) {
+		redisTemplate.opsForValue()
+				.set(generateKey(myBookQueryModel), DataSerializer.serialize(myBookQueryModel), ttl);
+	}
 
-    public void create(MyBookQueryModel myBookQueryModel, Duration ttl) {
-        redisTemplate.opsForValue()
-                .set(generateKey(myBookQueryModel), DataSerializer.serialize(myBookQueryModel), ttl);
-    }
+	public Optional<MyBookQueryModel> read(Long myBookId) {
+		return Optional.ofNullable(
+				redisTemplate.opsForValue().get(generateKey(myBookId))
+		).map(json -> DataSerializer.deserialize(json, MyBookQueryModel.class));
+	}
 
-    public Optional<MyBookQueryModel> read(Long myBookId) {
-        return Optional.ofNullable(
-                redisTemplate.opsForValue().get(generateKey(myBookId))
-        ).map(json -> DataSerializer.deserialize(json, MyBookQueryModel.class));
-    }
+	public Map<Long, MyBookQueryModel> readAll(List<Long> myBookIds) {
+		List<String> keys = myBookIds.stream().map(this::generateKey).toList();
+		List<String> jsons = redisTemplate.opsForValue().multiGet(keys);
+		if (jsons == null || jsons.isEmpty()) {
+			return Map.of();
+		}
+		return jsons.stream()
+				.filter(Objects::nonNull)
+				.map(json -> DataSerializer.deserialize(json, MyBookQueryModel.class))
+				.collect(toMap(MyBookQueryModel::getId, identity()));
+	}
 
-    public Map<Long, MyBookQueryModel> readAll(List<Long> myBookIds) {
-        List<String> keys = myBookIds.stream().map(this::generateKey).toList();
-        List<String> jsons = redisTemplate.opsForValue().multiGet(keys);
-        if (jsons == null || jsons.isEmpty()) {
-            return Map.of();
-        }
-        return jsons.stream()
-                .filter(Objects::nonNull)
-                .map(json -> DataSerializer.deserialize(json, MyBookQueryModel.class))
-                .collect(toMap(MyBookQueryModel::getId, identity()));
-    }
+	public void delete(Long myBookId) {
+		redisTemplate.delete(generateKey(myBookId));
+	}
 
-    public void delete(Long myBookId) {
-        redisTemplate.delete(generateKey(myBookId));
-    }
+	private String generateKey(MyBookQueryModel myBookQueryModel) {
+		return generateKey(myBookQueryModel.getId());
+	}
 
-    private String generateKey(MyBookQueryModel myBookQueryModel) {
-        return generateKey(myBookQueryModel.getId());
-    }
-
-    private String generateKey(Long myBookId) {
-        return KEY_FORMAT.formatted(myBookId);
-    }
+	private String generateKey(Long myBookId) {
+		return KEY_FORMAT.formatted(myBookId);
+	}
 }

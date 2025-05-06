@@ -11,19 +11,19 @@ import lombok.*;
 @Table(name = "cd_genre_type")
 public class CdGenreType {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Column(nullable = false, unique = true)
-  private String name;
+	@Column(nullable = false, unique = true)
+	private String name;
 
-  public static CdGenreType create(String name) {
-    return CdGenreType.builder().name(name).build();
-  }
+	public CdGenreType(String name) {
+		this.name = name;
+	}
 
-  public CdGenreType(String name) {
-    this.name = name;
-  }
+	public static CdGenreType create(String name) {
+		return CdGenreType.builder().name(name).build();
+	}
 }
 

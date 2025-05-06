@@ -13,15 +13,15 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Genre {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name;
+	private String name;
 
-    public static Genre create(String name) {
-        Genre genre = new Genre();
-        genre.name = name;
-        return genre;
-    }
+	public static Genre create(String name) {
+		Genre genre = new Genre();
+		genre.name = name;
+		return genre;
+	}
 }

@@ -24,36 +24,36 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends GenericFilterBean { // JwtFilter 요청마다 JWT 검증
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-    private final JwtTokenProvider jwtTokenProvider;
-    @Qualifier("blacklistRedisTemplate")
-    private final RedisTemplate<String, String> blacklistRedisTemplate;
+	private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+	private final JwtTokenProvider jwtTokenProvider;
+	@Qualifier("blacklistRedisTemplate")
+	private final RedisTemplate<String, String> blacklistRedisTemplate;
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException, IOException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        String jwt = jwtTokenProvider.resolveToken(httpServletRequest);
-        String requestURI = httpServletRequest.getRequestURI();
+	@Override
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException, IOException {
+		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+		String jwt = jwtTokenProvider.resolveToken(httpServletRequest);
+		String requestURI = httpServletRequest.getRequestURI();
 
-        if (StringUtils.hasText(jwt)) {
-            // 블랙리스트 확인
-            if (blacklistRedisTemplate.hasKey("blacklist:" + jwt)) {
-                logger.warn("블랙리스트에 등록된 토큰입니다. uri: {}", requestURI);
-                throw new UserNotFoundException(); // 에러 추후 관리 예정
-            }
+		if (StringUtils.hasText(jwt)) {
+			// 블랙리스트 확인
+			if (blacklistRedisTemplate.hasKey("blacklist:" + jwt)) {
+				logger.warn("블랙리스트에 등록된 토큰입니다. uri: {}", requestURI);
+				throw new UserNotFoundException(); // 에러 추후 관리 예정
+			}
 
-            // 유효성 검사 후 인증 객체 설정
-            if (jwtTokenProvider.validateToken(jwt)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
-            } else {
-                logger.debug("JWT 토큰이 유효하지 않습니다, uri: {}", requestURI);
-            }
-        } else {
-            logger.debug("JWT 토큰이 없습니다, uri: {}", requestURI);
-        }
+			// 유효성 검사 후 인증 객체 설정
+			if (jwtTokenProvider.validateToken(jwt)) {
+				Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+				logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+			} else {
+				logger.debug("JWT 토큰이 유효하지 않습니다, uri: {}", requestURI);
+			}
+		} else {
+			logger.debug("JWT 토큰이 없습니다, uri: {}", requestURI);
+		}
 
-        filterChain.doFilter(servletRequest, servletResponse);
-    }
+		filterChain.doFilter(servletRequest, servletResponse);
+	}
 }

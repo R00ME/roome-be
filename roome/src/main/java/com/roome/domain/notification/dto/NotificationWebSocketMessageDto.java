@@ -13,17 +13,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class NotificationWebSocketMessageDto {
-    private Long notificationId;
-    private NotificationType type;
-    private Long receiverId;
-    private LocalDateTime timestamp;
+	private Long notificationId;
+	private NotificationType type;
+	private Long receiverId;
+	private LocalDateTime timestamp;
 
-    public static NotificationWebSocketMessageDto of(Long notificationId, NotificationType type, Long receiverId) {
-        return NotificationWebSocketMessageDto.builder()
-                .notificationId(notificationId)
-                .type(type)
-                .receiverId(receiverId)
-                .timestamp(LocalDateTime.now())
-                .build();
-    }
+	public static NotificationWebSocketMessageDto of(Long notificationId, NotificationType type, Long receiverId) {
+		return NotificationWebSocketMessageDto.builder()
+				.notificationId(notificationId)
+				.type(type)
+				.receiverId(receiverId)
+				.timestamp(LocalDateTime.now())
+				.build();
+	}
 }

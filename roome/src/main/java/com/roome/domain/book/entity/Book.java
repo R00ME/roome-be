@@ -14,29 +14,29 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Book {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String isbn;
+	private String isbn;
 
-    private String title;
+	private String title;
 
-    private String author;
+	private String author;
 
-    private String publisher;
+	private String publisher;
 
-    private LocalDate publishedDate;
+	private LocalDate publishedDate;
 
-    private String imageUrl;
+	private String imageUrl;
 
-    private Long page;
+	private Long page;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookGenre> bookGenres = new ArrayList<>();
+	@Builder.Default
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<BookGenre> bookGenres = new ArrayList<>();
 
-    public void addBookGenre(BookGenre bookGenre) {
-        bookGenres.add(bookGenre);
-    }
+	public void addBookGenre(BookGenre bookGenre) {
+		bookGenres.add(bookGenre);
+	}
 }

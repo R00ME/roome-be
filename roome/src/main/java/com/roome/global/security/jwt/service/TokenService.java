@@ -14,32 +14,32 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TokenService {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenService refreshTokenService;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final RefreshTokenService refreshTokenService;
 
 
-    public void refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = extractRefreshTokenFromCookie(request);
+	public void refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+		String refreshToken = extractRefreshTokenFromCookie(request);
 
-        if(refreshToken == null || !jwtTokenProvider.validateRefreshToken(refreshToken))
-            throw new InvalidRefreshTokenException(); // 추후 에러 관리
+		if (refreshToken == null || !jwtTokenProvider.validateRefreshToken(refreshToken))
+			throw new InvalidRefreshTokenException(); // 추후 에러 관리
 
-        Long userId = jwtTokenProvider.getUserFromRefreshToken(refreshToken);
-        String savedToken = refreshTokenService.getRefreshToken(userId);
-        if(!refreshToken.equals(savedToken)) throw new InvalidRefreshTokenException(); // 추후 에러 관리
+		Long userId = jwtTokenProvider.getUserFromRefreshToken(refreshToken);
+		String savedToken = refreshTokenService.getRefreshToken(userId);
+		if (!refreshToken.equals(savedToken)) throw new InvalidRefreshTokenException(); // 추후 에러 관리
 
-        Authentication authentication = jwtTokenProvider.getAuthenticationFromUserId(userId);
-        String newAccessToken = jwtTokenProvider.createToken(authentication);
+		Authentication authentication = jwtTokenProvider.getAuthenticationFromUserId(userId);
+		String newAccessToken = jwtTokenProvider.createToken(authentication);
 
-        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken);
-    }
+		response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken);
+	}
 
-    private String extractRefreshTokenFromCookie(HttpServletRequest request) {
-        if (request.getCookies() == null) return null;
+	private String extractRefreshTokenFromCookie(HttpServletRequest request) {
+		if (request.getCookies() == null) return null;
 
-        for (Cookie cookie : request.getCookies()) {
-            if ("refreshToken".equals(cookie.getName())) return cookie.getValue();
-        }
-        return null;
-    }
+		for (Cookie cookie : request.getCookies()) {
+			if ("refreshToken".equals(cookie.getName())) return cookie.getValue();
+		}
+		return null;
+	}
 }

@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 
 public interface MyCdQueryRepository {
 
-  Page<MyCd> searchMyCd(Long userId, String keyword, Long cursor, int size);
+	Page<MyCd> searchMyCd(Long userId, String keyword, Long cursor, int size);
 }

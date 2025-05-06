@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class EventFullException extends BusinessException {
 
-  public EventFullException() {
-    super(ErrorCode.EVENT_FULL);
-  }
+	public EventFullException() {
+		super(ErrorCode.EVENT_FULL);
+	}
 }

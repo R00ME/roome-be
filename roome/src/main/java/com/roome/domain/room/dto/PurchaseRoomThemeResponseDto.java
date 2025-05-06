@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PurchaseRoomThemeResponseDto {
-    private Long roomId;
-    private String purchasedTheme;
-    private int remainingPoints; // 구매 후 남은 포인트
+	private Long roomId;
+	private String purchasedTheme;
+	private int remainingPoints; // 구매 후 남은 포인트
 }

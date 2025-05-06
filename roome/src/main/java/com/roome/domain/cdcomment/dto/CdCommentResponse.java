@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CdCommentResponse {
 
-  private Long id;
-  private Long myCdId;
-  private Long userId;
-  private String nickname;
-  private int timestamp;
-  private String content;
-  private LocalDateTime createdAt;
+	private Long id;
+	private Long myCdId;
+	private Long userId;
+	private String nickname;
+	private int timestamp;
+	private String content;
+	private LocalDateTime createdAt;
 }

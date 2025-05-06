@@ -12,62 +12,63 @@ import java.util.Optional;
 
 public interface MyBookRepository extends JpaRepository<MyBook, Long> {
 
-    default MyBook getById(Long id) {
-        return findById(id)
-                .orElseThrow(MyBookNotFoundException::new);
-    }
+	default MyBook getById(Long id) {
+		return findById(id)
+				.orElseThrow(MyBookNotFoundException::new);
+	}
 
-    @Query("select distinct mb from MyBook mb join fetch mb.book b join fetch b.bookGenres bg join fetch bg.genre where mb.id = :id")
-    Optional<MyBook> findFetchById(Long id);
+	@Query("select distinct mb from MyBook mb join fetch mb.book b join fetch b.bookGenres bg join fetch bg.genre where mb.id = :id")
+	Optional<MyBook> findFetchById(Long id);
 
-    Optional<MyBook> findByRoomIdAndBookId(Long roomId, Long bookId);
+	Optional<MyBook> findByRoomIdAndBookId(Long roomId, Long bookId);
 
-    @Query(
-            value = """
-                    select mb
-                    from MyBook mb
-                    join fetch mb.book
-                    where mb.user.id = :roomOwnerId
-                    and (:keyword is null or
-                    lower(mb.book.title) like concat('%', :keyword, '%')
-                    or lower(mb.book.author) like concat('%', :keyword, '%')
-                    or lower(mb.book.publisher) like concat('%', :keyword, '%'))
-                    order by mb.id desc limit :limit
-                    """
-    )
-    List<MyBook> findAll(
-            @Param("roomOwnerId") Long roomOwnerId,
-            @Param("limit") Long limit,
-            @Param("keyword") String keyword
-    );
+	@Query(
+			value = """
+					select mb
+					from MyBook mb
+					join fetch mb.book
+					where mb.user.id = :roomOwnerId
+					and (:keyword is null or
+					lower(mb.book.title) like concat('%', :keyword, '%')
+					or lower(mb.book.author) like concat('%', :keyword, '%')
+					or lower(mb.book.publisher) like concat('%', :keyword, '%'))
+					order by mb.id desc limit :limit
+					"""
+	)
+	List<MyBook> findAll(
+			@Param("roomOwnerId") Long roomOwnerId,
+			@Param("limit") Long limit,
+			@Param("keyword") String keyword
+	);
 
-    @Query(
-            value = """
-                    select mb
-                    from MyBook mb
-                    join fetch mb.book
-                    where mb.user.id = :roomOwnerId and mb.id < :lastMyBookId
-                    and (:keyword is null or
-                    lower(mb.book.title) like concat('%', :keyword, '%')
-                    or lower(mb.book.author) like concat('%', :keyword, '%')
-                    or lower(mb.book.publisher) like concat('%', :keyword, '%'))
-                    order by mb.id desc limit :limit
-                    """
-    )
-    List<MyBook> findAll(
-            @Param("roomOwnerId") Long roomOwnerId,
-            @Param("limit") Long limit,
-            @Param("lastMyBookId") Long lastMyBookId,
-            @Param("keyword") String keyword
-    );
+	@Query(
+			value = """
+					select mb
+					from MyBook mb
+					join fetch mb.book
+					where mb.user.id = :roomOwnerId and mb.id < :lastMyBookId
+					and (:keyword is null or
+					lower(mb.book.title) like concat('%', :keyword, '%')
+					or lower(mb.book.author) like concat('%', :keyword, '%')
+					or lower(mb.book.publisher) like concat('%', :keyword, '%'))
+					order by mb.id desc limit :limit
+					"""
+	)
+	List<MyBook> findAll(
+			@Param("roomOwnerId") Long roomOwnerId,
+			@Param("limit") Long limit,
+			@Param("lastMyBookId") Long lastMyBookId,
+			@Param("keyword") String keyword
+	);
 
-    @Modifying
-    @Query(
-            value = """
-                    delete from MyBook mb where mb.id in(:ids)
-                    """
-    )
-    void deleteAllIn(List<String> ids);
-    // 특정 사용자가 가지고 있는 모든 도서 목록 조회
-    List<MyBook> findAllByUserId(Long userId);
+	@Modifying
+	@Query(
+			value = """
+					delete from MyBook mb where mb.id in(:ids)
+					"""
+	)
+	void deleteAllIn(List<String> ids);
+
+	// 특정 사용자가 가지고 있는 모든 도서 목록 조회
+	List<MyBook> findAllByUserId(Long userId);
 }

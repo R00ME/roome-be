@@ -6,25 +6,25 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record MyBookCreateRequest(
-        String isbn,
-        String title,
-        String author,
-        String publisher,
-        LocalDate publishedDate,
-        String imageUrl,
-        List<String> genreNames,
-        Long page
+		String isbn,
+		String title,
+		String author,
+		String publisher,
+		LocalDate publishedDate,
+		String imageUrl,
+		List<String> genreNames,
+		Long page
 ) {
 
-    public Book toBookEntity() {
-        return Book.builder()
-                .isbn(isbn())
-                .title(title())
-                .author(author())
-                .publisher(publisher())
-                .publishedDate(publishedDate())
-                .imageUrl(imageUrl())
-                .page(page())
-                .build();
-    }
+	public Book toBookEntity() {
+		return Book.builder()
+				.isbn(isbn())
+				.title(title())
+				.author(author())
+				.publisher(publisher())
+				.publishedDate(publishedDate())
+				.imageUrl(imageUrl())
+				.page(page())
+				.build();
+	}
 }

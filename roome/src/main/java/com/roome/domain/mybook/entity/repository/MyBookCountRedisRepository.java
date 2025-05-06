@@ -10,20 +10,19 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class MyBookCountRedisRepository {
 
-    private final StringRedisTemplate redisTemplate;
+	private static final String KEY_FORMAT = "mybook::user::%s::count";
+	private final StringRedisTemplate redisTemplate;
 
-    private static final String KEY_FORMAT = "mybook::user::%s::count";
+	public void createOrUpdate(Long roomOwner, Long count, Duration ttl) {
+		redisTemplate.opsForValue().set(generateKey(roomOwner), String.valueOf(count), ttl);
+	}
 
-    public void createOrUpdate(Long roomOwner, Long count, Duration ttl) {
-        redisTemplate.opsForValue().set(generateKey(roomOwner), String.valueOf(count), ttl);
-    }
+	public Long read(Long roomOwnerId) {
+		String result = redisTemplate.opsForValue().get(generateKey(roomOwnerId));
+		return result == null ? null : Long.parseLong(result);
+	}
 
-    public Long read(Long roomOwnerId) {
-        String result = redisTemplate.opsForValue().get(generateKey(roomOwnerId));
-        return result == null ? null : Long.parseLong(result);
-    }
-
-    private String generateKey(Long roomOwnerId) {
-        return KEY_FORMAT.formatted(roomOwnerId);
-    }
+	private String generateKey(Long roomOwnerId) {
+		return KEY_FORMAT.formatted(roomOwnerId);
+	}
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class MissingAuthorizationCodeException extends BusinessException {
-    public MissingAuthorizationCodeException() {
-        super(ErrorCode.MISSING_AUTHORIZATION_CODE);
-    }
+	public MissingAuthorizationCodeException() {
+		super(ErrorCode.MISSING_AUTHORIZATION_CODE);
+	}
 }
