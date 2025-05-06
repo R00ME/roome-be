@@ -15,13 +15,6 @@ import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
 import com.roome.global.jwt.exception.UserNotFoundException;
 import com.roome.global.service.RedisLockService;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.util.LinkedHashMap;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,6 +24,14 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -100,8 +101,9 @@ public class PointService {
     redisTemplate.delete(BALANCE_CACHE_PREFIX + user.getId()); // 캐시 삭제 추가
   }
 
+  // Transactional: protected -> public 변경
   @Transactional
-  protected void usePointsInternal(User user, PointReason reason) {
+  public void usePointsInternal(User user, PointReason reason) {
     int amount = POINT_USAGE_MAP.getOrDefault(reason, 0);
     log.info("usePoints - User: {}, Reason: {}, Amount: {}", user.getId(), reason, amount);
 

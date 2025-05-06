@@ -14,8 +14,6 @@ import com.roome.domain.mybookreview.entity.repository.MyBookReviewRepository;
 import com.roome.domain.mycd.entity.MyCd;
 import com.roome.domain.mycd.repository.MyCdCountRepository;
 import com.roome.domain.mycd.repository.MyCdRepository;
-import com.roome.domain.payment.repository.PaymentLogRepository;
-import com.roome.domain.payment.repository.PaymentRepository;
 import com.roome.domain.point.repository.PointHistoryRepository;
 import com.roome.domain.point.repository.PointRepository;
 import com.roome.domain.recommendedUser.repository.RecommendedUserRepository;
@@ -29,12 +27,13 @@ import com.roome.domain.userGenrePreference.repository.UserGenrePreferenceReposi
 import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
 import com.roome.global.service.RedisService;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,8 +53,6 @@ public class UserService {
   private final MyBookCountRepository myBookCountRepository;
   private final PointRepository pointRepository;
   private final PointHistoryRepository pointHistoryRepository;
-  private final PaymentRepository paymentRepository;
-  private final PaymentLogRepository paymentLogRepository;
   private final UserGenrePreferenceRepository userGenrePreferenceRepository;
   private final RecommendedUserRepository recommendedUserRepository;
   private final RoomThemeUnlockRepository roomThemeUnlockRepository;
@@ -88,9 +85,6 @@ public class UserService {
 
     // 7. 포인트 및 포인트 내역 삭제
     deletePointData(userId);
-
-    // 8. 결제 기록 삭제
-    deletePaymentData(userId);
 
     // 9. Room 관련 데이터 삭제
     Optional<Room> roomOpt = roomRepository.findByUserId(userId);
@@ -230,15 +224,5 @@ public class UserService {
       pointRepository.delete(point);
       log.debug("[회원탈퇴] 포인트 삭제 완료: pointId={}", point.getId());
     });
-  }
-
-  private void deletePaymentData(Long userId) {
-    // 결제 로그 삭제
-    paymentLogRepository.deleteByUserId(userId);
-    log.debug("[회원탈퇴] 결제 로그 삭제 완료: userId={}", userId);
-
-    // 결제 정보 삭제
-    paymentRepository.deleteByUserId(userId);
-    log.debug("[회원탈퇴] 결제 정보 삭제 완료: userId={}", userId);
   }
 }
