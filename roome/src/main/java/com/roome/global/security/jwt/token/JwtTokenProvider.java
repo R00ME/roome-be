@@ -44,7 +44,7 @@ public class JwtTokenProvider implements InitializingBean {
 			@Value("${JWT_REFRESH_SECRET}") String refreshSecret) {
 		this.userRepository = userRepository;
 		this.secret = secret;
-		this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+		this.tokenValidityInMilliseconds = tokenValidityInSeconds;
 		this.refreshTokenValidity = refreshTokenValidity;
 		this.refreshSecret = refreshSecret;
 	}
