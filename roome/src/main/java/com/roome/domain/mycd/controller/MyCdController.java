@@ -41,7 +41,7 @@ public class MyCdController {
 			@RequestBody @Valid MyCdCreateRequest myCdRequest
 	) {
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(myCdService.addCdToMyList(user.getUserId(), myCdRequest));
+				.body(myCdService.addCdToMyList(user.getId(), myCdRequest));
 	}
 
 	@Operation(summary = "CD 목록 조회", description = "특정 사용자의 CD 보관함을 조회합니다. 키워드 검색을 지원합니다.")
@@ -62,9 +62,9 @@ public class MyCdController {
 			@Parameter(description = "CD 제목 또는 가수명으로 검색")
 			@RequestParam(value = "keyword", required = false) String keyword
 	) {
-		Long finalUserId = (targetUserId != null) ? targetUserId : user.getUserId(); // targetUserId가 있으면 해당 유저 조회
+		Long finalUserId = (targetUserId != null) ? targetUserId : user.getId(); // targetUserId가 있으면 해당 유저 조회
 
-		log.info("요청한 사용자 ID: {}, 조회 대상 사용자 ID: {}", user.getUserId(), finalUserId);
+		log.info("요청한 사용자 ID: {}, 조회 대상 사용자 ID: {}", user.getId(), finalUserId);
 
 		return ResponseEntity.ok(myCdService.getMyCdList(finalUserId, keyword, cursor, size));
 	}
@@ -99,7 +99,7 @@ public class MyCdController {
 			@Parameter(description = "삭제할 CD ID 목록", example = "[1, 2, 3]")
 			@RequestParam List<Long> myCdIds
 	) {
-		myCdService.delete(user.getUserId(), myCdIds);
+		myCdService.delete(user.getId(), myCdIds);
 		return ResponseEntity.noContent().build();
 	}
 }

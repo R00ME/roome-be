@@ -1,4 +1,4 @@
-package com.roome.global.security.oauth.user.userinfo;
+package com.roome.global.security.oauth.userinfo;
 
 import com.roome.domain.user.entity.Provider;
 import lombok.RequiredArgsConstructor;
@@ -22,25 +22,23 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
 
 	@Override
 	public String getEmail() {
-//        return (String) attributes.get("account_email");
-		return String.valueOf(attributes.get("account_email"));
+		return (String) ((Map<String, Object>) attributes.get("kakao_account")).get("email");
 	}
 
 	@Override
 	public String getName() {
-//        return (String) attributes.get("profile_nickname");
-		return String.valueOf(attributes.get("profile_nickname"));
+		return (String) ((Map<String, Object>) ((Map<String, Object>) attributes.get("kakao_account"))
+				.get("profile")).get("nickname");
 	}
 
 	@Override
 	public String getNickname() {
-//        return (String) attributes.get("profile_nickname");
-		return String.valueOf(attributes.get("profile_nickname"));
+		return getName();
 	}
 
 	@Override
 	public String getProfileImage() {
-//        return (String) attributes.get("profile_image");
-		return String.valueOf(attributes.get("profile_image"));
+		Map<String, Object> profile = (Map<String, Object>) ((Map<String, Object>) attributes.get("kakao_account")).get("profile");
+		return profile != null ? (String) profile.get("profile_image_url") : null;
 	}
 }

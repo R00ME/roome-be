@@ -1,7 +1,7 @@
 package com.roome.global.security.jwt.controller;
 
 import com.roome.global.security.jwt.dto.GetAccessTokenByTempCodeRequest;
-import com.roome.global.security.jwt.service.TempTokenService;
+import com.roome.global.security.jwt.service.TokenExchangeService;
 import com.roome.global.security.jwt.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,16 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth/token")
 public class TokenController {
 
-	private final TempTokenService tempTokenService;
+	private final TokenExchangeService tempTokenService;
 	private final TokenService tokenService;
 
+	// 임시 코드로 토큰 교환 api
 	@PostMapping("/temp")
 	public ResponseEntity<Void> exchangeTempCode(@RequestBody GetAccessTokenByTempCodeRequest getAccessTokenByTempCodeRequest,
 												 HttpServletResponse response) {
 		tempTokenService.exchangeTempCode(getAccessTokenByTempCodeRequest, response);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.noContent().build();
 	}
 
+	// refreshToken 으로 accessToken 재발급 api
 	@PostMapping("/refresh")
 	public ResponseEntity<Void> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
 		tokenService.refreshAccessToken(request, response);

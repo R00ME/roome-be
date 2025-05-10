@@ -3,7 +3,7 @@ package com.roome.global.security.jwt.token;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
 import com.roome.global.security.jwt.principal.CustomUser;
-import com.roome.global.security.oauth.user.model.CustomOAuth2User;
+import com.roome.global.security.jwt.principal.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -68,8 +68,10 @@ public class JwtTokenProvider implements InitializingBean {
 		long now = (new Date()).getTime();
 		Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
-		CustomOAuth2User customUser = (CustomOAuth2User) authentication.getPrincipal();
-		Long userId = customUser.getId();
+		UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
+//		CustomOAuth2User customUser = (CustomOAuth2User) authentication.getPrincipal();
+		Long userId = principal.getId();
 
 		return Jwts.builder()
 				.setSubject(String.valueOf(userId))

@@ -1,10 +1,9 @@
 package com.roome.global.config;
 
 import com.roome.global.security.jwt.token.JwtTokenProvider;
-import com.roome.global.security.oauth.client.KakaoAuthorizationCodeTokenResponseClient;
-import com.roome.global.security.oauth.user.handler.OAuth2AuthenticationFailureHandler;
-import com.roome.global.security.oauth.user.handler.OAuth2AuthenticationSuccessHandler;
-import com.roome.global.security.oauth.user.service.CustomOAuth2UserService;
+import com.roome.global.security.oauth.handler.OAuth2AuthenticationFailureHandler;
+import com.roome.global.security.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import com.roome.global.security.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -17,9 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -73,37 +69,20 @@ public class SecurityConfig {
 										.requestMatchers("/callback", "/oauth2/**").permitAll()
 										.requestMatchers("/login").permitAll()
 										.requestMatchers("/auth/token/temp").permitAll()
+										.requestMatchers("/auth/token/refresh").permitAll()
 										.requestMatchers(PathRequest.toH2Console()).permitAll()
 //                                .requestMatchers("/favicon.ico").permitAll()
 										.anyRequest().authenticated()
 				)
 				.oauth2Login(oauth2 -> oauth2
-								.tokenEndpoint(token -> token
-										.accessTokenResponseClient(customAccessTokenResponseClient())
-								)
-//                        .loginPage("/login")
-								.userInfoEndpoint(userInfo -> userInfo
-										.userService(customOAuth2UserService))
-								.successHandler(oAuth2AuthenticationSuccessHandler)
-								.failureHandler(oAuth2AuthenticationFailureHandler)
+						.userInfoEndpoint(userInfo -> userInfo
+								.userService(customOAuth2UserService))
+						.successHandler(oAuth2AuthenticationSuccessHandler)
+						.failureHandler(oAuth2AuthenticationFailureHandler)
 				);
 
 		jwtSecurityConfig.configure(httpSecurity); // JwtSecurityConfig를 적용
 
 		return httpSecurity.build();
-	}
-
-	@Bean
-	public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> customAccessTokenResponseClient() {
-		return request -> {
-			String registrationId = request.getClientRegistration().getRegistrationId();
-
-			if ("kakao".equals(registrationId)) {
-				return new KakaoAuthorizationCodeTokenResponseClient().getTokenResponse(request);
-			}
-
-			// 기본 클라이언트: 구글, 네이버는 그대로
-			return new DefaultAuthorizationCodeTokenResponseClient().getTokenResponse(request);
-		};
 	}
 }

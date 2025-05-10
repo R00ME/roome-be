@@ -1,12 +1,13 @@
-package com.roome.global.security.oauth.user.service;
+package com.roome.global.security.oauth.service;
 
 import com.roome.domain.user.entity.Status;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.entity.UserRole;
 import com.roome.domain.user.repository.UserRepository;
-import com.roome.global.security.oauth.user.factory.OAuth2UserInfoFactory;
-import com.roome.global.security.oauth.user.model.CustomOAuth2User;
-import com.roome.global.security.oauth.user.userinfo.OAuth2UserInfo;
+import com.roome.global.security.oauth.factory.OAuth2UserInfoFactory;
+import com.roome.global.security.oauth.model.CustomOAuth2User;
+import com.roome.global.security.oauth.userinfo.OAuth2UserInfo;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
@@ -41,7 +43,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		return new CustomOAuth2User(user, attributes, user.getId());
 	}
 
-	private User saveOrUpdate(OAuth2UserInfo userInfo) {
+	public User saveOrUpdate(OAuth2UserInfo userInfo) {
 		return userRepository.findByEmail(userInfo.getEmail())
 				.orElseGet(() -> userRepository.save(User.builder()
 						.email(userInfo.getEmail())

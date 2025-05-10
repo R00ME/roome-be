@@ -12,6 +12,7 @@
 <br/>
 
 ## ☁️ 프로젝트 소개 - 나를 찾는 디지털 힐링 공간 RoomE
+
 - RoomE(루미)는 바쁜 일상 속에서 자신을 잃어가는 현대인들에게 자아 탐색과 심리적 안정을 위한 공간을 제공합니다.
 - 사용자는 개성과 취향을 자유롭게 표현하며, 같은 관심사를 가진 사람들과 자연스럽게 연결될 수 있는 디지털 힐링 & 커뮤니티 플랫폼입니다.
 - 책장, CD 플레이어, 테마 등을 활용해 나만의 감성과 취향이 담긴 공간을 자유롭게 꾸밀 수 있습니다.
@@ -21,26 +22,28 @@
 <br />
 
 # 시연 영상
+
 [![ROOME 프로젝트 시연 영상](https://img.youtube.com/vi/cfqYWgZEVag/0.jpg)](https://www.youtube.com/watch?v=cfqYWgZEVag)
 
 # Skill
+
 ![image](https://github.com/user-attachments/assets/8d553034-ce41-41cd-9a6e-d4bf7e2b234a)
 
-
 # Infra Structure
+
 ![image](https://github.com/user-attachments/assets/95428da4-4439-4321-9005-d27fd6ac42bc)
 
 # ERD
+
 [![Roome_ERD](https://github.com/user-attachments/assets/bab32380-31ca-4330-a891-c2e8126ce524)](https://github.com/user-attachments/assets/c762c51e-d1b1-4941-941c-9d51b33b4c16)
 
-
 # Member
-| [유방현](https://github.com/chesthyeon) | [정현구](https://github.com/jhyngu) | [이하연](https://github.com/exxyeon) | [김소연](https://github.com/soyeon1806) | [장대영](https://github.com/JangDaeyeong) |
-| --- | --- | --- | --- | --- |
-| <a href="https://github.com/chesthyeon"><img src="https://avatars.githubusercontent.com/u/75735367?v=4" width="100px;" alt=""/></a> | <a href="https://github.com/jhyngu"><img src="https://avatars.githubusercontent.com/u/154207428?v=4" width="100px;" alt=""/></a> | <a href="https://github.com/exxyeon"><img src="https://avatars.githubusercontent.com/u/170444258?v=4" width="100px;" alt=""/></a> | <a href="https://github.com/soyeon1806"><img src="https://avatars.githubusercontent.com/u/102381857?v=4" width="100px;" alt=""/></a> | <a href="https://github.com/JangDaeyeong"><img src="https://avatars.githubusercontent.com/JangDaeyeong" width="100px;" alt=""/></a> |
-| PO | Team-Lead  | Clerk | Clerk | Clerk |
-| AWS, CI/CD, <br> 알림/친구, 프로필 | 음악, 포인트, 이벤트 | 로그인, 랭킹 | 메인/룸, <br> 방명록, 결제 | 도서, 출석체크 |
 
+| [유방현](https://github.com/chesthyeon)                                                                                                | [정현구](https://github.com/jhyngu)                                                                                                 | [이하연](https://github.com/exxyeon)                                                                                                 | [김소연](https://github.com/soyeon1806)                                                                                                 | [장대영](https://github.com/JangDaeyeong)                                                                                              |
+|-------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| <a href="https://github.com/chesthyeon"><img src="https://avatars.githubusercontent.com/u/75735367?v=4" width="100px;" alt=""/></a> | <a href="https://github.com/jhyngu"><img src="https://avatars.githubusercontent.com/u/154207428?v=4" width="100px;" alt=""/></a> | <a href="https://github.com/exxyeon"><img src="https://avatars.githubusercontent.com/u/170444258?v=4" width="100px;" alt=""/></a> | <a href="https://github.com/soyeon1806"><img src="https://avatars.githubusercontent.com/u/102381857?v=4" width="100px;" alt=""/></a> | <a href="https://github.com/JangDaeyeong"><img src="https://avatars.githubusercontent.com/JangDaeyeong" width="100px;" alt=""/></a> |
+| PO                                                                                                                                  | Team-Lead                                                                                                                        | Clerk                                                                                                                             | Clerk                                                                                                                                | Clerk                                                                                                                               |
+| AWS, CI/CD, <br> 알림/친구, 프로필                                                                                                         | 음악, 포인트, 이벤트                                                                                                                     | 로그인, 랭킹                                                                                                                           | 메인/룸, <br> 방명록, 결제                                                                                                                   | 도서, 출석체크                                                                                                                            |
 
 ***
 
@@ -53,9 +56,10 @@
 ***
 
 ***
+
 # 수상내역
+
 ![우수상](https://github.com/user-attachments/assets/fcbb42e1-49fc-4b4b-8982-57d1babf1c61)
 ![인기상](https://github.com/user-attachments/assets/f6863c36-5df2-40b9-b503-293e06ffbd83)
-
 
 ### [👉 자세한 프로젝트 문서는 Wiki에서 확인하세요](https://github.com/prgrms-web-devcourse-final-project/WEB2_3_CUBE_BE/wiki)

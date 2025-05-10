@@ -39,7 +39,7 @@ public class PointController {
 			@RequestParam(required = false) @Parameter(description = "마지막 조회한 포인트 내역 ID") Long itemCursor,
 			@RequestParam @Parameter(description = "한 번에 조회할 포인트 내역 개수") int size) {
 
-		PointHistoryResponse response = pointService.getPointHistory(user.getUserId(), dayCursor, itemCursor,
+		PointHistoryResponse response = pointService.getPointHistory(user.getId(), dayCursor, itemCursor,
 				size);
 		return ResponseEntity.ok(response);
 	}

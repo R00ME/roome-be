@@ -36,7 +36,7 @@ public class CdTemplateController {
 			@Parameter(description = "템플릿을 추가할 CD의 ID", example = "1") @PathVariable Long myCdId,
 			@RequestBody CdTemplateRequest request
 	) {
-		return ResponseEntity.ok(cdTemplateService.createTemplate(myCdId, user.getUserId(), request));
+		return ResponseEntity.ok(cdTemplateService.createTemplate(myCdId, user.getId(), request));
 	}
 
 	@Operation(summary = "CD 템플릿 조회", description = "특정 CD의 템플릿을 조회합니다.")
@@ -67,7 +67,7 @@ public class CdTemplateController {
 			@Parameter(description = "수정할 CD의 ID", example = "1") @PathVariable Long myCdId,
 			@RequestBody CdTemplateRequest request
 	) {
-		return ResponseEntity.ok(cdTemplateService.updateTemplate(myCdId, user.getUserId(), request));
+		return ResponseEntity.ok(cdTemplateService.updateTemplate(myCdId, user.getId(), request));
 	}
 
 	@Operation(summary = "CD 템플릿 삭제", description = "사용자가 특정 CD의 템플릿을 삭제합니다.")
@@ -82,7 +82,7 @@ public class CdTemplateController {
 			@AuthenticationPrincipal CustomUser user,
 			@Parameter(description = "삭제할 CD의 ID", example = "1") @PathVariable Long myCdId
 	) {
-		cdTemplateService.deleteTemplate(myCdId, user.getUserId());
+		cdTemplateService.deleteTemplate(myCdId, user.getId());
 		return ResponseEntity.noContent().build();
 	}
 }

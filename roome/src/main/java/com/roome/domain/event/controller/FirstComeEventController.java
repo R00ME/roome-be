@@ -33,7 +33,7 @@ public class FirstComeEventController {
 	public ResponseEntity<Void> joinEvent(
 			@AuthenticationPrincipal CustomUser user,
 			@PathVariable Long eventId) {
-		firstComeEventService.joinEvent(user.getUserId(), eventId);
+		firstComeEventService.joinEvent(user.getId(), eventId);
 		return ResponseEntity.noContent().build(); // 204 No Content 반환
 	}
 

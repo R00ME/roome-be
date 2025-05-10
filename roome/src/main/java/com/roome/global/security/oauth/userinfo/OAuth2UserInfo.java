@@ -1,4 +1,4 @@
-package com.roome.global.security.oauth.user.userinfo;
+package com.roome.global.security.oauth.userinfo;
 
 import com.roome.domain.user.entity.Provider;
 

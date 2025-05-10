@@ -40,7 +40,7 @@ public class CdCommentController {
 			@Parameter(description = "댓글을 추가할 CD의 ID", example = "1") @PathVariable Long myCdId,
 			@RequestBody @Valid CdCommentCreateRequest request
 	) {
-		CdCommentResponse response = cdCommentService.addComment(user.getUserId(), myCdId, request);
+		CdCommentResponse response = cdCommentService.addComment(user.getId(), myCdId, request);
 		return ResponseEntity.ok(response);
 	}
 
@@ -93,7 +93,7 @@ public class CdCommentController {
 			@AuthenticationPrincipal CustomUser user,
 			@Parameter(description = "삭제할 댓글 ID", example = "1") @PathVariable Long commentId
 	) {
-		cdCommentService.deleteComment(user.getUserId(), commentId);
+		cdCommentService.deleteComment(user.getId(), commentId);
 		return ResponseEntity.noContent().build();
 	}
 }

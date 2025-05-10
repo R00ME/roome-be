@@ -1,9 +1,7 @@
-package com.roome.global.security.oauth.user.handler;
+package com.roome.global.security.oauth.handler;
 
-import com.roome.global.security.jwt.service.RefreshTokenService;
-import com.roome.global.security.jwt.service.TempTokenService;
+import com.roome.global.security.jwt.service.TokenExchangeService;
 import com.roome.global.security.jwt.token.JwtTokenProvider;
-import com.roome.global.security.oauth.user.model.CustomOAuth2User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,27 +16,19 @@ import java.io.IOException;
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 	private final JwtTokenProvider jwtTokenProvider;
-	private final TempTokenService tempTokenService;
-	private final RefreshTokenService refreshTokenService;
+	private final TokenExchangeService tempTokenService;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 										Authentication authentication) throws IOException {
-		Long userId = ((CustomOAuth2User) authentication.getPrincipal()).getId();
-
 		// Token 코드 발급
 		String accessToken = jwtTokenProvider.createToken(authentication);
-		String refreshToken = jwtTokenProvider.createRefreshToken(userId);
 
 		// 임시 코드 발급 -> url 로 전달
 		String tempCode = tempTokenService.generateTempCode(accessToken);
 
-		// refreshToken redis 에 저장
-		refreshTokenService.saveRefreshToken(userId, refreshToken);
-
-		//redirectUrl 로 tempCode 반환
+		// redirectUrl 로 tempCode 반환 -> test controller 로 간이 api 생성
 		String redirectUrl = "http://localhost:8080/callback?temp_code=" + tempCode;
-		System.out.println("🔁 Redirecting to: " + redirectUrl);
 		response.sendRedirect(redirectUrl);
 	}
 }

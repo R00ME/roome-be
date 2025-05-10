@@ -54,7 +54,7 @@ public class HousemateController {
 		// 리미티 검증
 		validateLimit(limit);
 
-		HousemateListResponse response = housemateService.getFollowerList(user.getUserId(), cursor, limit,
+		HousemateListResponse response = housemateService.getFollowerList(user.getId(), cursor, limit,
 				nickname);
 		return ResponseEntity.ok(response);
 	}
@@ -82,7 +82,7 @@ public class HousemateController {
 		// 리미티 검증
 		validateLimit(limit);
 
-		HousemateListResponse response = housemateService.getFollowingList(user.getUserId(), cursor, limit,
+		HousemateListResponse response = housemateService.getFollowingList(user.getId(), cursor, limit,
 				nickname);
 		return ResponseEntity.ok(response);
 	}
@@ -102,12 +102,12 @@ public class HousemateController {
 			@Parameter(description = "추가할 사용자의 ID", example = "1")
 			@PathVariable Long targetId) {
 
-		validateFollowTarget(user.getUserId(), targetId);
+		validateFollowTarget(user.getId(), targetId);
 
-		AddedHousemate addedHousemate = housemateService.addHousemate(user.getUserId(), targetId);
+		AddedHousemate addedHousemate = housemateService.addHousemate(user.getId(), targetId);
 
 		// 팔로워 증가 활동 기록
-		housemateService.recordFollowActivity(user.getUserId(), targetId);
+		housemateService.recordFollowActivity(user.getId(), targetId);
 
 		HousemateResponseDto responseDto = housemateService.toResponseDto(addedHousemate);
 
@@ -129,9 +129,9 @@ public class HousemateController {
 			@Parameter(description = "삭제할 사용자의 ID", example = "1")
 			@PathVariable Long targetId) {
 
-		validateFollowTarget(user.getUserId(), targetId);
+		validateFollowTarget(user.getId(), targetId);
 
-		housemateService.removeHousemate(user.getUserId(), targetId);
+		housemateService.removeHousemate(user.getId(), targetId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 

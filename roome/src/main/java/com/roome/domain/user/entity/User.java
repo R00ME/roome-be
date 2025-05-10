@@ -39,7 +39,9 @@ public class User extends BaseTimeEntity {
 	@Column(length = 500)
 	private String profileImage;
 
+	@Column
 	private UserRole userRole;
+	
 	// 자기 소개
 	@Column(length = 101)
 	private String bio;

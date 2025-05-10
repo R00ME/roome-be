@@ -41,7 +41,7 @@ public class UserProfileController {
 			@PathVariable Long userId,
 			@AuthenticationPrincipal CustomUser user
 	) {
-		UserProfileResponse response = userProfileService.getUserProfile(userId, user.getUserId());
+		UserProfileResponse response = userProfileService.getUserProfile(userId, user.getId());
 		return ResponseEntity.ok(response);
 	}
 
@@ -63,7 +63,7 @@ public class UserProfileController {
 		validateNickname(request.getNickname());
 		validateBio(request.getBio());
 		log.info("[프로필 수정] nickname: {}, bio: {}", request.getNickname(), request.getBio());
-		UserProfileResponse response = userProfileService.updateProfile(user.getUserId(), request);
+		UserProfileResponse response = userProfileService.updateProfile(user.getId(), request);
 		return ResponseEntity.ok(response);
 	}
 

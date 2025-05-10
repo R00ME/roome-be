@@ -36,7 +36,7 @@ public class MyBookReviewController {
 			@PathVariable("myBookId") Long myBookId,
 			@RequestBody MyBookReviewCreateRequest request
 	) {
-		MyBookReviewResponse response = myBookReviewService.create(user.getUserId(), myBookId, request);
+		MyBookReviewResponse response = myBookReviewService.create(user.getId(), myBookId, request);
 		return ResponseEntity.ok(response);
 	}
 
@@ -69,7 +69,7 @@ public class MyBookReviewController {
 			@PathVariable("myBookId") Long myBookId,
 			@RequestBody MyBookReviewUpdateRequest request
 	) {
-		MyBookReviewResponse response = myBookReviewService.update(user.getUserId(), myBookId, request);
+		MyBookReviewResponse response = myBookReviewService.update(user.getId(), myBookId, request);
 		return ResponseEntity.ok(response);
 	}
 
@@ -86,7 +86,7 @@ public class MyBookReviewController {
 			@Parameter(description = "삭제할 책 ID")
 			@PathVariable("myBookId") Long myBookId
 	) {
-		myBookReviewService.delete(user.getUserId(), myBookId);
+		myBookReviewService.delete(user.getId(), myBookId);
 		return ResponseEntity.ok().build();
 	}
 }

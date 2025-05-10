@@ -1,6 +1,7 @@
-package com.roome.global.security.oauth.user.model;
+package com.roome.global.security.oauth.model;
 
 import com.roome.domain.user.entity.User;
+import com.roome.global.security.jwt.principal.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class CustomOAuth2User implements OAuth2User {
+public class CustomOAuth2User implements OAuth2User, UserPrincipal {
 
 	private final User user;
 	private final Map<String, Object> attributes;
@@ -32,11 +33,12 @@ public class CustomOAuth2User implements OAuth2User {
 		return user.getEmail();
 	}
 
-	public User getUser() {
-		return user;
-	}
-
+	@Override
 	public Long getId() {
 		return id;
+	}
+
+	public User getUser() {
+		return user;
 	}
 }

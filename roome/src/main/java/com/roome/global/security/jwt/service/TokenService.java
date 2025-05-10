@@ -22,11 +22,12 @@ public class TokenService {
 		String refreshToken = extractRefreshTokenFromCookie(request);
 
 		if (refreshToken == null || !jwtTokenProvider.validateRefreshToken(refreshToken))
-			throw new InvalidRefreshTokenException(); // 추후 에러 관리
+			throw new InvalidRefreshTokenException();
 
 		Long userId = jwtTokenProvider.getUserFromRefreshToken(refreshToken);
+		System.out.println("userId: " + userId);
 		String savedToken = refreshTokenService.getRefreshToken(userId);
-		if (!refreshToken.equals(savedToken)) throw new InvalidRefreshTokenException(); // 추후 에러 관리
+		if (!refreshToken.equals(savedToken)) throw new InvalidRefreshTokenException();
 
 		Authentication authentication = jwtTokenProvider.getAuthenticationFromUserId(userId);
 		String newAccessToken = jwtTokenProvider.createToken(authentication);

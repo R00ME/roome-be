@@ -68,7 +68,7 @@ public class NotificationController {
 				.cursor(cursor)
 				.limit(limit)
 				.read(read)
-				.receiverId(user.getUserId())
+				.receiverId(user.getId())
 				.build();
 
 		return ResponseEntity.ok(notificationService.getNotifications(condition));
@@ -94,7 +94,7 @@ public class NotificationController {
 			throw new ControllerException(ErrorCode.INVALID_CURSOR_VALUE);
 		}
 		NotificationReadResponse response = notificationService.readNotification(notificationId,
-				user.getUserId());
+				user.getId());
 		return ResponseEntity.ok(response);
 	}
 }

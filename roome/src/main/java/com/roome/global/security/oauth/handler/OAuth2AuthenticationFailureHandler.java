@@ -1,4 +1,4 @@
-package com.roome.global.security.oauth.user.handler;
+package com.roome.global.security.oauth.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

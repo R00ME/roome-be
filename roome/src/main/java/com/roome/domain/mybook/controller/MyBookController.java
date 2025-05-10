@@ -34,7 +34,7 @@ public class MyBookController {
 			@RequestParam("userId") Long userId,
 			@RequestBody MyBookCreateRequest request
 	) {
-		MyBookResponse response = myBookService.create(user.getUserId(), userId, request);
+		MyBookResponse response = myBookService.create(user.getId(), userId, request);
 		return ResponseEntity.ok(response);
 	}
 
@@ -82,7 +82,7 @@ public class MyBookController {
 			@RequestParam("userId") Long userId,
 			@RequestParam String myBookIds
 	) {
-		myBookService.delete(user.getUserId(), userId, myBookIds);
+		myBookService.delete(user.getId(), userId, myBookIds);
 		return ResponseEntity.ok().build();
 	}
 }

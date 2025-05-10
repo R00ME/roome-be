@@ -70,7 +70,7 @@ public class RoomController {
 			@PathVariable Long roomId,
 			@RequestBody UpdateRoomThemeRequestDto requestDto
 	) {
-		String updatedTheme = roomService.updateRoomTheme(user.getUserId(), roomId, requestDto.getThemeName());
+		String updatedTheme = roomService.updateRoomTheme(user.getId(), roomId, requestDto.getThemeName());
 
 		UpdateRoomThemeResponseDto responseDto = new UpdateRoomThemeResponseDto(roomId, updatedTheme);
 		return ResponseEntity.ok(responseDto);
@@ -87,7 +87,7 @@ public class RoomController {
 			@PathVariable Long roomId,
 			@RequestBody UpdateRoomThemeRequestDto requestDto
 	) {
-		int remainingPoints = roomService.purchaseRoomTheme(user.getUserId(), roomId, requestDto.getThemeName());
+		int remainingPoints = roomService.purchaseRoomTheme(user.getId(), roomId, requestDto.getThemeName());
 
 		PurchaseRoomThemeResponseDto responseDto = new PurchaseRoomThemeResponseDto(
 				roomId,
@@ -111,7 +111,7 @@ public class RoomController {
 			@RequestBody FurnitureRequestDto furnitureRequestDto
 	) {
 		String furnitureType = furnitureRequestDto.getFurnitureType();
-		FurnitureResponseDto updatedFurniture = roomService.toggleFurnitureVisibility(user.getUserId(), roomId,
+		FurnitureResponseDto updatedFurniture = roomService.toggleFurnitureVisibility(user.getId(), roomId,
 				furnitureType);
 
 		ToggleFurnitureResponseDto responseDto = new ToggleFurnitureResponseDto(roomId,
@@ -125,7 +125,7 @@ public class RoomController {
 	public ResponseEntity<List<String>> getUnlockedThemes(
 			@AuthenticationPrincipal CustomUser user
 	) {
-		List<String> unlockedThemes = roomService.getUnlockedThemes(user.getUserId());
+		List<String> unlockedThemes = roomService.getUnlockedThemes(user.getId());
 		return ResponseEntity.ok(unlockedThemes);
 	}
 

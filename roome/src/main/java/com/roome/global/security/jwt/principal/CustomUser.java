@@ -9,9 +9,9 @@ import java.util.Collection;
 
 @Getter
 @RequiredArgsConstructor
-public class CustomUser implements UserDetails {
+public class CustomUser implements UserDetails, UserPrincipal {
 
-	private final Long userId;
+	private final Long id;
 	private final String email;
 	private final Collection<? extends GrantedAuthority> authorities;
 
@@ -48,5 +48,10 @@ public class CustomUser implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return UserDetails.super.isEnabled();
+	}
+
+	@Override
+	public Long getId() {
+		return id;
 	}
 }

@@ -55,7 +55,7 @@ public class GuestbookController {
 			@Valid @RequestBody GuestbookRequestDto requestDto
 	) {
 		return ResponseEntity.ok(
-				guestbookService.addGuestbookWithPagination(roomId, user.getUserId(), requestDto, size));
+				guestbookService.addGuestbookWithPagination(roomId, user.getId(), requestDto, size));
 	}
 
 	@Operation(summary = "방명록 삭제", description = "주어진 방명록 ID에 해당하는 방명록 삭제")
@@ -71,7 +71,7 @@ public class GuestbookController {
 			@Parameter(description = "삭제할 방명록 ID") @PathVariable Long guestbookId,
 			@AuthenticationPrincipal CustomUser user
 	) {
-		guestbookService.deleteGuestbook(guestbookId, user.getUserId());
+		guestbookService.deleteGuestbook(guestbookId, user.getId());
 		return ResponseEntity.ok().build();
 	}
 }

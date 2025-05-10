@@ -1,6 +1,6 @@
 package com.roome.global.security.filter;
 
-import com.roome.global.security.jwt.exception.UserNotFoundException;
+import com.roome.global.security.jwt.exception.InvalidJwtTokenException;
 import com.roome.global.security.jwt.token.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean { // JwtFilter �
 			// 블랙리스트 확인
 			if (blacklistRedisTemplate.hasKey("blacklist:" + jwt)) {
 				logger.warn("블랙리스트에 등록된 토큰입니다. uri: {}", requestURI);
-				throw new UserNotFoundException(); // 에러 추후 관리 예정
+				throw new InvalidJwtTokenException();
 			}
 
 			// 유효성 검사 후 인증 객체 설정

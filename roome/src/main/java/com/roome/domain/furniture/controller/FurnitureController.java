@@ -25,7 +25,7 @@ public class FurnitureController {
 			@AuthenticationPrincipal CustomUser user,
 			@PathVariable("roomId") Long roomId
 	) {
-		furnitureService.upgradeBookshelf(user.getUserId(), roomId);
+		furnitureService.upgradeBookshelf(user.getId(), roomId);
 		return ResponseEntity.ok().build();
 	}
 
@@ -35,7 +35,7 @@ public class FurnitureController {
 			@AuthenticationPrincipal CustomUser user,
 			@PathVariable("roomId") Long roomId
 	) {
-		furnitureService.upgradeCdRack(user.getUserId(), roomId);
+		furnitureService.upgradeCdRack(user.getId(), roomId);
 		return ResponseEntity.noContent().build();
 	}
 

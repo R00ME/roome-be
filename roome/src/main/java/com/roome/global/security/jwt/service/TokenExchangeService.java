@@ -15,12 +15,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class TempTokenService {
+public class TokenExchangeService {
 
 	private static final long EXPIRATION_MINUTES = 3;
 	@Qualifier("tempCodeRedisTemplate")
 	private final RedisTemplate<String, String> tempCodeRedisTemplate;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final RefreshTokenService refreshTokenService;
 
 	public String generateTempCode(String accessToken) {
 		String tempCode = UUID.randomUUID().toString();
@@ -31,8 +32,13 @@ public class TempTokenService {
 	public void exchangeTempCode(GetAccessTokenByTempCodeRequest getAccessTokenByTempCodeRequest,
 								 HttpServletResponse response) {
 		String accessToken = getAccessTokenByTempCode(getAccessTokenByTempCodeRequest.getTempCode());
+		Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 
+		// refreshToken 생성
 		String refreshToken = jwtTokenProvider.createRefreshToken(jwtTokenProvider.getUserIdFromAccessToken(accessToken));
+
+		// refreshToken redis 에 저장
+		refreshTokenService.saveRefreshToken(userId, refreshToken);
 
 		// accessToken: Header로 전달
 		response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
