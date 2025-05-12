@@ -67,6 +67,8 @@ public class SecurityConfig {
 										.requestMatchers("/api/authenticate").permitAll()
 										.requestMatchers("/api/users/signup").permitAll()
 										.requestMatchers("/callback", "/oauth2/**").permitAll()
+						       				.requestMatchers("/api/login/oauth2/code/**").permitAll()
+										.requestMatchers("/api/oauth2/**").permitAll()
 										.requestMatchers("/login").permitAll()
 										.requestMatchers("/auth/token/temp").permitAll()
 										.requestMatchers("/auth/token/refresh").permitAll()
