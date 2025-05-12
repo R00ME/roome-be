@@ -35,7 +35,7 @@ public class TokenExchangeService {
 		Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 
 		// refreshToken 생성
-		String refreshToken = jwtTokenProvider.createRefreshToken(jwtTokenProvider.getUserIdFromAccessToken(accessToken));
+		String refreshToken = jwtTokenProvider.createRefreshToken(userId);
 
 		// refreshToken redis 에 저장
 		refreshTokenService.saveRefreshToken(userId, refreshToken);

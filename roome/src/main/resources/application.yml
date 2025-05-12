@@ -57,7 +57,6 @@ spring:
             user-name-attribute: id
   jwt:
     secret: ${JWT_SECRET}
-    token-validity-in-seconds: ${JWT_VALIDITY}
   data:
     redis:
       port: ${REDIS_PORT}

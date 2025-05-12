@@ -1,5 +1,6 @@
 package com.roome.domain.auth.service;
 
+import com.roome.global.security.jwt.service.RefreshTokenService;
 import com.roome.global.security.jwt.token.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,15 +21,15 @@ public class AuthService {
 
 	@Qualifier("blacklistRedisTemplate")
 	private final RedisTemplate<String, String> blacklistRedisTemplate;
+	private final RefreshTokenService refreshTokenService;
 
-	public void logout(HttpServletRequest request, HttpServletResponse response) {
+	public void logout(Long userId, HttpServletRequest request, HttpServletResponse response) {
 
 		String accessToken = jwtTokenProvider.resolveToken(request);
 		if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
-			Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 
 			// 1. RefreshToken 삭제
-			blacklistRedisTemplate.delete("refreshToken:" + userId);
+			refreshTokenService.deleteRefreshToken(userId);
 
 			// 2. AccessToken 블랙리스트 등록
 			long expiration = jwtTokenProvider.getExpiration(accessToken);

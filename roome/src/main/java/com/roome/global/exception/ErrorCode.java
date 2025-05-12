@@ -17,8 +17,8 @@ public enum ErrorCode {
 	MISSING_AUTHORIZATION_CODE(HttpStatus.BAD_REQUEST, "로그인 요청에는 authorization code가 필요합니다."),
 
 	// JWT 관련 예외
-	INVALID_JWT_TOKEN(HttpStatus.BAD_REQUEST, "JWT 토큰이 유효하지 않거나, 입력값이 비어 있습니다."),
-	INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "Refresh 토큰이 유효하지 않거나, 입력값이 비어 있습니다."),
+	INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT 토큰이 유효하지 않거나, 입력값이 비어 있습니다."),
+	INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Refresh 토큰이 유효하지 않거나, 입력값이 비어 있습니다."),
 	MISSING_AUTHORITY(HttpStatus.UNAUTHORIZED, "해당 토큰에는 권한 정보가 포함되어 있지 않습니다."),
 	INVALID_USER_ID_FORMAT(HttpStatus.UNAUTHORIZED, "토큰의 userId 형식이 올바르지 않습니다."),
 	MISSING_USER_ID_FROM_TOKEN(HttpStatus.UNAUTHORIZED, "토큰에서 userId를 찾을 수 없습니다."),

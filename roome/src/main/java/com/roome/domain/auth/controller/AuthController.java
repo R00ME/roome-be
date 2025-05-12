@@ -16,6 +16,8 @@ import com.roome.global.exception.BusinessException;
 import com.roome.global.security.jwt.exception.InvalidJwtTokenException;
 import com.roome.global.security.jwt.exception.InvalidUserIdFormatException;
 import com.roome.global.security.jwt.exception.MissingUserIdFromTokenException;
+import com.roome.global.security.jwt.principal.CustomUser;
+import com.roome.global.security.jwt.token.JwtTokenProvider;
 import com.roome.global.service.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +50,7 @@ public class AuthController {
 	private final UserStatusService userStatusService;
 	private final FurnitureRepository furnitureRepository;
 	private final AuthService authService;
+	private final JwtTokenProvider jwtTokenProvider;
 
 	@Operation(summary = "사용자 정보 조회", description = "Access Token으로 사용자 정보를 조회합니다.", security = @SecurityRequirement(name = "bearerAuth"))
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공"),
@@ -56,9 +60,7 @@ public class AuthController {
 			@RequestHeader("Authorization") String authHeader) {
 		try {
 			String accessToken = authHeader.substring(7);
-//      Long userId = tokenService.getUserIdFromToken(accessToken);
-			// userId 하드 코딩
-			Long userId = 1L;
+			Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 			User user = userRepository.findById(userId)
 					.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 			RoomResponseDto roomInfo = roomService.getOrCreateRoomByUserId(userId);
@@ -83,8 +85,7 @@ public class AuthController {
 			LoginResponse loginResponse = LoginResponse.builder()
 					.accessToken(accessToken)
 					.refreshToken(refreshToken)
-//          .expiresIn(jwtTokenProvider.getAccessTokenExpirationTime() / 1000) // 초 단위로 변환
-					.expiresIn(10000000L)
+					.expiresIn(jwtTokenProvider.getExpiration(accessToken) / 1000) // 초 단위로 변환
 					.user(LoginResponse.UserInfo.builder()
 							.userId(user.getId())
 							.nickname(user.getNickname())
@@ -105,8 +106,10 @@ public class AuthController {
 
 	// logout
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
-		authService.logout(request, response);
+	public ResponseEntity<Void> logout(@AuthenticationPrincipal CustomUser user,
+									   HttpServletRequest request, HttpServletResponse response
+	) {
+		authService.logout(user.getId(), request, response);
 		return ResponseEntity.ok().build();
 	}
 

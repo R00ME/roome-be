@@ -25,7 +25,6 @@ public class TokenService {
 			throw new InvalidRefreshTokenException();
 
 		Long userId = jwtTokenProvider.getUserFromRefreshToken(refreshToken);
-		System.out.println("userId: " + userId);
 		String savedToken = refreshTokenService.getRefreshToken(userId);
 		if (!refreshToken.equals(savedToken)) throw new InvalidRefreshTokenException();
 
@@ -38,6 +37,7 @@ public class TokenService {
 	private String extractRefreshTokenFromCookie(HttpServletRequest request) {
 		if (request.getCookies() == null) return null;
 
+		// 쿠키 검증 후 "refreshToken" 이름에 담겨 있는 refreshToken 반환
 		for (Cookie cookie : request.getCookies()) {
 			if ("refreshToken".equals(cookie.getName())) return cookie.getValue();
 		}

@@ -32,20 +32,14 @@ public class JwtTokenProvider implements InitializingBean {
 	private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 	private final String secret;
 	private final String refreshSecret;
-	private final long tokenValidityInMilliseconds;
-	private final long refreshTokenValidity;
 	private Key key;
 	private Key refreshKey;
 
 	public JwtTokenProvider(
 			UserRepository userRepository, @Value("${JWT_SECRET}") String secret,
-			@Value("${JWT_VALIDITY}") long tokenValidityInSeconds,
-			@Value("${JWT_REFRESH_VALIDITY}") long refreshTokenValidity,
 			@Value("${JWT_REFRESH_SECRET}") String refreshSecret) {
 		this.userRepository = userRepository;
 		this.secret = secret;
-		this.tokenValidityInMilliseconds = tokenValidityInSeconds;
-		this.refreshTokenValidity = refreshTokenValidity;
 		this.refreshSecret = refreshSecret;
 	}
 
@@ -66,11 +60,10 @@ public class JwtTokenProvider implements InitializingBean {
 
 		// 토큰의 expire 시간을 설정
 		long now = (new Date()).getTime();
-		Date validity = new Date(now + this.tokenValidityInMilliseconds);
+		long tokenValidityInMilliseconds = 1800000L;
+		Date validity = new Date(now + tokenValidityInMilliseconds);
 
 		UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-
-//		CustomOAuth2User customUser = (CustomOAuth2User) authentication.getPrincipal();
 		Long userId = principal.getId();
 
 		return Jwts.builder()
@@ -83,6 +76,7 @@ public class JwtTokenProvider implements InitializingBean {
 
 	public String createRefreshToken(Long userId) {
 		Date now = new Date();
+		long refreshTokenValidity = 2592000000L;
 		Date expiry = new Date(now.getTime() + refreshTokenValidity); // 2주 등
 
 		return Jwts.builder()

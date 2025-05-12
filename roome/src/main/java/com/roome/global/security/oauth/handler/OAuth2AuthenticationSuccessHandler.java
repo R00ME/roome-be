@@ -16,7 +16,7 @@ import java.io.IOException;
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 	private final JwtTokenProvider jwtTokenProvider;
-	private final TokenExchangeService tempTokenService;
+	private final TokenExchangeService tokenExchangeService;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -25,7 +25,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 		String accessToken = jwtTokenProvider.createToken(authentication);
 
 		// 임시 코드 발급 -> url 로 전달
-		String tempCode = tempTokenService.generateTempCode(accessToken);
+		String tempCode = tokenExchangeService.generateTempCode(accessToken);
 
 		// redirectUrl 로 tempCode 반환 -> test controller 로 간이 api 생성
 		String redirectUrl = "http://localhost:8080/callback?temp_code=" + tempCode;
