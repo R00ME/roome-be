@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserStatusDto {
-    private Long userId;
-    private Status status;
+	private Long userId;
+	private Status status;
 }

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NotificationRepositoryCustom {
-    List<Notification> findNotifications(NotificationSearchCondition condition);
-    void deleteOldNotifications(LocalDateTime threshold);
+	List<Notification> findNotifications(NotificationSearchCondition condition);
+
+	void deleteOldNotifications(LocalDateTime threshold);
 }

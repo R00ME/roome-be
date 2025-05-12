@@ -7,7 +7,7 @@ services:
     ports:
       - "8088:8080"
     env_file:
-      - .env
+      - roome/.env
     depends_on:
       - redis
     networks:

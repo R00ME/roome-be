@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class MyBookDuplicateException extends BusinessException {
 
-    public MyBookDuplicateException() {
-        super(ErrorCode.MY_BOOK_DUPLICATE);
-    }
+	public MyBookDuplicateException() {
+		super(ErrorCode.MY_BOOK_DUPLICATE);
+	}
 }

@@ -4,7 +4,7 @@ import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
 
 public class DisabledAccountException extends BusinessException {
-    public DisabledAccountException() {
-        super(ErrorCode.DISABLED_ACCOUNT);
-    }
+	public DisabledAccountException() {
+		super(ErrorCode.DISABLED_ACCOUNT);
+	}
 }

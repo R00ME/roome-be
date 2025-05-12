@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CdTemplateRequest {
 
-  @NotBlank
-  private String comment1;
+	@NotBlank
+	private String comment1;
 
-  @NotBlank
-  private String comment2;
+	@NotBlank
+	private String comment2;
 
-  @NotBlank
-  private String comment3;
+	@NotBlank
+	private String comment3;
 
-  @NotBlank
-  private String comment4;
+	@NotBlank
+	private String comment4;
 }

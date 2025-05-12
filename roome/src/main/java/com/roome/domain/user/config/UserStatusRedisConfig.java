@@ -16,27 +16,27 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class UserStatusRedisConfig {
 
-    private final UserStatusRedisService userStatusRedisService;
+	private final UserStatusRedisService userStatusRedisService;
 
-    @Bean
-    public MessageListenerAdapter statusUpdateMessageListener() {
-        MessageListenerAdapter adapter = new MessageListenerAdapter(userStatusRedisService, "handleStatusUpdateMessage");
-        adapter.setSerializer(new StringRedisSerializer());
-        return adapter;
-    }
+	@Bean
+	public MessageListenerAdapter statusUpdateMessageListener() {
+		MessageListenerAdapter adapter = new MessageListenerAdapter(userStatusRedisService, "handleStatusUpdateMessage");
+		adapter.setSerializer(new StringRedisSerializer());
+		return adapter;
+	}
 
-    @Bean
-    public RedisMessageListenerContainer statusUpdateListenerContainer(
-            RedisConnectionFactory connectionFactory,
-            MessageListenerAdapter statusUpdateMessageListener) {
+	@Bean
+	public RedisMessageListenerContainer statusUpdateListenerContainer(
+			RedisConnectionFactory connectionFactory,
+			MessageListenerAdapter statusUpdateMessageListener) {
 
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setConnectionFactory(connectionFactory);
 
-        // status-update:* 패턴의 모든 채널 구독
-        container.addMessageListener(statusUpdateMessageListener, new PatternTopic("status-update:*"));
+		// status-update:* 패턴의 모든 채널 구독
+		container.addMessageListener(statusUpdateMessageListener, new PatternTopic("status-update:*"));
 
-        log.info("Redis 상태 업데이트 구독 설정 완료: status-update:* 채널");
-        return container;
-    }
+		log.info("Redis 상태 업데이트 구독 설정 완료: status-update:* 채널");
+		return container;
+	}
 }

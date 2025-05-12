@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class MyCdNotFoundException extends BusinessException {
 
-  public MyCdNotFoundException() {
-    super(ErrorCode.MYCD_NOT_FOUND);
-  }
+	public MyCdNotFoundException() {
+		super(ErrorCode.MYCD_NOT_FOUND);
+	}
 }

@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class MyBookReviewAuthorizationException extends BusinessException {
 
-    public MyBookReviewAuthorizationException() {
-        super(ErrorCode.MY_BOOK_REVIEW_ACCESS_DENIED);
-    }
+	public MyBookReviewAuthorizationException() {
+		super(ErrorCode.MY_BOOK_REVIEW_ACCESS_DENIED);
+	}
 }

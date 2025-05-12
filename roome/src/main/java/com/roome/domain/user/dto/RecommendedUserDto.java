@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class RecommendedUserDto {
-    Long userId;
-    String nickname;
-    String profileImage;
+	Long userId;
+	String nickname;
+	String profileImage;
 }

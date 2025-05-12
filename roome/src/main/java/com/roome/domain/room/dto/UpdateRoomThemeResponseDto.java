@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UpdateRoomThemeResponseDto {
-    private Long roomId;
-    private String updatedTheme;
+	private Long roomId;
+	private String updatedTheme;
 }

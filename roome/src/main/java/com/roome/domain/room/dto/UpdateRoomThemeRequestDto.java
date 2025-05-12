@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateRoomThemeRequestDto {
-    private String themeName;
+	private String themeName;
 }

@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class CreateNotificationRequest {
-    private Long senderId;
-    private Long targetId;
-    private Long receiverId;
-    private NotificationType type;
+	private Long senderId;
+	private Long targetId;
+	private Long receiverId;
+	private NotificationType type;
 }

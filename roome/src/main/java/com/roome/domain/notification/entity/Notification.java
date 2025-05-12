@@ -15,37 +15,37 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Notification extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private NotificationType type;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private NotificationType type;
 
-    @Column(name = "sender_id", nullable = false)
-    private Long senderId;
+	@Column(name = "sender_id", nullable = false)
+	private Long senderId;
 
-    @Column(name = "target_id", nullable = false)
-    private Long targetId;
+	@Column(name = "target_id", nullable = false)
+	private Long targetId;
 
-    @Column(name = "receiver_id", nullable = false)
-    private Long receiverId;
+	@Column(name = "receiver_id", nullable = false)
+	private Long receiverId;
 
-    @Column(name = "is_read", nullable = false)
-    private boolean isRead;
+	@Column(name = "is_read", nullable = false)
+	private boolean isRead;
 
-    @Builder
-    public Notification(NotificationType type,
-                        Long senderId, Long targetId, Long receiverId) {
-        this.type = type;
-        this.senderId = senderId;
-        this.targetId = targetId;
-        this.receiverId = receiverId;
-        this.isRead = false;
-    }
+	@Builder
+	public Notification(NotificationType type,
+						Long senderId, Long targetId, Long receiverId) {
+		this.type = type;
+		this.senderId = senderId;
+		this.targetId = targetId;
+		this.receiverId = receiverId;
+		this.isRead = false;
+	}
 
-    public void markAsRead() {
-        this.isRead = true;
-    }
+	public void markAsRead() {
+		this.isRead = true;
+	}
 }

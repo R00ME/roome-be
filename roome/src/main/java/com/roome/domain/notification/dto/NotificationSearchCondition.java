@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @Builder
 public class NotificationSearchCondition {
-    private Long receiverId;
-    private Long cursor;
-    private Boolean read;
-    private Integer limit;
+	private Long receiverId;
+	private Long cursor;
+	private Boolean read;
+	private Integer limit;
 }

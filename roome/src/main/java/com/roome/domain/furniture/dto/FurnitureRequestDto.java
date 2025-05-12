@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FurnitureRequestDto {
-    private String furnitureType;
+	private String furnitureType;
 }

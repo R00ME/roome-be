@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class AlreadyParticipatedException extends BusinessException {
 
-  public AlreadyParticipatedException() {
-    super(ErrorCode.ALREADY_PARTICIPATED);
-  }
+	public AlreadyParticipatedException() {
+		super(ErrorCode.ALREADY_PARTICIPATED);
+	}
 }

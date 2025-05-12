@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CdGenreTypeRepository extends JpaRepository<CdGenreType, Long> {
-  Optional<CdGenreType> findByName(String name);
+	Optional<CdGenreType> findByName(String name);
 
-  @Query("SELECT cg.genreType.name FROM CdGenre cg WHERE cg.cd.id IN " +
-          "(SELECT mc.cd.id FROM MyCd mc WHERE mc.room.id = :roomId)")
-  List<String> findGenresByRoomId(Long roomId);
+	@Query("SELECT cg.genreType.name FROM CdGenre cg WHERE cg.cd.id IN " +
+			"(SELECT mc.cd.id FROM MyCd mc WHERE mc.room.id = :roomId)")
+	List<String> findGenresByRoomId(Long roomId);
 }

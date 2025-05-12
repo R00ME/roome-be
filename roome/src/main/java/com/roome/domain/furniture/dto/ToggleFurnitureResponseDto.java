@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ToggleFurnitureResponseDto {
-    private Long roomId;
-    private FurnitureResponseDto furniture;
+	private Long roomId;
+	private FurnitureResponseDto furniture;
 }

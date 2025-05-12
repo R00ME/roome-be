@@ -12,30 +12,30 @@ import lombok.*;
 @Builder
 public class MyCdCount {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  private Long count;
+	private Long count;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "room_id", nullable = false)
-  private Room room;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_id", nullable = false)
+	private Room room;
 
-  public static MyCdCount init(Room room) {
-    return MyCdCount.builder()
-        .count(0L)
-        .room(room)
-        .build();
-  }
+	public static MyCdCount init(Room room) {
+		return MyCdCount.builder()
+				.count(0L)
+				.room(room)
+				.build();
+	}
 
-  public void increment() {
-    this.count++;
-  }
+	public void increment() {
+		this.count++;
+	}
 
-  public void decrement() {
-    if (this.count > 0) {
-      this.count--;
-    }
-  }
+	public void decrement() {
+		if (this.count > 0) {
+			this.count--;
+		}
+	}
 }

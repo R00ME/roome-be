@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class MyCdListEmptyException extends BusinessException {
 
-  public MyCdListEmptyException() {
-    super(ErrorCode.MYCD_LIST_EMPTY);
-  }
+	public MyCdListEmptyException() {
+		super(ErrorCode.MYCD_LIST_EMPTY);
+	}
 }

@@ -9,8 +9,8 @@ import lombok.*;
 @Setter
 @Builder
 public class UpdateProfileRequest {
-    private String nickname;
+	private String nickname;
 
-    @Size(max = 101, message = "자기소개는 100자를 초과할 수 없습니다.")
-    private String bio;
+	@Size(max = 101, message = "자기소개는 100자를 초과할 수 없습니다.")
+	private String bio;
 }

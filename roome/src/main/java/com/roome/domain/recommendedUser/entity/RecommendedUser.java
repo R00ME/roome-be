@@ -11,29 +11,29 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "recommended_users",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "recommended_user_id"}))
+		uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "recommended_user_id"}))
 public class RecommendedUser extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recommended_user_id", nullable = false)
-    private User recommendedUser;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "recommended_user_id", nullable = false)
+	private User recommendedUser;
 
-    @Column(nullable = false)
-    private Integer similarityScore;
+	@Column(nullable = false)
+	private Integer similarityScore;
 
-    public static RecommendedUser create(User user, User recommendedUser, Integer similarityScore) {
-        return RecommendedUser.builder()
-                .user(user)
-                .recommendedUser(recommendedUser)
-                .similarityScore(similarityScore)
-                .build();
-    }
+	public static RecommendedUser create(User user, User recommendedUser, Integer similarityScore) {
+		return RecommendedUser.builder()
+				.user(user)
+				.recommendedUser(recommendedUser)
+				.similarityScore(similarityScore)
+				.build();
+	}
 }

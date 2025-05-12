@@ -5,8 +5,8 @@ import com.roome.global.exception.ErrorCode;
 
 public class CdRackNotFoundException extends BusinessException {
 
-  public CdRackNotFoundException() {
-    super(ErrorCode.CD_RACK_NOT_FOUND);
-  }
+	public CdRackNotFoundException() {
+		super(ErrorCode.CD_RACK_NOT_FOUND);
+	}
 }
 

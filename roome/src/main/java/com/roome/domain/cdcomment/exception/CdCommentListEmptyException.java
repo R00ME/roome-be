@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class CdCommentListEmptyException extends BusinessException {
 
-  public CdCommentListEmptyException() {
-    super(ErrorCode.CD_COMMENT_LIST_EMPTY);
-  }
+	public CdCommentListEmptyException() {
+		super(ErrorCode.CD_COMMENT_LIST_EMPTY);
+	}
 }

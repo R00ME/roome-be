@@ -9,8 +9,8 @@ import java.util.List;
 @Getter
 @Builder
 public class NotificationResponse {
-    private List<NotificationInfo> notifications;
-    private String nextCursor;
-    private boolean hasNext;
+	private List<NotificationInfo> notifications;
+	private String nextCursor;
+	private boolean hasNext;
 
 }

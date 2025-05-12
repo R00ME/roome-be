@@ -1,7 +1,7 @@
 package com.roome.domain.furniture.controller;
 
 import com.roome.domain.furniture.service.FurnitureService;
-import com.roome.global.auth.AuthenticatedUser;
+import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,26 +17,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FurnitureController {
 
-  private final FurnitureService furnitureService;
+	private final FurnitureService furnitureService;
 
-  @Operation(summary = "책장 레벨 업그레이드", description = "책장 레벨을 업그레이드 할 수 있다.")
-  @PostMapping("/api/rooms/{roomId}/furniture/bookshelf/upgrade")
-  public ResponseEntity<Void> upgradeBookshelf(
-      @AuthenticationPrincipal Long loginUserId,
-      @PathVariable("roomId") Long roomId
-  ) {
-    furnitureService.upgradeBookshelf(loginUserId, roomId);
-    return ResponseEntity.ok().build();
-  }
+	@Operation(summary = "책장 레벨 업그레이드", description = "책장 레벨을 업그레이드 할 수 있다.")
+	@PostMapping("/api/rooms/{roomId}/furniture/bookshelf/upgrade")
+	public ResponseEntity<Void> upgradeBookshelf(
+			@AuthenticationPrincipal CustomUser user,
+			@PathVariable("roomId") Long roomId
+	) {
+		furnitureService.upgradeBookshelf(user.getId(), roomId);
+		return ResponseEntity.ok().build();
+	}
 
-  @Operation(summary = "CD 랙 레벨 업그레이드", description = "CD 랙 레벨을 업그레이드 할 수 있다.")
-  @PatchMapping("/api/rooms/{roomId}/furniture/cd-rack/upgrade")
-  public ResponseEntity<Void> upgradeCdRack(
-      @AuthenticatedUser Long userId,
-      @PathVariable("roomId") Long roomId
-  ) {
-    furnitureService.upgradeCdRack(userId, roomId);
-    return ResponseEntity.noContent().build();
-  }
+	@Operation(summary = "CD 랙 레벨 업그레이드", description = "CD 랙 레벨을 업그레이드 할 수 있다.")
+	@PatchMapping("/api/rooms/{roomId}/furniture/cd-rack/upgrade")
+	public ResponseEntity<Void> upgradeCdRack(
+			@AuthenticationPrincipal CustomUser user,
+			@PathVariable("roomId") Long roomId
+	) {
+		furnitureService.upgradeCdRack(user.getId(), roomId);
+		return ResponseEntity.noContent().build();
+	}
 
 }

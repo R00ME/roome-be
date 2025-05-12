@@ -47,9 +47,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // MariaDB
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
 
-    // H2
+    // h2
     runtimeOnly 'com.h2database:h2'
 
     // OAuth2 및 Security
@@ -90,6 +90,8 @@ dependencies {
     // Jackson
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
+    //.env
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 }
 
 jar {

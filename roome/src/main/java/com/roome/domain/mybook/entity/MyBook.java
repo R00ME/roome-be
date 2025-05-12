@@ -14,33 +14,33 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyBook {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_Id")
-    private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_Id")
+	private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    private Room room;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_id")
+	private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "book_id")
+	private Book book;
 
-    public static MyBook create(User user, Room room, Book book) {
-        MyBook myBook = new MyBook();
-        myBook.user = user;
-        myBook.room = room;
-        myBook.book = book;
-        return myBook;
-    }
+	public static MyBook create(User user, Room room, Book book) {
+		MyBook myBook = new MyBook();
+		myBook.user = user;
+		myBook.room = room;
+		myBook.book = book;
+		return myBook;
+	}
 
-    public void validateOwner(Long userId) {
-        if (user == null || !user.getId().equals(userId)) {
-            throw new MyBookAuthorizationException();
-        }
-    }
+	public void validateOwner(Long userId) {
+		if (user == null || !user.getId().equals(userId)) {
+			throw new MyBookAuthorizationException();
+		}
+	}
 }
