@@ -49,7 +49,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 						"http://localhost:3000",
 						"http://localhost:63342",
 						"https://www.roome.io.kr",
-						"https://dev.roomie.io.kr"
+						"https://dev.roome.io.kr"
 				) // SecurityConfig와 동일한 CORS 설정 사용
 				.withSockJS();
 	}
