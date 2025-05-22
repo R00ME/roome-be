@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,7 +49,7 @@ public class SecurityConfig {
 
 		httpSecurity
 				// csrf 는 로그인 유저 올바른지 판단하기 위한 csrf 토큰 방식 -> rest api 구조 + JWT 사용으로 닫아놓음
-				.csrf(csrf -> csrf.disable())
+				.csrf(AbstractHttpConfigurer::disable)
 //                .exceptionHandling(exceptionHandling ->
 //                        exceptionHandling
 //                                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -64,10 +65,12 @@ public class SecurityConfig {
 				)
 				.authorizeHttpRequests(authorizeRequests ->
 								authorizeRequests
+										.requestMatchers("/ws/**").permitAll()
+										.requestMatchers("/topic/**", "/app/**").permitAll()
 										.requestMatchers("/api/authenticate").permitAll()
 										.requestMatchers("/api/users/signup").permitAll()
 										.requestMatchers("/callback", "/oauth2/**").permitAll()
-						       				.requestMatchers("/api/login/oauth2/code/**").permitAll()
+										.requestMatchers("/api/login/oauth2/code/**").permitAll()
 										.requestMatchers("/api/oauth2/**").permitAll()
 										.requestMatchers("/login").permitAll()
 										.requestMatchers("/auth/token/temp").permitAll()
