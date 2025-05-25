@@ -44,7 +44,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		// 웹소켓 엔드포인트 등록 및 CORS 설정
-		registry.addEndpoint("/ws")
+		registry.addEndpoint("/api/ws")
 				.setAllowedOriginPatterns(
 						"https://desqb38rc2v50.cloudfront.net",
 						"http://localhost:5173",
