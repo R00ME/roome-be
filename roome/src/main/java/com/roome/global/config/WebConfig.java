@@ -44,12 +44,13 @@ public class WebConfig implements WebMvcConfigurer {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**") // 모든 API에 대해
-						.allowedOrigins("http://localhost:3000") // 프론트 주소
+				registry.addMapping("/oauth2/**") // 모든 API에 대해
+						.allowedOrigins("http://localhost:5173") // 프론트 주소
 						.allowedMethods("*") // GET, POST, PUT, DELETE 등 허용
 						.allowedHeaders("*") // 모든 헤더 허용
 						.exposedHeaders("Authorization") // 👉 이거 추가해서 Authorization 헤더 클라이언트가 읽을 수 있게 함
-						.allowCredentials(true); // (Optional) 쿠키 전달 허용
+						.allowCredentials(true)
+						.exposedHeaders("Location"); // (Optional) 쿠키 전달 허용
 			}
 		};
 	}
