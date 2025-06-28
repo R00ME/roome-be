@@ -16,7 +16,7 @@ public class RoomeApplication {
 	public static void main(String[] args) {
 		// .env 파일 로드
 		Dotenv dotenv = Dotenv.configure()
-				.directory("./roome")
+				.directory(".")
 				.load();
 
 		// 환경변수를 시스템 프로퍼티에 추가
