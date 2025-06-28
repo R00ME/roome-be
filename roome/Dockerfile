@@ -8,7 +8,7 @@ LABEL authors="yubanghyeon"
 WORKDIR /app
 
 # 4. .env 파일 복사
-COPY roome/.env .env
+COPY .env .env
 
 # 5. JAR 파일을 컨테이너 내부로 복사
 COPY build/libs/*.jar app.jar
