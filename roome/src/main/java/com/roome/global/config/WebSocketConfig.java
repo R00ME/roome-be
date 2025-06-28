@@ -1,7 +1,7 @@
 package com.roome.global.config;
 
-import com.roome.global.jwt.interceptor.JwtWebSocketInterceptor;
-import com.roome.global.jwt.service.JwtTokenProvider;
+import com.roome.global.security.jwt.interceptor.JwtWebSocketInterceptor;
+import com.roome.global.security.jwt.token.JwtTokenProvider;
 import com.roome.global.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +35,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Bean
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(1);
+        scheduler.setPoolSize(5);
         scheduler.setThreadNamePrefix("websocket-heartbeat-");
         scheduler.initialize();
         return scheduler;
@@ -45,11 +45,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 웹소켓 엔드포인트 등록 및 CORS 설정
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns(
+                .setAllowedOrigins(
                         "https://desqb38rc2v50.cloudfront.net",
                         "http://localhost:5173",
                         "http://localhost:3000",
-                        "http://localhost:63342"
+                        "http://localhost:63342",
+                        "https://www.roome.io.kr",
+                        "https://dev.roome.io.kr"
                 ) // SecurityConfig와 동일한 CORS 설정 사용
                 .withSockJS();
     }

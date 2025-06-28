@@ -10,28 +10,28 @@ import java.util.Optional;
 
 public interface MyBookCountRepository extends JpaRepository<MyBookCount, Long> {
 
-    @Modifying(clearAutomatically = true)
-    @Query(
-            value = """
-                    update my_book_count set count = count + 1 where user_id = :roomOwnerId
-                    """,
-            nativeQuery = true
-    )
-    int increase(@Param("roomOwnerId") Long roomOwnerId);
+	@Modifying(clearAutomatically = true)
+	@Query(
+			value = """
+					update my_book_count set count = count + 1 where user_id = :roomOwnerId
+					""",
+			nativeQuery = true
+	)
+	int increase(@Param("roomOwnerId") Long roomOwnerId);
 
-    @Modifying(clearAutomatically = true)
-    @Query(
-            value = """
-                    update my_book_count set count = count - :count where user_id = :roomOwnerId
-                    """,
-            nativeQuery = true
-    )
-    int decrease(
-            @Param("roomOwnerId") Long roomOwnerId,
-            @Param("count") int count
-    );
+	@Modifying(clearAutomatically = true)
+	@Query(
+			value = """
+					update my_book_count set count = count - :count where user_id = :roomOwnerId
+					""",
+			nativeQuery = true
+	)
+	int decrease(
+			@Param("roomOwnerId") Long roomOwnerId,
+			@Param("count") int count
+	);
 
-    Optional<MyBookCount> findByUserId(Long userId);
+	Optional<MyBookCount> findByUserId(Long userId);
 
-    Optional<MyBookCount> findByRoomId(Long roomId);
+	Optional<MyBookCount> findByRoomId(Long roomId);
 }

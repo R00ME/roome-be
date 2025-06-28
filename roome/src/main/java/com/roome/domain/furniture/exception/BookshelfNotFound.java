@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class BookshelfNotFound extends BusinessException {
 
-    public BookshelfNotFound() {
-        super(ErrorCode.BOOKSHELF_NOT_FOUND);
-    }
+	public BookshelfNotFound() {
+		super(ErrorCode.BOOKSHELF_NOT_FOUND);
+	}
 }

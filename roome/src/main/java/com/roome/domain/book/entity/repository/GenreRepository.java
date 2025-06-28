@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface GenreRepository extends JpaRepository<Genre, Long> {
 
-    Optional<Genre> findByName(String name);
+	Optional<Genre> findByName(String name);
 
-    @Query("SELECT bg.genre.name FROM BookGenre bg WHERE bg.book.id IN " +
-            "(SELECT mb.book.id FROM MyBook mb WHERE mb.room.id = :roomId)")
-    List<String> findGenresByRoomId(Long roomId);
+	@Query("SELECT bg.genre.name FROM BookGenre bg WHERE bg.book.id IN " +
+			"(SELECT mb.book.id FROM MyBook mb WHERE mb.room.id = :roomId)")
+	List<String> findGenresByRoomId(Long roomId);
 }

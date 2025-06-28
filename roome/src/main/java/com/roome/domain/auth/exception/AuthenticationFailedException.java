@@ -4,7 +4,7 @@ import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
 
 public class AuthenticationFailedException extends BusinessException {
-    public AuthenticationFailedException() {
-        super(ErrorCode.AUTHENTICATION_FAILED);
-    }
+	public AuthenticationFailedException() {
+		super(ErrorCode.AUTHENTICATION_FAILED);
+	}
 }

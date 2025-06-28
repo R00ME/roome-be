@@ -11,28 +11,28 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class FurnitureResponseDto {
-    private String furnitureType;
-    private Boolean isVisible;
-    private int level;
-    private int maxCapacity;
-    private List<String> topGenres;
+	private String furnitureType;
+	private Boolean isVisible;
+	private int level;
+	private int maxCapacity;
+	private List<String> topGenres;
 
-    public static FurnitureResponseDto from(Furniture furniture) {
-        return FurnitureResponseDto.builder()
-                .furnitureType(furniture.getFurnitureType().name())
-                .isVisible(furniture.getIsVisible())
-                .level(furniture.getLevel())
-                .maxCapacity(furniture.getMaxCapacity())
-                .build();
-    }
+	public static FurnitureResponseDto from(Furniture furniture) {
+		return FurnitureResponseDto.builder()
+				.furnitureType(furniture.getFurnitureType().name())
+				.isVisible(furniture.getIsVisible())
+				.level(furniture.getLevel())
+				.maxCapacity(furniture.getMaxCapacity())
+				.build();
+	}
 
-    public static FurnitureResponseDto from(Furniture furniture, List<String> topGenres) {
-        return FurnitureResponseDto.builder()
-                .furnitureType(furniture.getFurnitureType().name())
-                .isVisible(furniture.getIsVisible())
-                .level(furniture.getLevel())
-                .maxCapacity(furniture.getMaxCapacity())
-                .topGenres(topGenres)
-                .build();
-    }
+	public static FurnitureResponseDto from(Furniture furniture, List<String> topGenres) {
+		return FurnitureResponseDto.builder()
+				.furnitureType(furniture.getFurnitureType().name())
+				.isVisible(furniture.getIsVisible())
+				.level(furniture.getLevel())
+				.maxCapacity(furniture.getMaxCapacity())
+				.topGenres(topGenres)
+				.build();
+	}
 }

@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class CdTemplateNotFoundException extends BusinessException {
 
-  public CdTemplateNotFoundException() {
-    super(ErrorCode.CD_TEMPLATE_NOT_FOUND);
-  }
+	public CdTemplateNotFoundException() {
+		super(ErrorCode.CD_TEMPLATE_NOT_FOUND);
+	}
 }

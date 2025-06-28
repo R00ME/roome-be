@@ -8,27 +8,27 @@ import com.roome.domain.user.entity.User;
 import java.time.LocalDateTime;
 
 public record MyBookReviewCreateRequest(
-        String title,
-        String quote,
-        String takeaway,
-        String motivate,
-        String topic,
-        String freeFormText,
-        String coverColor
+		String title,
+		String quote,
+		String takeaway,
+		String motivate,
+		String topic,
+		String freeFormText,
+		String coverColor
 ) {
 
-    public MyBookReview toEntity(MyBook myBook, User user) {
-        return MyBookReview.builder()
-                .title(title)
-                .quote(quote)
-                .takeaway(takeaway)
-                .motivate(motivate)
-                .topic(topic)
-                .freeFormText(freeFormText)
-                .coverColor(CoverColor.valueOf(coverColor))
-                .writeDateTime(LocalDateTime.now())
-                .myBook(myBook)
-                .user(user)
-                .build();
-    }
+	public MyBookReview toEntity(MyBook myBook, User user) {
+		return MyBookReview.builder()
+				.title(title)
+				.quote(quote)
+				.takeaway(takeaway)
+				.motivate(motivate)
+				.topic(topic)
+				.freeFormText(freeFormText)
+				.coverColor(CoverColor.valueOf(coverColor))
+				.writeDateTime(LocalDateTime.now())
+				.myBook(myBook)
+				.user(user)
+				.build();
+	}
 }

@@ -15,54 +15,54 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyBookReview {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String title;
+	private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String quote;
+	@Column(columnDefinition = "TEXT")
+	private String quote;
 
-    @Column(columnDefinition = "TEXT")
-    private String takeaway;
+	@Column(columnDefinition = "TEXT")
+	private String takeaway;
 
-    @Column(columnDefinition = "TEXT")
-    private String motivate;
+	@Column(columnDefinition = "TEXT")
+	private String motivate;
 
-    @Column(columnDefinition = "TEXT")
-    private String topic;
+	@Column(columnDefinition = "TEXT")
+	private String topic;
 
-    @Column(columnDefinition = "TEXT")
-    private String freeFormText;
+	@Column(columnDefinition = "TEXT")
+	private String freeFormText;
 
-    @Enumerated(EnumType.STRING)
-    private CoverColor coverColor;
+	@Enumerated(EnumType.STRING)
+	private CoverColor coverColor;
 
-    private LocalDateTime writeDateTime;
+	private LocalDateTime writeDateTime;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "my_book_id")
-    private MyBook myBook;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "my_book_id")
+	private MyBook myBook;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    public void update(MyBookReview myBookReview) {
-        this.title = myBookReview.getTitle();
-        this.quote = myBookReview.getQuote();
-        this.takeaway = myBookReview.getTakeaway();
-        this.motivate = myBookReview.getMotivate();
-        this.topic = myBookReview.getTopic();
-        this.freeFormText = myBookReview.getFreeFormText();
-        this.coverColor = myBookReview.getCoverColor();
-        this.writeDateTime = LocalDateTime.now();
-    }
+	public void update(MyBookReview myBookReview) {
+		this.title = myBookReview.getTitle();
+		this.quote = myBookReview.getQuote();
+		this.takeaway = myBookReview.getTakeaway();
+		this.motivate = myBookReview.getMotivate();
+		this.topic = myBookReview.getTopic();
+		this.freeFormText = myBookReview.getFreeFormText();
+		this.coverColor = myBookReview.getCoverColor();
+		this.writeDateTime = LocalDateTime.now();
+	}
 
-    public void validateOwner(Long userId) {
-        if (user == null || !user.getId().equals(userId)) {
-            throw new MyBookReviewAuthorizationException();
-        }
-    }
+	public void validateOwner(Long userId) {
+		if (user == null || !user.getId().equals(userId)) {
+			throw new MyBookReviewAuthorizationException();
+		}
+	}
 }

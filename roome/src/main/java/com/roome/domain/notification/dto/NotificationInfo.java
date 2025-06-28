@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @Builder
 @Setter
 public class NotificationInfo {
-    private Long notificationId;
-    private NotificationType type;
-    private Long senderId;
-    private String senderNickName;
-    private String senderProfileImage;
-    private Long targetId;
-    private LocalDateTime createdAt;
-    private Boolean isRead;
+	private Long notificationId;
+	private NotificationType type;
+	private Long senderId;
+	private String senderNickName;
+	private String senderProfileImage;
+	private Long targetId;
+	private LocalDateTime createdAt;
+	private Boolean isRead;
 }

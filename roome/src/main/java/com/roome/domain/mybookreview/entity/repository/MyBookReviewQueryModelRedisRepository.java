@@ -13,31 +13,30 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MyBookReviewQueryModelRedisRepository {
 
-    private final StringRedisTemplate redisTemplate;
+	private static final String KEY_FORMAT = "mybook::%s::review";
+	private final StringRedisTemplate redisTemplate;
 
-    private static final String KEY_FORMAT = "mybook::%s::review";
+	public void create(Long myBookId, MyBookReviewQueryModel myBookReviewQueryModel, Duration ttl) {
+		redisTemplate.opsForValue()
+				.set(generateKey(myBookId), DataSerializer.serialize(myBookReviewQueryModel), ttl);
+	}
 
-    public void create(Long myBookId, MyBookReviewQueryModel myBookReviewQueryModel, Duration ttl) {
-        redisTemplate.opsForValue()
-                .set(generateKey(myBookId), DataSerializer.serialize(myBookReviewQueryModel), ttl);
-    }
+	public Optional<MyBookReviewQueryModel> read(Long myBookId) {
+		return Optional.ofNullable(
+				redisTemplate.opsForValue().get(generateKey(myBookId))
+		).map(json -> DataSerializer.deserialize(json, MyBookReviewQueryModel.class));
+	}
 
-    public Optional<MyBookReviewQueryModel> read(Long myBookId) {
-        return Optional.ofNullable(
-                redisTemplate.opsForValue().get(generateKey(myBookId))
-        ).map(json -> DataSerializer.deserialize(json, MyBookReviewQueryModel.class));
-    }
+	public void update(Long myBookId, MyBookReviewQueryModel myBookReviewQueryModel) {
+		redisTemplate.opsForValue()
+				.setIfPresent(generateKey(myBookId), DataSerializer.serialize(myBookReviewQueryModel));
+	}
 
-    public void update(Long myBookId, MyBookReviewQueryModel myBookReviewQueryModel) {
-        redisTemplate.opsForValue()
-                .setIfPresent(generateKey(myBookId), DataSerializer.serialize(myBookReviewQueryModel));
-    }
+	public void delete(Long myBookId) {
+		redisTemplate.delete(generateKey(myBookId));
+	}
 
-    public void delete(Long myBookId) {
-        redisTemplate.delete(generateKey(myBookId));
-    }
-
-    private String generateKey(Long myBookId) {
-        return KEY_FORMAT.formatted(myBookId);
-    }
+	private String generateKey(Long myBookId) {
+		return KEY_FORMAT.formatted(myBookId);
+	}
 }

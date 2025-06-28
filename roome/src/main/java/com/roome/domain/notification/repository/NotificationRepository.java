@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long>, NotificationRepositoryCustom {
-    boolean existsByIdAndReceiverId(Long id, Long receiverId);
+	boolean existsByIdAndReceiverId(Long id, Long receiverId);
 }

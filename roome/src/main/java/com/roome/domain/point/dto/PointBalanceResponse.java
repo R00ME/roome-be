@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PointBalanceResponse {
 
-  private int balance;
+	private int balance;
 }

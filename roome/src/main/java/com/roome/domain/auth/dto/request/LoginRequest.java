@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginRequest {
-    private String code;
+	private String code;
 
-    public LoginRequest(String code) {
-        this.code = code;
-    }
+	public LoginRequest(String code) {
+		this.code = code;
+	}
 }

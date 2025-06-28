@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ImageUploadResponseDto {
-    private String imageUrl;
-    private String fileName;
+	private String imageUrl;
+	private String fileName;
 }

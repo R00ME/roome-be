@@ -15,25 +15,25 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @RequiredArgsConstructor
 public class NotificationRedisConfig {
 
-    private final NotificationRedisService notificationRedisService;
+	private final NotificationRedisService notificationRedisService;
 
-    @Bean
-    public MessageListenerAdapter notificationMessageListener() {
-        return new MessageListenerAdapter(notificationRedisService, "handleNotificationMessage");
-    }
+	@Bean
+	public MessageListenerAdapter notificationMessageListener() {
+		return new MessageListenerAdapter(notificationRedisService, "handleNotificationMessage");
+	}
 
-    @Bean
-    public RedisMessageListenerContainer notificationListenerContainer(
-            RedisConnectionFactory connectionFactory,
-            MessageListenerAdapter notificationMessageListener) {
+	@Bean
+	public RedisMessageListenerContainer notificationListenerContainer(
+			RedisConnectionFactory connectionFactory,
+			MessageListenerAdapter notificationMessageListener) {
 
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setConnectionFactory(connectionFactory);
 
-        // notification:* 패턴의 모든 채널 구독
-        container.addMessageListener(notificationMessageListener, new PatternTopic("notification:*"));
+		// notification:* 패턴의 모든 채널 구독
+		container.addMessageListener(notificationMessageListener, new PatternTopic("notification:*"));
 
-        log.info("Redis 알림 구독 설정 완료: notification:* 채널");
-        return container;
-    }
+		log.info("Redis 알림 구독 설정 완료: notification:* 채널");
+		return container;
+	}
 }

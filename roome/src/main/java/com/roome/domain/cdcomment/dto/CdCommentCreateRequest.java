@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CdCommentCreateRequest {
 
-  @NotNull
-  private int timestamp;
+	@NotNull
+	private int timestamp;
 
-  @NotBlank
-  private String content;
+	@NotBlank
+	private String content;
 }
 

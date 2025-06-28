@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class GuestbookListResponseDto {
-    private Long roomId;
-    private List<GuestbookResponseDto> guestbook;
-    private PaginationDto pagination;
+	private Long roomId;
+	private List<GuestbookResponseDto> guestbook;
+	private PaginationDto pagination;
 }

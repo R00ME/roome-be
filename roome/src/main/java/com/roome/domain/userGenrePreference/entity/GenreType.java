@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum GenreType {
-    CD("CD"),
-    BOOK("Book");
+	CD("CD"),
+	BOOK("Book");
 
-    private final String type;
+	private final String type;
 }

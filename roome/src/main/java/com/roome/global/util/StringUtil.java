@@ -9,11 +9,11 @@ import java.util.List;
 
 public abstract class StringUtil {
 
-    public static List<String> convertStringToList(String values) {
-        if (StringUtils.hasText(values)) {
-            String decodedValues = URLDecoder.decode(values, StandardCharsets.UTF_8);
-            return Arrays.asList(decodedValues.split(","));
-        }
-        return List.of();
-    }
+	public static List<String> convertStringToList(String values) {
+		if (StringUtils.hasText(values)) {
+			String decodedValues = URLDecoder.decode(values, StandardCharsets.UTF_8);
+			return Arrays.asList(decodedValues.split(","));
+		}
+		return List.of();
+	}
 }

@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserRankingDto {
 
-  private int rank;
-  private Long userId;
-  private String nickname;
-  private String profileImage;
-  private int score;
-  private boolean isTopRank; // 1~3위 여부
+	private int rank;
+	private Long userId;
+	private String nickname;
+	private String profileImage;
+	private int score;
+	private boolean isTopRank; // 1~3위 여부
 }

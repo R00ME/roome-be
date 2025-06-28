@@ -5,7 +5,7 @@ import com.roome.global.exception.ErrorCode;
 
 public class CdRackCapacityExceededException extends BusinessException {
 
-  public CdRackCapacityExceededException() {
-    super(ErrorCode.CD_RACK_CAPACITY_EXCEEDED);
-  }
+	public CdRackCapacityExceededException() {
+		super(ErrorCode.CD_RACK_CAPACITY_EXCEEDED);
+	}
 }

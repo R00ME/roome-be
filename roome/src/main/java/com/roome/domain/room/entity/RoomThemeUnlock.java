@@ -12,22 +12,22 @@ import lombok.*;
 @Table(name = "room_theme_unlock")
 public class RoomThemeUnlock {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "theme", nullable = false)
-    private RoomTheme theme;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "theme", nullable = false)
+	private RoomTheme theme;
 
-    public static RoomThemeUnlock create(User user, RoomTheme theme) {
-        return RoomThemeUnlock.builder()
-                .user(user)
-                .theme(theme)
-                .build();
-    }
+	public static RoomThemeUnlock create(User user, RoomTheme theme) {
+		return RoomThemeUnlock.builder()
+				.user(user)
+				.theme(theme)
+				.build();
+	}
 }

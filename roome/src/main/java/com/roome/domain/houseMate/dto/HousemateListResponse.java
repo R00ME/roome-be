@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Builder
 public class HousemateListResponse {
-    private List<HousemateInfo> housemates;
-    private Long nextCursor;
-    private boolean hasNext;
+	private List<HousemateInfo> housemates;
+	private Long nextCursor;
+	private boolean hasNext;
 }

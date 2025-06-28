@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class NotificationCleanupScheduler {
 
-    private final NotificationRepository notificationRepository;
+	private final NotificationRepository notificationRepository;
 
-    @Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
-    @Transactional
-    public void cleanupOldNotifications() {
-        LocalDateTime threshold = LocalDateTime
-                .now()
-                .minusDays(30);
-        notificationRepository.deleteOldNotifications(threshold);
-    }
+	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
+	@Transactional
+	public void cleanupOldNotifications() {
+		LocalDateTime threshold = LocalDateTime
+				.now()
+				.minusDays(30);
+		notificationRepository.deleteOldNotifications(threshold);
+	}
 }
