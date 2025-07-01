@@ -15,29 +15,26 @@ spring:
       client:
         registration:
           google:
-            client-name: google
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: https://dev.roome.io.kr/oauth2/callback/google
+            redirect-uri: "{baseUrl}/callback"
             authorization-grant-type: authorization_code
             scope:
               - email
               - profile
           naver:
-            client-name: naver
             client-id: ${NAVER_CLIENT_ID}
             client-secret: ${NAVER_CLIENT_SECRET}
-            redirect-uri: https://dev.roome.io.kr/oauth2/callback/naver
+            redirect-uri: "{baseUrl}/callback"
             authorization-grant-type: authorization_code
             scope:
-              - nickname
+              - name
               - email
               - profile_image
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
-            client-name: kakao
-            redirect-uri: https://dev.roome.io.kr/oauth2/callback/kakao
+            redirect-uri: "{baseUrl}/callback"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
