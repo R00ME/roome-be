@@ -17,6 +17,8 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
 	private final JwtTokenProvider jwtTokenProvider;
 	private final TokenExchangeService tokenExchangeService;
+	@Value("${app.oauth2.redirectUri}")
+	private String frontendRedirectUri ; // 프론트 팀원들과 협의 필요
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -28,7 +30,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 		String tempCode = tokenExchangeService.generateTempCode(accessToken);
 
 		// redirectUrl 로 tempCode 반환 -> test controller 로 간이 api 생성
-		String redirectUrl = "http://localhost:8080/callback?temp_code=" + tempCode;
+		String redirectUrl = frontendRedirectUri + + "?temp_code=" + tempCode;
 		response.sendRedirect(redirectUrl);
 	}
 }
