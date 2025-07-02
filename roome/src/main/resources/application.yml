@@ -119,17 +119,17 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MariaDBDialect
         default_batch_fetch_size: 100
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            redirect-uri: http://ec2-3-39-182-150.ap-northeast-2.compute.amazonaws.com/oauth/callback/google
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            redirect-uri: http://ec2-3-39-182-150.ap-northeast-2.compute.amazonaws.com/oauth/callback/google
 
 # 로컬 환경용 OAuth2 리디렉션 설정
-app:
-  oauth2:
-    redirectUri: http://localhost:5173/login/callback
+#app:
+#  oauth2:
+#    redirectUri: http://localhost:5173/login/callback
 # 알라딘 API 키
 aladin:
   api:
@@ -158,17 +158,17 @@ spring:
           useUnicode: true
         format_sql: false
         dialect: org.hibernate.dialect.MariaDBDialect
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            redirect-uri: http://ec2-3-39-182-150.ap-northeast-2.compute.amazonaws.com/oauth/callback/google
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            redirect-uri: http://ec2-3-39-182-150.ap-northeast-2.compute.amazonaws.com/oauth/callback/google
 
 # 개발 서버용 OAuth2 리디렉션 설정
-app:
-  oauth2:
-    redirectUri: http://localhost:5173/login/callback
+#app:
+#  oauth2:
+#    redirectUri: http://localhost:5173/login/callback
 # 알라딘 API 키
 aladin:
   api:
@@ -196,12 +196,12 @@ spring:
           useUnicode: true
         format_sql: false
         dialect: org.hibernate.dialect.MariaDBDialect
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            redirect-uri: http://localhost:8080/login/oauth2/code/google
 #            redirect-uri: https://desqb38rc2v50.cloudfront.net/oauth/callback/google
 #          naver:
 #            redirect-uri: https://desqb38rc2v50.cloudfront.net/oauth/callback/naver
@@ -236,6 +236,6 @@ spring:
         format_sql: true
 
 # 테스트용 OAuth2 리디렉션 설정
-app:
-  oauth2:
-    redirectUri: http://localhost:5173/login/callback
+#app:
+#  oauth2:
+#    redirectUri: http://localhost:5173/login/callback
