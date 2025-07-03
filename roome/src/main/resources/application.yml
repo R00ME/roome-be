@@ -34,7 +34,7 @@ spring:
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
-            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+            redirect-uri: https://dev.roome.io.kr/api/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
@@ -67,7 +67,7 @@ app:
     redirectUri: https://dev.roome.io.kr/login
   cors:
     allowed-origins:
-      - http://dev.roome.io.kr               # CloudFront URL
+      - https://dev.roome.io.kr               # CloudFront URL
       - http://localhost:5173                # 프론트엔드 개발 환경
       - http://localhost:3000                # 다른 프론트엔드 개발 환경
 
@@ -210,9 +210,9 @@ spring:
 #            redirect-uri: https://desqb38rc2v50.cloudfront.net/oauth/callback/naver
 
 # 프로덕션 서버용 OAuth2 리디렉션 설정
-app:
-  oauth2:
-    redirectUri: https://desqb38rc2v50.cloudfront.net/login/callback
+# app:
+#   oauth2:
+#     redirectUri: https://desqb38rc2v50.cloudfront.net/login/callback
 
 # 알라딘 API 키
 aladin:
