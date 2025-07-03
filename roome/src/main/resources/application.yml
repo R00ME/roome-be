@@ -64,7 +64,7 @@ spring:
 # 백엔드 → 프론트엔드 리다이렉트 (SuccessHandler 에서 사용)
 app:
   oauth2:
-    redirectUri: http://dev.roome.io.kr/login
+    redirectUri: https://dev.roome.io.kr/login
   cors:
     allowed-origins:
       - http://dev.roome.io.kr               # CloudFront URL
