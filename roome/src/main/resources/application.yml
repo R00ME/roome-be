@@ -64,7 +64,7 @@ spring:
 # 백엔드 → 프론트엔드 리다이렉트 (SuccessHandler 에서 사용)
 app:
   oauth2:
-    redirectUri: http://dev.roome.io.kr/login/callback
+    redirectUri: http://dev.roome.io.kr/login
   cors:
     allowed-origins:
       - http://dev.roome.io.kr               # CloudFront URL
@@ -132,7 +132,7 @@ spring:
 # 로컬 환경용 OAuth2 리디렉션 설정
 app:
   oauth2:
-    redirectUri: http://localhost:5173/login/callback
+    redirectUri: http://localhost:5173/login
 # 알라딘 API 키
 aladin:
   api:
