@@ -34,7 +34,7 @@ spring:
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
-            redirect-uri: "https://dev.roome.io.kr/login/oauth2/code/kakao"
+            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
@@ -64,7 +64,7 @@ spring:
 # 백엔드 → 프론트엔드 리다이렉트 (SuccessHandler 에서 사용)
 app:
   oauth2:
-    redirectUri: https://dev.roome.io.kr/login
+    redirectUri: https://dev.roome.io.kr/
   cors:
     allowed-origins:
       - https://dev.roome.io.kr               # CloudFront URL

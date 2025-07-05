@@ -31,7 +31,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 		String tempCode = tokenExchangeService.generateTempCode(accessToken);
 
 		// redirectUrl 로 tempCode 반환 -> test controller 로 간이 api 생성
-		String redirectUrl = frontendRedirectUri + "?temp_code=" + tempCode;
+		String redirectUrl = frontendRedirectUri + "login?temp_code=" + tempCode;
 		response.sendRedirect(redirectUrl);
 	}
 }
