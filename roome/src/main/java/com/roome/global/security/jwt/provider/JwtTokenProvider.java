@@ -1,4 +1,4 @@
-package com.roome.global.security.jwt.token;
+package com.roome.global.security.jwt.provider;
 
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
@@ -68,6 +68,7 @@ public class JwtTokenProvider implements InitializingBean {
 
 		return Jwts.builder()
 				.setSubject(String.valueOf(userId))
+				.claim("userId", String.valueOf(userId))
 				.claim(AUTHORITIES_KEY, authorities) // 정보 저장
 				.signWith(key, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
 				.setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
@@ -77,7 +78,7 @@ public class JwtTokenProvider implements InitializingBean {
 	public String createRefreshToken(Long userId) {
 		Date now = new Date();
 		long refreshTokenValidity = 2592000000L;
-		Date expiry = new Date(now.getTime() + refreshTokenValidity); // 2주 등
+		Date expiry = new Date(now.getTime() + refreshTokenValidity);
 
 		return Jwts.builder()
 				.setSubject(String.valueOf(userId))

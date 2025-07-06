@@ -2,7 +2,7 @@ package com.roome.global.security.jwt.interceptor;
 
 import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
-import com.roome.global.security.jwt.token.JwtTokenProvider;
+import com.roome.global.security.jwt.provider.JwtTokenProvider;
 import com.roome.global.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

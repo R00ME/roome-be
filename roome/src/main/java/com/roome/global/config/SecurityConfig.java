@@ -1,6 +1,6 @@
 package com.roome.global.config;
 
-import com.roome.global.security.jwt.token.JwtTokenProvider;
+import com.roome.global.security.jwt.provider.JwtTokenProvider;
 import com.roome.global.security.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.roome.global.security.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.roome.global.security.oauth.service.CustomOAuth2UserService;

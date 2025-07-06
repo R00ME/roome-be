@@ -23,8 +23,9 @@ public class TokenController {
 	// 임시 코드로 토큰 교환 api
 	@PostMapping("/temp")
 	public ResponseEntity<Void> exchangeTempCode(@RequestBody GetAccessTokenByTempCodeRequest getAccessTokenByTempCodeRequest,
+												 HttpServletRequest request,
 												 HttpServletResponse response) {
-		tempTokenService.exchangeTempCode(getAccessTokenByTempCodeRequest, response);
+		tempTokenService.exchangeTempCode(getAccessTokenByTempCodeRequest, request, response);
 		return ResponseEntity.noContent().build();
 	}
 

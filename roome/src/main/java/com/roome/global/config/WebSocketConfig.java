@@ -1,7 +1,7 @@
 package com.roome.global.config;
 
 import com.roome.global.security.jwt.interceptor.JwtWebSocketInterceptor;
-import com.roome.global.security.jwt.token.JwtTokenProvider;
+import com.roome.global.security.jwt.provider.JwtTokenProvider;
 import com.roome.global.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

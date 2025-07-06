@@ -1,7 +1,7 @@
 package com.roome.global.security.oauth.handler;
 
 import com.roome.global.security.jwt.service.TokenExchangeService;
-import com.roome.global.security.jwt.token.JwtTokenProvider;
+import com.roome.global.security.jwt.provider.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
