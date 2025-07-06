@@ -1,7 +1,7 @@
 package com.roome.global.security.filter;
 
 import com.roome.global.security.jwt.exception.InvalidJwtTokenException;
-import com.roome.global.security.jwt.token.JwtTokenProvider;
+import com.roome.global.security.jwt.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

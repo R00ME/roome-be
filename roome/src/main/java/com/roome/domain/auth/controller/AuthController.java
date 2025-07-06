@@ -17,7 +17,7 @@ import com.roome.global.security.jwt.exception.InvalidJwtTokenException;
 import com.roome.global.security.jwt.exception.InvalidUserIdFormatException;
 import com.roome.global.security.jwt.exception.MissingUserIdFromTokenException;
 import com.roome.global.security.jwt.principal.CustomUser;
-import com.roome.global.security.jwt.token.JwtTokenProvider;
+import com.roome.global.security.jwt.provider.JwtTokenProvider;
 import com.roome.global.service.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -110,7 +110,7 @@ public class AuthController {
 									   HttpServletRequest request, HttpServletResponse response
 	) {
 		authService.logout(user.getId(), request, response);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.noContent().build();
 	}
 
 	@Operation(summary = "회원 탈퇴", description = "현재 로그인된 사용자 계정을 삭제합니다.", security = @SecurityRequirement(name = "bearerAuth"))
