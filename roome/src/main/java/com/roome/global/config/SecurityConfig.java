@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,11 +58,11 @@ public class SecurityConfig {
 //                )
 				.headers(headers ->
 						headers
-								.frameOptions(frameOptions -> frameOptions.sameOrigin())
+								.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
 				)
 				.sessionManagement(sessionManagement ->
 						sessionManagement
-								.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+								.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
 				)
 				.authorizeHttpRequests(authorizeRequests ->
 								authorizeRequests
