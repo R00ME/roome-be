@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,7 +58,7 @@ public class SecurityConfig {
 //                )
 				.headers(headers ->
 						headers
-								.frameOptions(frameOptions -> frameOptions.sameOrigin())
+								.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
 				)
 				.sessionManagement(sessionManagement ->
 						sessionManagement
@@ -68,11 +69,7 @@ public class SecurityConfig {
 										.requestMatchers("/ws/**").permitAll()
 										.requestMatchers("/topic/**", "/app/**").permitAll()
 										.requestMatchers("/api/authenticate").permitAll()
-//										.requestMatchers("/api/users/signup").permitAll()
-//										.requestMatchers("/callback", "/oauth2/**").permitAll()
-										// .requestMatchers("/api/login/oauth2/code/**").permitAll()
-										// .requestMatchers("/api/oauth2/**").permitAll()
-						                                .requestMatchers("/login/oauth2/code/**").permitAll()
+						                .requestMatchers("/login/oauth2/code/**").permitAll()
 										.requestMatchers("/oauth2/**").permitAll()
 //										.requestMatchers("/login").permitAll()
 										.requestMatchers("/auth/token/temp").permitAll()
