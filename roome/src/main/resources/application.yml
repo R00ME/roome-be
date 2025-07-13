@@ -28,7 +28,7 @@ spring:
             redirect-uri: "https://dev.roome.io.kr/api/login/oauth2/code/naver"
             authorization-grant-type: authorization_code
             scope:
-              - name
+              - nickname
               - email
               - profile_image
           kakao:
