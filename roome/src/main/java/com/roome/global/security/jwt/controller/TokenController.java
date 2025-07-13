@@ -26,7 +26,7 @@ public class TokenController {
 												 HttpServletRequest request,
 												 HttpServletResponse response) {
 		tempTokenService.exchangeTempCode(getAccessTokenByTempCodeRequest, request, response);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok().build();
 	}
 
 	// refreshToken 으로 accessToken 재발급 api
