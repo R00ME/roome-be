@@ -110,7 +110,7 @@ public class AuthController {
 									   HttpServletRequest request, HttpServletResponse response
 	) {
 		authService.logout(user.getId(), request, response);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "회원 탈퇴", description = "현재 로그인된 사용자 계정을 삭제합니다.", security = @SecurityRequirement(name = "bearerAuth"))
