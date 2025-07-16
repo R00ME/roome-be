@@ -55,7 +55,7 @@ public class AuthController {
 	@Operation(summary = "사용자 정보 조회", description = "Access Token으로 사용자 정보를 조회합니다.", security = @SecurityRequirement(name = "bearerAuth"))
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공"),
 			@ApiResponse(responseCode = "401", description = "인증 실패 또는 유효하지 않은 토큰")})
-	@GetMapping("/user")
+	@GetMapping("/api/user")
 	public ResponseEntity<LoginResponse> getUserInfo(
 			@RequestHeader("Authorization") String authHeader) {
 		try {
