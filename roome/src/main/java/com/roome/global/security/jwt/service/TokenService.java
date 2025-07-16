@@ -7,9 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,6 +25,8 @@ public class TokenService {
 
 	private final JwtTokenProvider jwtTokenProvider;
 	private final RefreshTokenService refreshTokenService;
+    @Qualifier("blacklistRedisTemplate")
+    private final RedisTemplate<String, Long> blacklistRedisTemplate;
 
 	public void refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
 		String refreshToken = extractAndValidateRefreshToken(request);
@@ -40,6 +45,16 @@ public class TokenService {
 
 		addTokensToResponse(response, newAccessToken, newRefreshToken);
 	}
+
+    public void addAccessTokenToBlacklist(String accessToken) {
+        long remainingTime = jwtTokenProvider.getRemainingValidity(accessToken);
+
+        blacklistRedisTemplate.opsForValue().set("blacklist:" + accessToken, 1L, Duration.ofSeconds(remainingTime));
+    }
+
+    public boolean isTokenBlacklisted(String token) {
+        return blacklistRedisTemplate.hasKey("blacklist:" + token);
+    }
 
 	private String extractAndValidateRefreshToken(HttpServletRequest request) {
 		String token = extractRefreshTokenFromCookie(request);

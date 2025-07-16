@@ -18,6 +18,7 @@ import com.roome.global.security.jwt.exception.InvalidUserIdFormatException;
 import com.roome.global.security.jwt.exception.MissingUserIdFromTokenException;
 import com.roome.global.security.jwt.principal.CustomUser;
 import com.roome.global.security.jwt.provider.JwtTokenProvider;
+import com.roome.global.security.jwt.service.RefreshTokenService;
 import com.roome.global.service.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,17 +52,22 @@ public class AuthController {
 	private final FurnitureRepository furnitureRepository;
 	private final AuthService authService;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final RefreshTokenService refreshTokenService;
 
 	@Operation(summary = "사용자 정보 조회", description = "Access Token으로 사용자 정보를 조회합니다.", security = @SecurityRequirement(name = "bearerAuth"))
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공"),
 			@ApiResponse(responseCode = "401", description = "인증 실패 또는 유효하지 않은 토큰")})
 	@GetMapping("/user")
 	public ResponseEntity<LoginResponse> getUserInfo(
-			@RequestHeader("Authorization") String authHeader) {
+//			@RequestHeader("Authorization") String authHeader
+			@AuthenticationPrincipal CustomUser customUser,
+			HttpServletRequest httpServletRequest
+	) {
 		try {
-			String accessToken = authHeader.substring(7);
-			Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
-			User user = userRepository.findById(userId)
+			String accessToken = httpServletRequest.getHeader("Authorization").substring(7);
+//			Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
+			Long userId = customUser.getId();
+			User user = userRepository.findById(customUser.getId())
 					.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 			RoomResponseDto roomInfo = roomService.getOrCreateRoomByUserId(userId);
 
@@ -79,7 +85,7 @@ public class AuthController {
 				}
 			}
 
-			String refreshToken = redisService.getRefreshToken(userId.toString());
+			String refreshToken = refreshTokenService.getStoredFingerprint(userId).get("token");
 			log.info("User ID: {}, Refresh Token: {}", userId, refreshToken);
 
 			LoginResponse loginResponse = LoginResponse.builder()
@@ -172,10 +178,8 @@ public class AuthController {
 			log.debug("[회원탈퇴] 리프레시 토큰 삭제 성공: userId={}", userId);
 
 			// Access Token 블랙리스트 추가
-//      long remainingTime = jwtTokenProvider.getTokenTimeToLive(accessToken);
+			long remainingTime = jwtTokenProvider.getRemainingValidity(accessToken);
 
-			// remainingTime 하드 코딩
-			long remainingTime = 10000L;
 			if (remainingTime > 0) {
 				redisService.addToBlacklist(accessToken, remainingTime);
 				log.debug("[회원탈퇴] 액세스 토큰 블랙리스트 추가 성공: userId={}, 남은시간={}ms", userId, remainingTime);
