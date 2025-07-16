@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/token")
+@RequestMapping("api/auth/token")
 public class TokenController {
 
 	private final TokenExchangeService tempTokenService;
