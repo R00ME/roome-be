@@ -74,8 +74,6 @@ public class SecurityConfig {
 						                .requestMatchers("/login/oauth2/code/**").permitAll()
 										.requestMatchers("/oauth2/**").permitAll()
 //										.requestMatchers("/login").permitAll()
-										.requestMatchers("/auth/token/temp").permitAll()
-										.requestMatchers("/auth/token/refresh").permitAll()
 										.requestMatchers("/api/auth/token/temp").permitAll()
 										.requestMatchers("/api/auth/token/refresh").permitAll()
 										.requestMatchers(PathRequest.toH2Console()).permitAll()
