@@ -4,12 +4,10 @@ import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
 import com.roome.global.security.jwt.principal.CustomUser;
 import com.roome.global.security.jwt.principal.UserPrincipal;
-import com.roome.global.security.jwt.service.TokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,17 +30,15 @@ public class JwtTokenProvider implements InitializingBean {
 	private static final String AUTHORITIES_KEY = "auth";
 	private final UserRepository userRepository;
 	private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
-	private final TokenService tokenService;
 	private final String secret;
 	private final String refreshSecret;
 	private Key key;
 	private Key refreshKey;
 
 	public JwtTokenProvider(
-			UserRepository userRepository, TokenService tokenService, @Value("${JWT_SECRET}") String secret,
+			UserRepository userRepository, @Value("${JWT_SECRET}") String secret,
 			@Value("${JWT_REFRESH_SECRET}") String refreshSecret) {
 		this.userRepository = userRepository;
-		this.tokenService = tokenService;
 		this.secret = secret;
 		this.refreshSecret = refreshSecret;
 	}
@@ -151,15 +147,10 @@ public class JwtTokenProvider implements InitializingBean {
 		return claims.getExpiration().getTime() - System.currentTimeMillis();
 	}
 
-
 	// 토큰의 유효성 검증을 수행
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-			if (tokenService.isTokenBlacklisted(token)) {
-				logger.info("블랙리스트에 등록된 JWT 토큰입니다.");
-				return false;
-			}
 			return true;
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 
