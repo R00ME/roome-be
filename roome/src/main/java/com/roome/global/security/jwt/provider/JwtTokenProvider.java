@@ -147,7 +147,6 @@ public class JwtTokenProvider implements InitializingBean {
 		return claims.getExpiration().getTime() - System.currentTimeMillis();
 	}
 
-
 	// 토큰의 유효성 검증을 수행
 	public boolean validateToken(String token) {
 		try {
@@ -186,6 +185,19 @@ public class JwtTokenProvider implements InitializingBean {
 		return null;
 	}
 
+	public long getRemainingValidity(String accessToken) {
+		Claims claims = Jwts.parserBuilder()
+				.setSigningKey(key)  // 시크릿 키 사용
+				.build()
+				.parseClaimsJws(accessToken)
+				.getBody();
+
+		Date expiration = claims.getExpiration(); // 만료 시간
+		long now = System.currentTimeMillis();
+
+		return (expiration.getTime() - now) / 1000;
+	}
+
 	private Claims getClaims(String token) {
 		return Jwts.parserBuilder()
 				.setSigningKey(key)
@@ -193,4 +205,5 @@ public class JwtTokenProvider implements InitializingBean {
 				.parseClaimsJws(token)
 				.getBody();
 	}
+
 }

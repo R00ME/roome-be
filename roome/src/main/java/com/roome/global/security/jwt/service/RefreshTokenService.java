@@ -34,7 +34,7 @@ public class RefreshTokenService {
 
 	public Map<String, String> getStoredFingerprint(Long userId) {
 		Map<Object, Object> stored = refreshTokenRedisTemplate.opsForHash().entries("refreshToken:" + userId);
-		if (stored == null || stored.isEmpty()) return null;
+		if (stored.isEmpty()) return null;
 
 		// Redis에서 가져온 Map<Object, Object> → Map<String, String> 으로 변환
 		return stored.entrySet().stream()
