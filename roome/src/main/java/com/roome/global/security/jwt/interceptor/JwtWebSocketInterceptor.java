@@ -5,7 +5,6 @@ import com.roome.global.exception.ErrorCode;
 import com.roome.global.security.jwt.principal.CustomUser;
 import com.roome.global.security.jwt.provider.JwtTokenProvider;
 import com.roome.global.security.jwt.service.TokenService;
-import com.roome.global.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
