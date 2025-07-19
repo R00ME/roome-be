@@ -61,7 +61,7 @@ public class AuthController {
     			    throw new RuntimeException("CustomUser is null");
 			}
 			Long userId = customUser.getId();
-			log.info(">>>>> customUser = {}", customUser);
+			log.info("🧍 user = {}", customUser);
 			
 			User user = userRepository.findById(customUser.getId())
 					.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));

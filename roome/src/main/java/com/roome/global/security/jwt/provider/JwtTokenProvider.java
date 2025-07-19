@@ -8,6 +8,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class JwtTokenProvider implements InitializingBean {
 	private static final String AUTHORITIES_KEY = "auth";
 	private final UserRepository userRepository;
@@ -108,6 +110,8 @@ public class JwtTokenProvider implements InitializingBean {
 						.collect(Collectors.toList());
 
 		CustomUser principal = new CustomUser(userId, email, authorities);
+
+		log.info("🧩 Claims authorities: {}", claims.get("auth"));
 
 		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 	}
