@@ -208,4 +208,15 @@ public class JwtTokenProvider implements InitializingBean {
 				.getBody();
 	}
 
+	public String getEmailFromAccessToken(String token) {
+		Claims claims = getClaims(token);
+		return claims.get("email", String.class);
+	}
+
+	public List<String> getAuthorities(String token) {
+		Claims claims = getClaims(token);
+		String roles = claims.get("auth", String.class); // AUTHORITIES_KEY
+		return Arrays.asList(roles.split(","));
+	}
+
 }
