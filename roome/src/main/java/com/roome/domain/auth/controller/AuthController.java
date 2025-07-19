@@ -54,7 +54,8 @@ public class AuthController {
 			@AuthenticationPrincipal CustomUser customUser,
 			HttpServletRequest httpServletRequest
 	) {
-		try {
+			log.info("👀 AuthController 진입 시작");
+			try {
 //			String accessToken = httpServletRequest.getHeader("Authorization").substring(7);
 			if (customUser == null) {
     			    throw new RuntimeException("CustomUser is null");
