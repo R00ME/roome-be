@@ -54,4 +54,7 @@ public class CustomUser implements UserDetails, UserPrincipal {
 	public Long getId() {
 		return id;
 	}
+
+	@Override
+	public String getEmail() {return email;}
 }
