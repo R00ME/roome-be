@@ -31,6 +31,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean { // JwtFilter �
 		String jwt = jwtTokenProvider.resolveToken(httpServletRequest);
 		String requestURI = httpServletRequest.getRequestURI();
 
+		log.info("📌 Authorization Header: {}", httpServletRequest.getHeader("Authorization"));
+                log.info("📌 추출된 JWT: {}", jwt);
+
 		try {
 			if (StringUtils.hasText(jwt)) {
 				// 토큰 블랙리스트 확인
