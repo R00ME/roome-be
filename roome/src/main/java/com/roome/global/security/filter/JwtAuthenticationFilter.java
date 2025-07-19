@@ -30,6 +30,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean { // JwtFilter �
 		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 		String jwt = jwtTokenProvider.resolveToken(httpServletRequest);
 		String requestURI = httpServletRequest.getRequestURI();
+		log.info("📎 요청 URI: {}", requestURI);
 
 		log.info("📌 Authorization Header: {}", httpServletRequest.getHeader("Authorization"));
                 log.info("📌 추출된 JWT: {}", jwt);
