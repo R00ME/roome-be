@@ -50,7 +50,7 @@ dependencies {
     implementation 'org.mariadb.jdbc:mariadb-java-client'
 
     // h2
-    runtimeOnly 'com.h2database:h2'
+//    runtimeOnly 'com.h2database:h2'
 
     // OAuth2 및 Security
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'

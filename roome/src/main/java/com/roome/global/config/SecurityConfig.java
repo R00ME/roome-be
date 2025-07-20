@@ -77,7 +77,7 @@ public class SecurityConfig {
 //										.requestMatchers("/login").permitAll()
 										.requestMatchers("/api/auth/token/temp").permitAll()
 										.requestMatchers("/api/auth/token/refresh").permitAll()
-										.requestMatchers(PathRequest.toH2Console()).permitAll()
+//										.requestMatchers(PathRequest.toH2Console()).permitAll()
 //                                .requestMatchers("/favicon.ico").permitAll()
 										.anyRequest().authenticated()
 				)
