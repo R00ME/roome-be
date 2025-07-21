@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,38 +21,42 @@ import java.util.Map;
 @Slf4j
 @Aspect
 @Component
-public class RequestLog {
+public class ResponseLog {
 
-    @Pointcut(
-            "execution(* com.roome.domain..controller..*.*(..)) || " +
-                    "execution(* com.roome.global.controller..*.*(..))"
-    )
-    private void cut() {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final ThreadLocal<Long> startTimeThreadLocal = new ThreadLocal<>();
+
+    // 요청 시작 시간 기록 (같이 사용되도록)
+    @Before("execution(* com.roome.domain..controller..*.*(..)) || execution(* com.roome.global.controller..*.*(..))")
+    public void before() {
+        startTimeThreadLocal.set(System.currentTimeMillis());
     }
 
-    @Before("cut()")
-    public void logBefore(JoinPoint joinPoint) {
+    @AfterReturning(
+            pointcut = "execution(* com.roome.domain..controller..*.*(..)) || execution(* com.roome.global.controller..*.*(..))",
+            returning = "response"
+    )
+    public void logAfterReturning(JoinPoint joinPoint, Object response) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) return;
 
         HttpServletRequest request = attributes.getRequest();
 
+        long duration = System.currentTimeMillis() - startTimeThreadLocal.get();
+        startTimeThreadLocal.remove(); // 꼭 제거해주기
+
         Map<String, Object> logMap = new LinkedHashMap<>();
-        logMap.put("logType", "request_info");
+        logMap.put("logType", "response_info");
         logMap.put("timestamp", LocalDateTime.now().toString());
         logMap.put("classMethod", joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         logMap.put("httpMethod", request.getMethod());
         logMap.put("requestURI", request.getRequestURI());
-        logMap.put("requestURL", request.getRequestURL().toString());
-        logMap.put("ipAddress", getClientIp(request));
         logMap.put("username", getUsername());
+        logMap.put("executionTimeMs", duration);
+        logMap.put("responseBody", getResponseJson(response));
 
         log.info(asJson(logMap));
-    }
-
-    private String getClientIp(HttpServletRequest request) {
-        String xfHeader = request.getHeader("X-Forwarded-For");
-        return xfHeader == null ? request.getRemoteAddr() : xfHeader.split(",")[0];
     }
 
     private String getUsername() {
@@ -60,11 +64,19 @@ public class RequestLog {
         return authentication != null ? authentication.getName() : "anonymous";
     }
 
+    private String getResponseJson(Object response) {
+        try {
+            return objectMapper.writeValueAsString(response);
+        } catch (JsonProcessingException e) {
+            return "Unserializable Response";
+        }
+    }
+
     private String asJson(Map<String, Object> map) {
         try {
-            return new ObjectMapper().writeValueAsString(map);
+            return objectMapper.writeValueAsString(map);
         } catch (JsonProcessingException e) {
-            return "{\"error\": \"Failed to convert log to JSON\"}";
+            return "{\"error\": \"Failed to convert response log to JSON\"}";
         }
     }
 }
