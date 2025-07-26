@@ -2,8 +2,9 @@ package com.roome.global.security.jwt.interceptor;
 
 import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
+import com.roome.global.security.jwt.principal.CustomUser;
 import com.roome.global.security.jwt.provider.JwtTokenProvider;
-import com.roome.global.service.RedisService;
+import com.roome.global.security.jwt.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -14,10 +15,11 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -25,7 +27,7 @@ import java.util.UUID;
 public class JwtWebSocketInterceptor implements ChannelInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final RedisService redisService;
+    private final TokenService tokenService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -44,7 +46,7 @@ public class JwtWebSocketInterceptor implements ChannelInterceptor {
                 }
 
                 // 블랙리스트 체크
-                if (redisService.isBlacklisted(token)) {
+                if (tokenService.isTokenBlacklisted(token)) {
                     log.warn("[WebSocket 연결 거부] 블랙리스트에 등록된 토큰");
                     throw new BusinessException(ErrorCode.WEBSOCKET_TOKEN_BLACKLISTED);
                 }
@@ -52,11 +54,16 @@ public class JwtWebSocketInterceptor implements ChannelInterceptor {
                 // 토큰 검증
                 if (jwtTokenProvider.validateToken(token)) {
                     Long userId = jwtTokenProvider.getUserIdFromAccessToken(token);
+                    String email = jwtTokenProvider.getEmailFromAccessToken(token);         // 🔧 추가
+                    List<SimpleGrantedAuthority> authorities = jwtTokenProvider.getAuthorities(token).stream() // 🔧 추가
+                            .map(SimpleGrantedAuthority::new)
+                            .toList();
 
                     try {
 
                         // SecurityContext에 인증 정보 설정 (JwtAuthenticationFilter와 유사)
-                        Authentication auth = new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+                        CustomUser customUser = new CustomUser(userId, email, authorities);
+                        Authentication auth = new UsernamePasswordAuthenticationToken(customUser, null, authorities);
                         SecurityContextHolder.getContext().setAuthentication(auth);
 
                         // accessor가 mutable인 경우에만 User 설정

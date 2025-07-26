@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/token")
+@RequestMapping("/api/auth/token")
 public class TokenController {
 
 	private final TokenExchangeService tempTokenService;
@@ -26,7 +26,7 @@ public class TokenController {
 												 HttpServletRequest request,
 												 HttpServletResponse response) {
 		tempTokenService.exchangeTempCode(getAccessTokenByTempCodeRequest, request, response);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok().build();
 	}
 
 	// refreshToken 으로 accessToken 재발급 api

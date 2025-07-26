@@ -19,23 +19,33 @@ public class CustomOAuth2User implements OAuth2User, UserPrincipal {
 	private final Long id;
 
 	@Override
+	public <A> A getAttribute(String name) {
+		return OAuth2User.super.getAttribute(name);
+	}
+
+	@Override
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(user.getUserRole().name()));
+		return List.of(new SimpleGrantedAuthority(user.getUserRole().getAuthority()));
 	}
 
 	@Override
 	public String getName() {
-		return user.getEmail();
+		return user.getName();
 	}
 
 	@Override
 	public Long getId() {
 		return id;
+	}
+
+	@Override
+	public String getEmail() {
+		return user.getEmail();
 	}
 
 	public User getUser() {

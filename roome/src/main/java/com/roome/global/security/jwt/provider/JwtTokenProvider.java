@@ -8,6 +8,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class JwtTokenProvider implements InitializingBean {
 	private static final String AUTHORITIES_KEY = "auth";
 	private final UserRepository userRepository;
@@ -65,10 +67,12 @@ public class JwtTokenProvider implements InitializingBean {
 
 		UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 		Long userId = principal.getId();
+		String email = principal.getEmail();
 
 		return Jwts.builder()
 				.setSubject(String.valueOf(userId))
 				.claim("userId", String.valueOf(userId))
+				.claim("email", email)
 				.claim(AUTHORITIES_KEY, authorities) // 정보 저장
 				.signWith(key, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
 				.setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
@@ -106,6 +110,8 @@ public class JwtTokenProvider implements InitializingBean {
 						.collect(Collectors.toList());
 
 		CustomUser principal = new CustomUser(userId, email, authorities);
+
+		log.info("🧩 Claims authorities: {}", claims.get("auth"));
 
 		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 	}
@@ -147,7 +153,6 @@ public class JwtTokenProvider implements InitializingBean {
 		return claims.getExpiration().getTime() - System.currentTimeMillis();
 	}
 
-
 	// 토큰의 유효성 검증을 수행
 	public boolean validateToken(String token) {
 		try {
@@ -186,6 +191,19 @@ public class JwtTokenProvider implements InitializingBean {
 		return null;
 	}
 
+	public long getRemainingValidity(String accessToken) {
+		Claims claims = Jwts.parserBuilder()
+				.setSigningKey(key)  // 시크릿 키 사용
+				.build()
+				.parseClaimsJws(accessToken)
+				.getBody();
+
+		Date expiration = claims.getExpiration(); // 만료 시간
+		long now = System.currentTimeMillis();
+
+		return (expiration.getTime() - now) / 1000;
+	}
+
 	private Claims getClaims(String token) {
 		return Jwts.parserBuilder()
 				.setSigningKey(key)
@@ -193,4 +211,16 @@ public class JwtTokenProvider implements InitializingBean {
 				.parseClaimsJws(token)
 				.getBody();
 	}
+
+	public String getEmailFromAccessToken(String token) {
+		Claims claims = getClaims(token);
+		return claims.get("email", String.class);
+	}
+
+	public List<String> getAuthorities(String token) {
+		Claims claims = getClaims(token);
+		String roles = claims.get("auth", String.class); // AUTHORITIES_KEY
+		return Arrays.asList(roles.split(","));
+	}
+
 }
