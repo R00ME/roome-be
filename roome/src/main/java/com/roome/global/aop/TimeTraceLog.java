@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class TimeTraceLog {
 
-    @Around("execution(* com.roome.domain..controller..*.*(..)) || execution(* com.roome.global.controller..*.*(..))")
+    @Around("execution(* com.roome.domain..controller..*.*(..))")
     public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         Object result = joinPoint.proceed();

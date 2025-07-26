@@ -28,13 +28,13 @@ public class ResponseLog {
     private final ThreadLocal<Long> startTimeThreadLocal = new ThreadLocal<>();
 
     // 요청 시작 시간 기록 (같이 사용되도록)
-    @Before("execution(* com.roome.domain..controller..*.*(..)) || execution(* com.roome.global.controller..*.*(..))")
+    @Before("execution(* com.roome.domain..controller..*.*(..))")
     public void before() {
         startTimeThreadLocal.set(System.currentTimeMillis());
     }
 
     @AfterReturning(
-            pointcut = "execution(* com.roome.domain..controller..*.*(..)) || execution(* com.roome.global.controller..*.*(..))",
+            pointcut = "execution(* com.roome.domain..controller..*.*(..))",
             returning = "response"
     )
     public void logAfterReturning(JoinPoint joinPoint, Object response) {
@@ -44,7 +44,7 @@ public class ResponseLog {
         HttpServletRequest request = attributes.getRequest();
 
         long duration = System.currentTimeMillis() - startTimeThreadLocal.get();
-        startTimeThreadLocal.remove(); // 꼭 제거해주기
+        startTimeThreadLocal.remove();
 
         Map<String, Object> logMap = new LinkedHashMap<>();
         logMap.put("logType", "response_info");

@@ -24,9 +24,7 @@ import java.util.Map;
 public class RequestLog {
 
     @Pointcut(
-            "execution(* com.roome.domain..controller..*.*(..)) || " +
-                    "execution(* com.roome.global.controller..*.*(..))"
-    )
+            "execution(* com.roome.domain..controller..*.*(..))")
     private void cut() {
     }
 
