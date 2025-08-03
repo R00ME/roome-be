@@ -4,6 +4,7 @@ import com.roome.domain.point.entity.Point;
 import com.roome.domain.rank.entity.UserActivity;
 import com.roome.domain.room.entity.Room;
 import com.roome.domain.room.exception.RoomAuthorizationException;
+import com.roome.domain.user.dto.request.SetProfileInfoRequest;
 import com.roome.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -45,6 +46,11 @@ public class User extends BaseTimeEntity {
 	// 자기 소개
 	@Column(length = 101)
 	private String bio;
+
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
+
+	private Integer birthYear;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 10)
@@ -128,5 +134,10 @@ public class User extends BaseTimeEntity {
 
 	public void updateLastLogin(LocalDateTime now) {
 		this.lastLogin = now;
+	}
+
+	public void setProfileInfo(SetProfileInfoRequest setProfileInfoRequest) {
+		this.gender = setProfileInfoRequest.getGender();
+		this.birthYear = setProfileInfoRequest.getBirthYear();
 	}
 }

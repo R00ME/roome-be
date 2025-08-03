@@ -24,6 +24,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 	private final UserRepository userRepository;
 
+		private record UserResult(User user, boolean isNewUser) {}
+
 	// OAuth2 서버 에서 사용자 정보 받는 메서드
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -38,23 +40,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(provider, attributes);
 
 		// db 조회 / 회원가입 처리
-		User user = saveOrUpdate(userInfo);
+		UserResult userResult = saveOrUpdate(userInfo);
 
 		// 반환 -> 이후 principal 객체 역할
-		return new CustomOAuth2User(user, attributes, user.getId());
+		return new CustomOAuth2User(userResult.user, attributes, userResult.user.getId(), userResult.isNewUser());
 	}
 
-	public User saveOrUpdate(OAuth2UserInfo userInfo) {
+	public UserResult saveOrUpdate(OAuth2UserInfo userInfo) {
 		return userRepository.findByEmail(userInfo.getEmail())
-				.orElseGet(() -> userRepository.save(User.builder()
-						.email(userInfo.getEmail())
-						.provider(userInfo.getProvider())
-						.providerId(userInfo.getProviderId())
-						.name(userInfo.getName() != null ? userInfo.getName() : "unknown") // name 기본값
-						.nickname(userInfo.getNickname() != null ? userInfo.getNickname() : "nickname") // nickname 기본값
-						.profileImage(userInfo.getProfileImage()) // (nullable 가능)
-						.status(Status.ONLINE) // 상태 기본값 설정 -> 회원 가입 후 자동 로그인 -> ONLINE
-						.userRole(UserRole.USER)
-						.build()));
+				.map(user -> new UserResult(user, false))
+				.orElseGet(() -> {
+					User newUser = userRepository.save(User.builder()
+							.email(userInfo.getEmail())
+							.provider(userInfo.getProvider())
+							.providerId(userInfo.getProviderId())
+							.name(userInfo.getName() != null ? userInfo.getName() : "unknown") // name 기본값
+							.nickname(userInfo.getNickname() != null ? userInfo.getNickname() : "nickname") // nickname 기본값
+							.profileImage(userInfo.getProfileImage()) // (nullable 가능)
+							.status(Status.ONLINE) // 상태 기본값 설정 -> 회원 가입 후 자동 로그인 -> ONLINE
+							.userRole(UserRole.USER)
+							.build());
+					return new UserResult(newUser, true);
+				});
 	}
 }
