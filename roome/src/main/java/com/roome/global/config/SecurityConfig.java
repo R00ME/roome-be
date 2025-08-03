@@ -20,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.http.HttpMethod.PATCH;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -74,11 +76,9 @@ public class SecurityConfig {
 										.requestMatchers("/api/authenticate").permitAll()
 						                .requestMatchers("/login/oauth2/code/**").permitAll()
 										.requestMatchers("/oauth2/**").permitAll()
-//										.requestMatchers("/login").permitAll()
 										.requestMatchers("/api/auth/token/temp").permitAll()
 										.requestMatchers("/api/auth/token/refresh").permitAll()
-//										.requestMatchers(PathRequest.toH2Console()).permitAll()
-//                                .requestMatchers("/favicon.ico").permitAll()
+										.requestMatchers(PATCH, "/api/users/*/profile").permitAll()
 										.anyRequest().authenticated()
 				)
 				.oauth2Login(oauth2 -> oauth2
