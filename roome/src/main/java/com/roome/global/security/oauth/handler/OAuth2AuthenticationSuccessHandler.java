@@ -2,6 +2,7 @@ package com.roome.global.security.oauth.handler;
 
 import com.roome.global.security.jwt.service.TokenExchangeService;
 import com.roome.global.security.jwt.provider.JwtTokenProvider;
+import com.roome.global.security.oauth.model.CustomOAuth2User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 	private final JwtTokenProvider jwtTokenProvider;
 	private final TokenExchangeService tokenExchangeService;
 	@Value("${app.oauth2.redirectUri}")
-	private String frontendRedirectUri ; // 프론트 팀원들과 협의 필요
+	private String frontendRedirectUri ;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -30,8 +31,12 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 		// 임시 코드 발급 -> url 로 전달
 		String tempCode = tokenExchangeService.generateTempCode(accessToken);
 
-		// redirectUrl 로 tempCode 반환 -> test controller 로 간이 api 생성
-		String redirectUrl = frontendRedirectUri + "/login/callback?temp_code=" + tempCode;
+		// isNewUser 여부 추출
+		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+		boolean isNewUser = oAuth2User.isNewUser();
+
+		// tempCode, isNewUser 함께 전달
+		String redirectUrl = frontendRedirectUri + "/login/callback?temp_code=" + tempCode + "&is_new_user=" + isNewUser;
 		response.sendRedirect(redirectUrl);
 	}
 }

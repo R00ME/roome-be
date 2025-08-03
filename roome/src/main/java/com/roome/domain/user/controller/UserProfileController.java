@@ -1,5 +1,6 @@
 package com.roome.domain.user.controller;
 
+import com.roome.domain.user.dto.request.SetProfileInfoRequest;
 import com.roome.domain.user.dto.request.UpdateProfileRequest;
 import com.roome.domain.user.dto.response.UserProfileResponse;
 import com.roome.domain.user.service.UserProfileService;
@@ -28,6 +29,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserProfileController {
 
 	private final UserProfileService userProfileService;
+
+	// 신규 user 나이대, 성별 조회 api
+	@PatchMapping("/{userId}/profile")
+	public ResponseEntity<Void> setProfileInfo(@AuthenticationPrincipal CustomUser user, @PathVariable Long userId, SetProfileInfoRequest setProfileInfoRequest) {
+		userProfileService.setProfileInfo(userId, setProfileInfoRequest);
+		return ResponseEntity.ok().build();
+	}
 
 	@Operation(summary = "프로필 조회",
 			description = "특정 사용자의 프로필 정보를 조회합니다.")

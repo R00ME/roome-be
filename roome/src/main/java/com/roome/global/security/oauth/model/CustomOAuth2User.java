@@ -17,6 +17,7 @@ public class CustomOAuth2User implements OAuth2User, UserPrincipal {
 	private final User user;
 	private final Map<String, Object> attributes;
 	private final Long id;
+	private final boolean isNewUser;
 
 	@Override
 	public <A> A getAttribute(String name) {
@@ -50,5 +51,9 @@ public class CustomOAuth2User implements OAuth2User, UserPrincipal {
 
 	public User getUser() {
 		return user;
+	}
+
+	public boolean isNewUser() {
+		return isNewUser;
 	}
 }
