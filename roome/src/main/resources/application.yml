@@ -200,6 +200,9 @@ spring:
           useUnicode: true
         format_sql: false
         dialect: org.hibernate.dialect.MariaDBDialect
+#  app:
+#    oauth2:
+#      redirectUri: https://dev.roome.io.kr
 
 # 알라딘 API 키
 aladin:
@@ -228,6 +231,9 @@ spring:
           useUnicode: true
         format_sql: false
         dialect: org.hibernate.dialect.MariaDBDialect
+#  app:
+#    oauth2:
+#      redirectUri: https://roome.io.kr
 
 # 알라딘 API 키
 aladin:
@@ -239,9 +245,9 @@ spring:
     activate:
       on-profile: test
 
-#  h2:
-#    console:
-#      enabled: true
+  #  h2:
+  #    console:
+  #      enabled: true
 
   jpa:
     hibernate:

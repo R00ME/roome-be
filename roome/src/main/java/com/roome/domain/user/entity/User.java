@@ -4,11 +4,11 @@ import com.roome.domain.point.entity.Point;
 import com.roome.domain.rank.entity.UserActivity;
 import com.roome.domain.room.entity.Room;
 import com.roome.domain.room.exception.RoomAuthorizationException;
-import com.roome.domain.user.dto.request.SetProfileInfoRequest;
 import com.roome.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class User extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
-	private Integer birthYear;
+	private LocalDate birthDate;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 10)
@@ -136,8 +136,8 @@ public class User extends BaseTimeEntity {
 		this.lastLogin = now;
 	}
 
-	public void setProfileInfo(SetProfileInfoRequest setProfileInfoRequest) {
-		this.gender = setProfileInfoRequest.getGender();
-		this.birthYear = setProfileInfoRequest.getBirthYear();
+	public void setProfileInfo(Gender gender, LocalDate birthDate) {
+		this.gender = gender;
+		this.birthDate = birthDate;
 	}
 }

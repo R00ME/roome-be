@@ -32,7 +32,7 @@ public class UserProfileController {
 
 	// 신규 user 나이대, 성별 조회 api
 	@PatchMapping("/{userId}/profile")
-	public ResponseEntity<Void> setProfileInfo(@PathVariable Long userId, @RequestBody SetProfileInfoRequest setProfileInfoRequest) {
+	public ResponseEntity<Void> setProfileInfo(@AuthenticationPrincipal CustomUser customUser, @PathVariable Long userId, @RequestBody SetProfileInfoRequest setProfileInfoRequest) {
 		userProfileService.setProfileInfo(userId, setProfileInfoRequest);
 		return ResponseEntity.ok().build();
 	}

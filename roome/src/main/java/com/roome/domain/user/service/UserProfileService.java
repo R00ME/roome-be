@@ -12,12 +12,13 @@ import com.roome.domain.userGenrePreference.service.GenrePreferenceService;
 import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
 import com.roome.global.security.jwt.exception.UserNotFoundException;
-import com.roome.global.security.jwt.principal.CustomUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,9 @@ public class UserProfileService {
 	public void setProfileInfo(Long userId, SetProfileInfoRequest setProfileInfoRequest) {
 		Optional<User> user = userRepository.findById(userId);
 		if (user.isEmpty()) throw new UserNotFoundException();
-		user.get().setProfileInfo(setProfileInfoRequest);
+
+		LocalDate birthDate = LocalDate.parse(setProfileInfoRequest.getBirthDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		user.get().setProfileInfo(setProfileInfoRequest.getGender(), birthDate);
 	}
 
 	public UserProfileResponse getUserProfile(Long userId, Long authUserId) {
