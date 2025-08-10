@@ -78,7 +78,7 @@ public class SecurityConfig {
 										.requestMatchers("/oauth2/**").permitAll()
 										.requestMatchers("/api/auth/token/temp").permitAll()
 										.requestMatchers("/api/auth/token/refresh").permitAll()
-										.requestMatchers(PATCH, "/api/users/*/profile").permitAll()
+//										.requestMatchers(PATCH, "/api/users/*/profile").permitAll()
 										.anyRequest().authenticated()
 				)
 				.oauth2Login(oauth2 -> oauth2
