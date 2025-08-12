@@ -16,15 +16,22 @@ import java.util.UUID;
 import static com.roome.global.security.jwt.util.TokenResponseUtil.addTokensToResponse;
 
 @Service
-@RequiredArgsConstructor
 public class TokenExchangeService {
 
 	private static final long EXPIRATION_MINUTES = 3;
-	private static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
-	@Qualifier("tempCodeRedisTemplate")
 	private final RedisTemplate<String, String> tempCodeRedisTemplate;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final RefreshTokenService refreshTokenService;
+
+	public TokenExchangeService(
+			@Qualifier("tempCodeRedisTemplate") RedisTemplate<String, String> tempCodeRedisTemplate,
+			JwtTokenProvider jwtTokenProvider,
+			RefreshTokenService refreshTokenService
+	) {
+		this.tempCodeRedisTemplate = tempCodeRedisTemplate;
+		this.jwtTokenProvider = jwtTokenProvider;
+		this.refreshTokenService = refreshTokenService;
+	}
 
 	public String generateTempCode(String accessToken) {
 		String tempCode = UUID.randomUUID().toString();

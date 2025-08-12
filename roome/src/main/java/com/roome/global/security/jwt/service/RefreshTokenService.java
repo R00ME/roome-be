@@ -1,7 +1,6 @@
 package com.roome.global.security.jwt.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -11,12 +10,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class RefreshTokenService {
 
 	private static final Duration REFRES_TOKEN_DURATION = Duration.ofDays(14);
-	@Qualifier("refreshTokenRedisTemplate")
 	private final RedisTemplate<String, String> refreshTokenRedisTemplate;
+
+	public RefreshTokenService(
+			@Qualifier("refreshTokenRedisTemplate")
+			RedisTemplate<String, String> refreshTokenRedisTemplate
+	) {
+		this.refreshTokenRedisTemplate = refreshTokenRedisTemplate;
+	}
 
 	public void saveRefreshToken(Long userId, String refreshToken, HttpServletRequest request) {
 		String ip = request.getRemoteAddr();
