@@ -3,7 +3,6 @@ package com.roome.global.service;
 import com.roome.domain.rank.entity.ScoreUpdateTask;
 import com.roome.domain.rank.entity.TaskStatus;
 import com.roome.domain.rank.repository.ScoreUpdateTaskRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -22,17 +21,27 @@ import java.util.function.Supplier;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class RedisService {
 
 	private static final String REFRESH_TOKEN_PREFIX = "RT:";
 	private static final String BLACKLIST_PREFIX = "BL:";
 	private static final String RANKING_KEY = "user:ranking";
-	@Qualifier("rankingRedisTemplate")
 	private final RedisTemplate<String, String> rankingRedisTemplate;
 	private final StringRedisTemplate redisTemplate;
 	private final RedissonClient redissonClient;
 	private final ScoreUpdateTaskRepository scoreUpdateTaskRepository;
+
+	public RedisService(
+			@Qualifier("rankingRedisTemplate") RedisTemplate<String, String> rankingRedisTemplate,
+			StringRedisTemplate redisTemplate,
+			RedissonClient redissonClient,
+			ScoreUpdateTaskRepository scoreUpdateTaskRepository
+	) {
+		this.rankingRedisTemplate = rankingRedisTemplate;
+		this.redisTemplate = redisTemplate;
+		this.redissonClient = redissonClient;
+		this.scoreUpdateTaskRepository = scoreUpdateTaskRepository;
+	}
 
 	// 분산 락 사용
 	public <T> T executeWithLock(String lockKey, long waitTime, long leaseTime,

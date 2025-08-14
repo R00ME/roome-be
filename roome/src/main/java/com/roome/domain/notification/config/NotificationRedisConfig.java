@@ -3,6 +3,7 @@ package com.roome.domain.notification.config;
 import com.roome.domain.notification.service.NotificationRedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -25,7 +26,7 @@ public class NotificationRedisConfig {
 	@Bean
 	public RedisMessageListenerContainer notificationListenerContainer(
 			RedisConnectionFactory connectionFactory,
-			MessageListenerAdapter notificationMessageListener) {
+			@Qualifier("notificationMessageListener") MessageListenerAdapter notificationMessageListener) {
 
 		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
 		container.setConnectionFactory(connectionFactory);

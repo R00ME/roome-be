@@ -27,17 +27,29 @@ import java.util.Map;
 import java.util.Set;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class RankingScheduler {
 
 	private static final String RANKING_KEY = "user:ranking";
-	@Qualifier("rankingRedisTemplate")
 	private final RedisTemplate<String, String> rankingRedisTemplate;
 	private final UserActivityRepository userActivityRepository;
 	private final UserRepository userRepository;
 	private final PointRepository pointRepository;
 	private final PointHistoryRepository pointHistoryRepository;
+
+	public RankingScheduler(
+			@Qualifier("rankingRedisTemplate") RedisTemplate<String, String> rankingRedisTemplate,
+			UserActivityRepository userActivityRepository,
+			UserRepository userRepository,
+			PointRepository pointRepository,
+			PointHistoryRepository pointHistoryRepository
+	) {
+		this.rankingRedisTemplate = rankingRedisTemplate;
+		this.userActivityRepository = userActivityRepository;
+		this.userRepository = userRepository;
+		this.pointRepository = pointRepository;
+		this.pointHistoryRepository = pointHistoryRepository;
+	}
 
 	// 최근 7일간의 활동 점수를 집계하여 Redis에 저장
 	@Scheduled(fixedRate = 3600000) // 1시간마다 실행
