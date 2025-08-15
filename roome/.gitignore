@@ -49,3 +49,4 @@ redis/
 ### .env ###
 src/main/resources/.env
 **/resources/.env
+.env
