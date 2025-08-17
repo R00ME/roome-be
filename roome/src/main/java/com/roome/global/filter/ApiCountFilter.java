@@ -1,11 +1,14 @@
 package com.roome.global.filter;
 
 import com.roome.domain.apiUsage.service.ApiUsageCountService;
+import com.roome.global.security.jwt.principal.CustomUser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,11 +27,11 @@ public class ApiCountFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String uri = request.getRequestURI();
-        String userId = request.getUserPrincipal() != null
-                ? request.getUserPrincipal().getName()
-                : "anonymous";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUser user = (CustomUser) auth.getPrincipal();
+        Long userId = user.getId();
 
-        apiUsageCountService.incrementCount(Long.parseLong(userId), uri);
+        apiUsageCountService.incrementCount(userId, uri);
 
         filterChain.doFilter(request, response);
     }
