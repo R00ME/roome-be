@@ -149,7 +149,7 @@ spring:
 
 app:
   oauth2:
-    redirectUri: https://dev.roome.io.kr
+    redirectUri: http://localhost:5173
 
 aladin:
   api:
