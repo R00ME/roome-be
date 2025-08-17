@@ -163,6 +163,15 @@ public class RedisConfig {
 		return template;
 	}
 
+    @Bean(name = "apiCountRedisTemplate")
+    public RedisTemplate<String, Long> apiCountRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Long> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericToStringSerializer<>(Long.class));
+        return template;
+    }
+
 	@Bean
 	public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
 		ObjectMapper objectMapper = new ObjectMapper();
