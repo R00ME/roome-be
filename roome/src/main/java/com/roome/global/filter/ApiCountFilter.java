@@ -27,11 +27,17 @@ public class ApiCountFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String uri = request.getRequestURI();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUser user = (CustomUser) auth.getPrincipal();
-        Long userId = user.getId();
 
-        apiUsageCountService.incrementCount(userId, uri);
+        if (uri.startsWith("/api/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof CustomUser customUser) {
+            Long userId = customUser.getId();
+            apiUsageCountService.incrementCount(userId, uri);
+        }
 
         filterChain.doFilter(request, response);
     }
