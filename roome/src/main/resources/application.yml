@@ -109,7 +109,11 @@ cloud:
 
 aladin:
   api:
-    key: ${ALADIN_SECRET_LOCAL} 
+    key: ${ALADIN_SECRET_LOCAL}
+
+app:
+  oauth2:
+    redirectUris: http://localhost:5173,https://dev.roome.io.kr,https://roome.io.kr
 
 ---
 spring:
@@ -128,9 +132,9 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
-app:
-  oauth2:
-    redirectUri: http://localhost:5173
+#app:
+#  oauth2:
+#    redirectUri: http://localhost:5173
 
 aladin:
   api:
@@ -147,9 +151,9 @@ spring:
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
 
-app:
-  oauth2:
-    redirectUri: https://dev.roome.io.kr
+#app:
+#  oauth2:
+#    redirectUri: https://dev.roome.io.kr
 
 aladin:
   api:
@@ -166,9 +170,9 @@ spring:
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
 
-app:
-  oauth2:
-    redirectUri: https://roome.io.kr
+#app:
+#  oauth2:
+#    redirectUri: https://roome.io.kr
 
 aladin:
   api:

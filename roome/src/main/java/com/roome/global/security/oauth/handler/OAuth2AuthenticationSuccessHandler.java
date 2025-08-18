@@ -12,31 +12,33 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-	private final JwtTokenProvider jwtTokenProvider;
-	private final TokenExchangeService tokenExchangeService;
-	@Value("${app.oauth2.redirectUri}")
-	private String frontendRedirectUri ;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenExchangeService tokenExchangeService;
+    @Value("${app.oauth2.redirectUris}")
+    private List<String> redirectUris;
 
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-										Authentication authentication) throws IOException {
-		// Token 코드 발급
-		String accessToken = jwtTokenProvider.createToken(authentication);
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
+        String origin = request.getHeader("Origin");
+        String targetUri = redirectUris.stream()
+                .filter(uri -> uri.startsWith(origin))
+                .findFirst()
+                .orElse("https://roome.io.kr"); // fallback
 
-		// 임시 코드 발급 -> url 로 전달
-		String tempCode = tokenExchangeService.generateTempCode(accessToken);
+        String accessToken = jwtTokenProvider.createToken(authentication);
+        String tempCode = tokenExchangeService.generateTempCode(accessToken);
 
-		// isNewUser 여부 추출
-		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-		boolean isNewUser = oAuth2User.isNewUser();
+        CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+        boolean isNewUser = oAuth2User.isNewUser();
 
-		// tempCode, isNewUser 함께 전달
-		String redirectUrl = frontendRedirectUri + "/login/callback?temp_code=" + tempCode + "&is_new_user=" + isNewUser;
-		response.sendRedirect(redirectUrl);
-	}
+        String redirectUrl = targetUri + "/login/callback?temp_code=" + tempCode + "&is_new_user=" + isNewUser;
+        response.sendRedirect(redirectUrl);
+    }
 }
