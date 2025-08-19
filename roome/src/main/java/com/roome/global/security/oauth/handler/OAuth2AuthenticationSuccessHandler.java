@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,11 +32,11 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         if (origin == null) {
             String referer = request.getHeader("Referer");
             if (referer != null) {
-                // 마지막 '/' 제거
-                if (referer.endsWith("/")) {
-                    referer = referer.substring(0, referer.length() - 1);
+                URI uri = URI.create(referer);
+                origin = uri.getScheme() + "://" + uri.getHost();
+                if (uri.getPort() != -1 && uri.getPort() != 80 && uri.getPort() != 443) {
+                    origin += ":" + uri.getPort();
                 }
-                origin = referer;
             }
         }
 
@@ -43,7 +44,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         String targetUri = redirectUris.stream()
                 .filter(uri -> checkOrigin != null && uri.startsWith(checkOrigin))
                 .findFirst()
-                .orElse("https://roome.io.kr"); // fallback
+                .orElse("https://roome.io.kr");
 
         String accessToken = jwtTokenProvider.createToken(authentication);
         String tempCode = tokenExchangeService.generateTempCode(accessToken);
