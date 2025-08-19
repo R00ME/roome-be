@@ -27,8 +27,21 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         String origin = request.getHeader("Origin");
+
+        if (origin == null) {
+            String referer = request.getHeader("Referer");
+            if (referer != null) {
+                // 마지막 '/' 제거
+                if (referer.endsWith("/")) {
+                    referer = referer.substring(0, referer.length() - 1);
+                }
+                origin = referer;
+            }
+        }
+
+        String checkOrigin = origin;
         String targetUri = redirectUris.stream()
-                .filter(uri -> uri.startsWith(origin))
+                .filter(uri -> checkOrigin != null && uri.startsWith(checkOrigin))
                 .findFirst()
                 .orElse("https://roome.io.kr"); // fallback
 
