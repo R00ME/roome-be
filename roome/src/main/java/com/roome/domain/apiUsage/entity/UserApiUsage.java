@@ -30,4 +30,8 @@ public class UserApiUsage {
         this.date = date;
         this.count = count;
     }
+
+    public void plusCount(Long additionalCount) {
+        this.count += additionalCount;
+    }
 }

@@ -7,10 +7,11 @@ import com.roome.domain.point.exception.PointNotFoundException;
 import com.roome.domain.point.repository.PointHistoryRepository;
 import com.roome.domain.point.repository.PointRepository;
 import com.roome.domain.rank.entity.UserActivity;
+import com.roome.domain.rank.entity.UserRankingHistory;
 import com.roome.domain.rank.repository.UserActivityRepository;
+import com.roome.domain.rank.repository.UserRankingHistoryRepository;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -20,6 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -36,19 +38,22 @@ public class RankingScheduler {
 	private final UserRepository userRepository;
 	private final PointRepository pointRepository;
 	private final PointHistoryRepository pointHistoryRepository;
+    private final UserRankingHistoryRepository userRankingHistoryRepository;
 
 	public RankingScheduler(
 			@Qualifier("rankingRedisTemplate") RedisTemplate<String, String> rankingRedisTemplate,
 			UserActivityRepository userActivityRepository,
 			UserRepository userRepository,
 			PointRepository pointRepository,
-			PointHistoryRepository pointHistoryRepository
+			PointHistoryRepository pointHistoryRepository,
+            UserRankingHistoryRepository userRankingHistoryRepository
 	) {
 		this.rankingRedisTemplate = rankingRedisTemplate;
 		this.userActivityRepository = userActivityRepository;
 		this.userRepository = userRepository;
 		this.pointRepository = pointRepository;
 		this.pointHistoryRepository = pointHistoryRepository;
+        this.userRankingHistoryRepository = userRankingHistoryRepository;
 	}
 
 	// 최근 7일간의 활동 점수를 집계하여 Redis에 저장
@@ -159,6 +164,30 @@ public class RankingScheduler {
 					log.error("랭킹 데이터 처리 중 형변환 오류: {}", e.getMessage());
 				}
 			}
+
+            LocalDate snapshotDate = LocalDate.now();
+            Set<ZSetOperations.TypedTuple<String>> allRankers =
+                    rankingRedisTemplate.opsForZSet().reverseRangeWithScores(RANKING_KEY, 0, -1);
+
+            if (allRankers != null) {
+                int historyRank = 1;
+                for (ZSetOperations.TypedTuple<String> ranker : allRankers) {
+                    if (ranker.getValue() == null || ranker.getScore() == null) continue;
+
+                    Long userId = Long.valueOf(ranker.getValue());
+                    int score = ranker.getScore().intValue();
+
+                    UserRankingHistory history = UserRankingHistory.builder()
+                            .snapshotDate(snapshotDate)
+                            .userId(userId)
+                            .rank(historyRank++)
+                            .score(score)
+                            .build();
+
+                    userRankingHistoryRepository.save(history);
+                }
+                log.info("UserRankingHistory 저장 완료: {}명 기록", allRankers.size());
+            }
 
 			// 지난 주 활동 데이터 삭제
 			LocalDateTime oneWeekAgo = LocalDateTime.now().minusDays(7);
