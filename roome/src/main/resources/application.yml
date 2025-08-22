@@ -116,6 +116,7 @@ app:
     redirectUris: http://localhost:5173,https://dev.roome.io.kr,https://roome.io.kr
 
 ---
+
 spring:
   config:
     activate:
@@ -141,6 +142,7 @@ aladin:
     key: ${ALADIN_SECRET_LOCAL}
 
 ---
+
 spring:
   config:
     activate:
@@ -160,10 +162,21 @@ aladin:
     key: ${ALADIN_SECRET_DEV}
 
 ---
+
 spring:
   config:
     activate:
       on-profile: prod
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: "https://www.roome.io.kr/login/oauth2/code/google"
+          naver:
+            redirect-uri: "https://www.roome.io.kr/login/oauth2/code/naver"
+          kakao:
+            redirect-uri: "https://www.roome.io.kr/login/oauth2/code/kakao"
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: ${DATASOURCE_URL}

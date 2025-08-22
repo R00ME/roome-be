@@ -1,11 +1,12 @@
 package com.roome.global.security.oauth.handler;
 
-import com.roome.global.security.jwt.service.TokenExchangeService;
 import com.roome.global.security.jwt.provider.JwtTokenProvider;
+import com.roome.global.security.jwt.service.TokenExchangeService;
 import com.roome.global.security.oauth.model.CustomOAuth2User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -27,6 +29,11 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
+
+        response.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+
         String origin = request.getHeader("Origin");
 
         if (origin == null) {
@@ -42,9 +49,13 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         String checkOrigin = origin;
         String targetUri = redirectUris.stream()
-                .filter(uri -> checkOrigin != null && uri.startsWith(checkOrigin))
+                .map(String::trim)
+                .filter(uri -> checkOrigin != null && checkOrigin.startsWith(uri))
                 .findFirst()
                 .orElse("https://roome.io.kr");
+
+        log.debug("referer={}, origin={}, checkOrigin={}, redirectUris={}",
+                request.getHeader("Referer"), origin, checkOrigin, redirectUris);
 
         String accessToken = jwtTokenProvider.createToken(authentication);
         String tempCode = tokenExchangeService.generateTempCode(accessToken);
