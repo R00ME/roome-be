@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -35,16 +34,18 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
 
-        String origin = Optional.ofNullable(request.getHeader("Origin"))
-                .orElseGet(() -> {
-                    String referer = request.getHeader("Referer");
-                    if (referer != null) {
-                        URI uri = URI.create(referer);
-                        return uri.getScheme() + "://" + uri.getHost()
-                                + (uri.getPort() > 0 ? ":" + uri.getPort() : "");
-                    }
-                    return null;
-                });
+        String origin = request.getHeader("Origin");
+
+        if (origin == null) {
+            String referer = request.getHeader("Referer");
+            if (referer != null) {
+                URI uri = URI.create(referer);
+                origin = uri.getScheme() + "://" + uri.getHost();
+                if (uri.getPort() != -1 && uri.getPort() != 80 && uri.getPort() != 443) {
+                    origin += ":" + uri.getPort();
+                }
+            }
+        }
 
         String checkOrigin = origin != null ? origin.replaceAll("/$", "").trim() : null;
 
@@ -55,9 +56,10 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                 .orElseGet(() -> {
                     String forwardedHost = request.getHeader("X-Forwarded-Host");
                     String forwardedProto = request.getHeader("X-Forwarded-Proto");
-                    return (forwardedHost != null && forwardedProto != null)
-                            ? forwardedProto + "://" + forwardedHost
-                            : request.getRequestURL().toString();
+                    if (forwardedHost != null && forwardedProto != null) {
+                        return forwardedProto + "://" + forwardedHost;
+                    }
+                    return request.getScheme() + "://" + request.getServerName();
                 });
 
         log.debug("referer={}, origin={}, checkOrigin={}, redirectUris={}",
