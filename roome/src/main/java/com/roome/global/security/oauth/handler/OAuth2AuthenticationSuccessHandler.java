@@ -47,10 +47,11 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             }
         }
 
-        String checkOrigin = origin;
+        String checkOrigin = origin != null ? origin.replaceAll("/$", "").trim() : null;
+
         String targetUri = redirectUris.stream()
-                .map(String::trim)
-                .filter(uri -> checkOrigin != null && checkOrigin.startsWith(uri))
+                .map(u -> u.replaceAll("/$", "").trim())
+                .filter(uri -> checkOrigin != null && checkOrigin.equals(uri))
                 .findFirst()
                 .orElse("https://roome.io.kr");
 
