@@ -53,7 +53,14 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                 .map(u -> u.replaceAll("/$", "").trim())
                 .filter(uri -> checkOrigin != null && checkOrigin.equals(uri))
                 .findFirst()
-                .orElse("https://roome.io.kr");
+                .orElseGet(() -> {
+                    String forwardedHost = request.getHeader("X-Forwarded-Host");
+                    String forwardedProto = request.getHeader("X-Forwarded-Proto");
+                    if (forwardedHost != null && forwardedProto != null) {
+                        return forwardedProto + "://" + forwardedHost;
+                    }
+                    return request.getScheme() + "://" + request.getServerName();
+                });
 
         log.debug("referer={}, origin={}, checkOrigin={}, redirectUris={}",
                 request.getHeader("Referer"), origin, checkOrigin, redirectUris);
