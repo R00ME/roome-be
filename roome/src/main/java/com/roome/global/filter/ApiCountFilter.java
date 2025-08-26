@@ -28,7 +28,7 @@ public class ApiCountFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
-        if (uri.startsWith("/api/auth/") || uri.startsWith("/ws/")) {
+        if (uri.startsWith("/api/auth/") || uri.startsWith("/ws/") || uri.startsWith("/api/notification")) {
             filterChain.doFilter(request, response);
             return;
         }

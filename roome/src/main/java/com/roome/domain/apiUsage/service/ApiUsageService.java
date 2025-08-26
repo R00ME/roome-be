@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
@@ -75,10 +77,21 @@ public class ApiUsageService {
     }
 
     private String resolveDomain(String uri) {
-        String[] parts = uri.split("/");
-        if (parts.length >= 3) {
-            return parts[2];
-        }
-        return "etc";
+        return DOMAIN_RULES.entrySet().stream()
+                .filter(entry -> entry.getKey().test(uri))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse("etc");
     }
+
+    private static final Map<Predicate<String>, String> DOMAIN_RULES = Map.of(
+            uri -> uri.startsWith("/api/my-cd"), "cd",
+//            uri -> uri.startsWith("/api/aladin"), "aladin",
+            uri -> uri.startsWith("/api/guestbooks"), "book",
+            uri -> uri.startsWith("/api/mybooks"), "book",
+            uri -> uri.startsWith("/api/events"), "event",
+            uri -> uri.startsWith("/api/rooms"), "room",
+            uri -> uri.startsWith("/api/points"), "points",
+            uri -> uri.startsWith("/api/mates"), "mates"
+    );
 }
