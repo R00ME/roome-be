@@ -86,7 +86,7 @@ public class ApiUsageService {
 
     private static final Map<Predicate<String>, String> DOMAIN_RULES = Map.of(
             uri -> uri.startsWith("/api/my-cd"), "cd",
-            uri -> uri.startsWith("/api/aladin"), "aladin",
+//            uri -> uri.startsWith("/api/aladin"), "aladin",
             uri -> uri.startsWith("/api/guestbooks"), "book",
             uri -> uri.startsWith("/api/mybooks"), "book",
             uri -> uri.startsWith("/api/events"), "event",
