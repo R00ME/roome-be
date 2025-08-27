@@ -27,8 +27,14 @@ public class ApiCountFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String uri = request.getRequestURI();
+        String method = request.getMethod();
 
         if (uri.startsWith("/api/auth/") || uri.startsWith("/ws/") || uri.startsWith("/api/notification")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if ("GET".equalsIgnoreCase(method) || "OPTIONS".equalsIgnoreCase(method)) {
             filterChain.doFilter(request, response);
             return;
         }

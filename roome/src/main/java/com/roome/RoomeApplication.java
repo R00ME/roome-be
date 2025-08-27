@@ -22,7 +22,7 @@ public class RoomeApplication {
 		// 환경변수를 시스템 프로퍼티에 추가
 		dotenv.entries().forEach(entry -> {
 					System.setProperty(entry.getKey(), entry.getValue());
-					System.out.println("🔐 ENV Loaded: " + entry.getKey() + " = " + entry.getValue());
+//					System.out.println("🔐 ENV Loaded: " + entry.getKey() + " = " + entry.getValue());
 				}
 		);
 

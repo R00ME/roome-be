@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -84,14 +85,13 @@ public class ApiUsageService {
                 .orElse("etc");
     }
 
-    private static final Map<Predicate<String>, String> DOMAIN_RULES = Map.of(
-            uri -> uri.startsWith("/api/my-cd"), "cd",
-//            uri -> uri.startsWith("/api/aladin"), "aladin",
-            uri -> uri.startsWith("/api/guestbooks"), "book",
-            uri -> uri.startsWith("/api/mybooks"), "book",
-            uri -> uri.startsWith("/api/events"), "event",
-            uri -> uri.startsWith("/api/rooms"), "room",
-            uri -> uri.startsWith("/api/points"), "points",
-            uri -> uri.startsWith("/api/mates"), "mates"
-    );
+    private static final Map<Predicate<String>, String> DOMAIN_RULES = new LinkedHashMap<>() {{
+        put(uri -> uri.contains("/comments"), "comment");
+        put(uri -> uri.contains("/visit"), "roomVisit");
+        put(uri -> uri.startsWith("/api/my-cd"), "cd");
+        put(uri -> uri.startsWith("/api/guestbooks"), "guestbook");
+        put(uri -> uri.startsWith("/api/mybooks"), "book");
+        put(uri -> uri.startsWith("/api/rooms"), "room");
+        put(uri -> uri.startsWith("/api/mates"), "mates");
+    }};
 }
