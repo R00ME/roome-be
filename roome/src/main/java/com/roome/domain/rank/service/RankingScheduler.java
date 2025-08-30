@@ -149,8 +149,16 @@ public class RankingScheduler {
 					}
 
 					// Point 엔티티 조회
-					Point pointEntity = pointRepository.findByUserId(user.getId())
-							.orElseThrow(PointNotFoundException::new);
+                    Point pointEntity = pointRepository.findByUserId(user.getId())
+                            .orElseGet(() -> {
+                                Point newPoint = Point.builder()
+                                        .user(user)
+                                        .balance(0)
+                                        .totalEarned(0)
+                                        .totalUsed(0)
+                                        .build();
+                                return pointRepository.save(newPoint);
+                            });
 
 					// 포인트 적립
 					pointEntity.addPoints(points);
