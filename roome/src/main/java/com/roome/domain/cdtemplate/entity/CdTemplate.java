@@ -24,7 +24,7 @@ public class CdTemplate extends BaseEntity {
 	private MyCd myCd;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_Id", nullable = false, unique = true)
+	@JoinColumn(name = "user_Id", nullable = false)
 	private User user;
 
 	@Column(nullable = false, length = 255)
