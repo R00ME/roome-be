@@ -52,7 +52,6 @@ public class AuthController {
 			@AuthenticationPrincipal CustomUser customUser,
 			HttpServletRequest httpServletRequest
 	) {
-			log.info("👀 AuthController 진입 시작");
 			try {
 //			String accessToken = httpServletRequest.getHeader("Authorization").substring(7);
 			if (customUser == null) {

@@ -10,7 +10,7 @@ import lombok.Getter;
 @Builder
 public class SetProfileInfoRequest {
     @NotBlank
-    private Gender gender;
+    private String gender;
 
     @NotBlank(message = "생년월일은 필수입니다.")
     @Pattern(

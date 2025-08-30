@@ -6,6 +6,7 @@ import com.roome.domain.user.dto.RecommendedUserDto;
 import com.roome.domain.user.dto.request.SetProfileInfoRequest;
 import com.roome.domain.user.dto.request.UpdateProfileRequest;
 import com.roome.domain.user.dto.response.UserProfileResponse;
+import com.roome.domain.user.entity.Gender;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
 import com.roome.domain.userGenrePreference.service.GenrePreferenceService;
@@ -37,8 +38,10 @@ public class UserProfileService {
 		Optional<User> user = userRepository.findById(userId);
 		if (user.isEmpty()) throw new UserNotFoundException();
 
+        // gender String → Enum 변환
+        Gender gender = Gender.valueOf(setProfileInfoRequest.getGender().toUpperCase());
 		LocalDate birthDate = LocalDate.parse(setProfileInfoRequest.getBirthDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		user.get().setProfileInfo(setProfileInfoRequest.getGender(), birthDate);
+		user.get().setProfileInfo(gender, birthDate);
 	}
 
 	public UserProfileResponse getUserProfile(Long userId, Long authUserId) {
