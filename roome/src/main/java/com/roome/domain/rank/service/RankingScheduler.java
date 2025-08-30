@@ -57,7 +57,8 @@ public class RankingScheduler {
 	}
 
 	// 최근 7일간의 활동 점수를 집계하여 Redis에 저장
-	@Scheduled(fixedRate = 3600000) // 1시간마다 실행
+//	@Scheduled(fixedRate = 3600000) // 1시간마다 실행
+    @Scheduled(cron = "0 */5 * * * *")
 	@Transactional(readOnly = true)
 	public void updateRanking() {
 		log.info("랭킹 갱신 작업 시작: {}", LocalDateTime.now());
@@ -91,7 +92,7 @@ public class RankingScheduler {
 	// 포인트 지급 및 점수 리셋 (상위 3명에게 포인트 지급)
 //	@Scheduled(cron = "0 0 0 * * MON") // 매주 월요일 자정
 	//  @Scheduled(fixedDelay = 60000) // 1분 후 실행
-    @Scheduled(cron = "0 0 */6 * * *") // test: 6시간 마다
+    @Scheduled(cron = "0 */10 * * * *") // test: 10분 마다
 	@Transactional
 	public void awardWeeklyPoints() {
 		log.info("주간 랭킹 보상 지급 시작: {}", LocalDateTime.now());
