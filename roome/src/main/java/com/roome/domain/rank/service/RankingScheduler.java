@@ -63,15 +63,16 @@ public class RankingScheduler {
 		log.info("랭킹 갱신 작업 시작: {}", LocalDateTime.now());
 
         // 기존 랭킹 삭제 전 prev 키로 기존 랭킹 기록 남김
-        if (Boolean.TRUE.equals(rankingRedisTemplate.hasKey(RANKING_KEY))) {
-            // 기존 user:ranking → user:ranking:prev 로 rename
+        Set<ZSetOperations.TypedTuple<String>> currentRankings =
+                rankingRedisTemplate.opsForZSet().reverseRangeWithScores(RANKING_KEY, 0, -1);
+
+        if (currentRankings != null && !currentRankings.isEmpty()) {
             String prevKey = RANKING_KEY + ":prev";
-            try {
-                rankingRedisTemplate.rename(RANKING_KEY, prevKey);
-                log.info("기존 랭킹 데이터를 snapshot({}) 으로 보관 완료", prevKey);
-            } catch (Exception e) {
-                log.warn("이전 랭킹 snapshot 보관 실패: {}", e.getMessage());
+            rankingRedisTemplate.delete(prevKey); // 이전 prev 지우고
+            for (ZSetOperations.TypedTuple<String> tuple : currentRankings) {
+                rankingRedisTemplate.opsForZSet().add(prevKey, tuple.getValue(), tuple.getScore());
             }
+            log.info("기존 랭킹을 {} 에 복사 완료", prevKey);
         }
 		// 기존 랭킹 데이터 삭제
 		rankingRedisTemplate.delete(RANKING_KEY);
