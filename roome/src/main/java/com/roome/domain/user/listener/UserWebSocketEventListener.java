@@ -2,10 +2,12 @@ package com.roome.domain.user.listener;
 
 import com.roome.domain.user.entity.Status;
 import com.roome.domain.user.service.UserStatusService;
+import com.roome.global.security.jwt.principal.CustomUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -43,13 +45,12 @@ public class UserWebSocketEventListener {
 
 		try {
 			// 인터셉터에서 설정한 형식 그대로 사용
-//            UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) principal;
-//            Long userId = (Long) authentication.getPrincipal();
-			Long userId = 1L;
+			Authentication authentication = (Authentication) principal;
+			Object principalObj = authentication.getPrincipal();
 
-			if (userId == null) {
-				log.warn("웹소켓 {} 이벤트의 Authentication에서 userId 추출 실패: sessionId={}", eventType, sessionId);
-				return;
+			Long userId = null;
+			if (principalObj instanceof CustomUser customUser) {
+				userId = customUser.getId();
 			}
 
 			log.info("사용자 {} 감지: userId={}, sessionId={}", eventType, userId, sessionId);

@@ -8,6 +8,7 @@ import com.roome.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -45,6 +46,11 @@ public class User extends BaseTimeEntity {
 	// 자기 소개
 	@Column(length = 101)
 	private String bio;
+
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
+
+	private LocalDate birthDate;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 10)
@@ -128,5 +134,10 @@ public class User extends BaseTimeEntity {
 
 	public void updateLastLogin(LocalDateTime now) {
 		this.lastLogin = now;
+	}
+
+	public void setProfileInfo(Gender gender, LocalDate birthDate) {
+		this.gender = gender;
+		this.birthDate = birthDate;
 	}
 }

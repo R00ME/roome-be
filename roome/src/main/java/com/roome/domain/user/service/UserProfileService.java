@@ -3,30 +3,46 @@ package com.roome.domain.user.service;
 import com.roome.domain.houseMate.repository.HousemateRepository;
 import com.roome.domain.recommendedUser.service.RecommendedUserService;
 import com.roome.domain.user.dto.RecommendedUserDto;
+import com.roome.domain.user.dto.request.SetProfileInfoRequest;
 import com.roome.domain.user.dto.request.UpdateProfileRequest;
 import com.roome.domain.user.dto.response.UserProfileResponse;
+import com.roome.domain.user.entity.Gender;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
 import com.roome.domain.userGenrePreference.service.GenrePreferenceService;
 import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
+import com.roome.global.security.jwt.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class UserProfileService {
 
 	private final UserRepository userRepository;
 	private final HousemateRepository housemateRepository;
 	private final GenrePreferenceService genrePreferenceService;
 	private final RecommendedUserService recommendedUserService;
+
+	public void setProfileInfo(Long userId, SetProfileInfoRequest setProfileInfoRequest) {
+		Optional<User> user = userRepository.findById(userId);
+		if (user.isEmpty()) throw new UserNotFoundException();
+
+        // gender String → Enum 변환
+        Gender gender = Gender.valueOf(setProfileInfoRequest.getGender().toUpperCase());
+		LocalDate birthDate = LocalDate.parse(setProfileInfoRequest.getBirthDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		user.get().setProfileInfo(gender, birthDate);
+	}
 
 	public UserProfileResponse getUserProfile(Long userId, Long authUserId) {
 		// 사용자 정보 한 번만 조회

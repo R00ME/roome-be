@@ -17,6 +17,12 @@ public class CustomOAuth2User implements OAuth2User, UserPrincipal {
 	private final User user;
 	private final Map<String, Object> attributes;
 	private final Long id;
+	private final boolean isNewUser;
+
+	@Override
+	public <A> A getAttribute(String name) {
+		return OAuth2User.super.getAttribute(name);
+	}
 
 	@Override
 	public Map<String, Object> getAttributes() {
@@ -25,12 +31,12 @@ public class CustomOAuth2User implements OAuth2User, UserPrincipal {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(user.getUserRole().name()));
+		return List.of(new SimpleGrantedAuthority(user.getUserRole().getAuthority()));
 	}
 
 	@Override
 	public String getName() {
-		return user.getEmail();
+		return user.getName();
 	}
 
 	@Override
@@ -38,7 +44,16 @@ public class CustomOAuth2User implements OAuth2User, UserPrincipal {
 		return id;
 	}
 
+	@Override
+	public String getEmail() {
+		return user.getEmail();
+	}
+
 	public User getUser() {
 		return user;
+	}
+
+	public boolean isNewUser() {
+		return isNewUser;
 	}
 }
