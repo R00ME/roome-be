@@ -56,13 +56,23 @@ public class RankingScheduler {
         this.userRankingHistoryRepository = userRankingHistoryRepository;
 	}
 
-	// 최근 7일간의 활동 점수를 집계하여 Redis에 저장
 //	@Scheduled(fixedRate = 3600000) // 1시간마다 실행
     @Scheduled(cron = "0 */5 * * * *")
 	@Transactional(readOnly = true)
 	public void updateRanking() {
 		log.info("랭킹 갱신 작업 시작: {}", LocalDateTime.now());
 
+        // 기존 랭킹 삭제 전 prev 키로 기존 랭킹 기록 남김
+        if (Boolean.TRUE.equals(rankingRedisTemplate.hasKey(RANKING_KEY))) {
+            // 기존 user:ranking → user:ranking:prev 로 rename
+            String prevKey = RANKING_KEY + ":prev";
+            try {
+                rankingRedisTemplate.rename(RANKING_KEY, prevKey);
+                log.info("기존 랭킹 데이터를 snapshot({}) 으로 보관 완료", prevKey);
+            } catch (Exception e) {
+                log.warn("이전 랭킹 snapshot 보관 실패: {}", e.getMessage());
+            }
+        }
 		// 기존 랭킹 데이터 삭제
 		rankingRedisTemplate.delete(RANKING_KEY);
 
