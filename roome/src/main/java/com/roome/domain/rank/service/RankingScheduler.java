@@ -92,7 +92,7 @@ public class RankingScheduler {
 	// 포인트 지급 및 점수 리셋 (상위 3명에게 포인트 지급)
 //	@Scheduled(cron = "0 0 0 * * MON") // 매주 월요일 자정
 	//  @Scheduled(fixedDelay = 60000) // 1분 후 실행
-    @Scheduled(cron = "0 */10 * * * *") // test: 10분 마다
+    @Scheduled(cron = "5 */10 * * * *") // test: 10분 마다 / 5초 지연
 	@Transactional
 	public void awardWeeklyPoints() {
 		log.info("주간 랭킹 보상 지급 시작: {}", LocalDateTime.now());
