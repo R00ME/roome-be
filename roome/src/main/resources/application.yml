@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: dev           
+    default: prod           
   config:
     import: optional:file:.env[.properties]
   autoconfigure:
@@ -183,9 +183,9 @@ spring:
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
 
-#app:
-#  oauth2:
-#    redirectUri: https://roome.io.kr
+app:
+  oauth2:
+    redirectUri: https://roome.io.kr
 
 aladin:
   api:
