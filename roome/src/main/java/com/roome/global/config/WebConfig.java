@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	private static final String[] ALLOWED_ORIGINS = {
 			"http://localhost:5173",
-			"https://dev.roome.io.kr"
+			"https://roome.io.kr"
 	};
 
 	@Override
