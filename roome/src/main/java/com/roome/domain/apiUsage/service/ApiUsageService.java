@@ -91,7 +91,7 @@ public class ApiUsageService {
         put(uri -> uri.startsWith("/api/my-cd"), "cd");
         put(uri -> uri.startsWith("/api/guestbooks"), "guestbook");
         put(uri -> uri.startsWith("/api/mybooks"), "book");
-        put(uri -> uri.startsWith("/api/rooms"), "room");
-        put(uri -> uri.startsWith("/api/mates"), "mates");
+//        put(uri -> uri.startsWith("/api/rooms"), "room");
+//        put(uri -> uri.startsWith("/api/mates"), "mates");
     }};
 }
