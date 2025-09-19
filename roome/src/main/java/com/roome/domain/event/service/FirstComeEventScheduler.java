@@ -3,6 +3,7 @@ package com.roome.domain.event.service;
 import com.roome.domain.event.entity.EventStatus;
 import com.roome.domain.event.entity.FirstComeEvent;
 import com.roome.domain.event.repository.FirstComeEventRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,6 +36,7 @@ public class FirstComeEventScheduler {
 		log.info("✅ [테스트] 이벤트 생성 완료: {}", event.getEventTime());
 	}
 
+    @Transactional
 	@Scheduled(cron = "0 0 3 * *  Sat")
 	public void updateEndedTestEvents() {
 		List<FirstComeEvent> ongoingEvents = firstComeEventRepository.findByStatus(EventStatus.ONGOING);
