@@ -20,7 +20,7 @@ public class FirstComeEventScheduler {
 	private final FirstComeEventRepository firstComeEventRepository;
 
 	// 토요일 오후 6시마다
-	@Scheduled(cron = "0 40 2 * * Sat")
+	@Scheduled(cron = "0 50 2 * * Sat")
 	public void createTestEvent() {
 		log.info("🔹 [테스트] 주간 선착순 이벤트 자동 생성 시작");
 
@@ -37,7 +37,7 @@ public class FirstComeEventScheduler {
 	}
 
     @Transactional
-	@Scheduled(cron = "0 0 3 * *  Sat")
+	@Scheduled(cron = "0 5 3 * *  Sat")
 	public void updateEndedTestEvents() {
 		List<FirstComeEvent> ongoingEvents = firstComeEventRepository.findByStatus(EventStatus.ONGOING);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(10); // 5분 이상 지난 이벤트 종료
