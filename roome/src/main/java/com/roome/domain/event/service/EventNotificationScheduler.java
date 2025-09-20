@@ -21,7 +21,7 @@ public class EventNotificationScheduler {
 	private final ApplicationEventPublisher eventPublisher;
 
 	// 모든 사용자에게 이벤트 알림 발송
-	@Scheduled(cron = "0 45 2 * * Sat")
+	@Scheduled(cron = "0 43 8 * * Sat")
 	public void sendEventNotifications() {
 		log.info("이벤트 알림 발송 시작: 이벤트 ID={}, 이벤트명={}", "0", "선찬순 이벤트");
 		int page = 0;
