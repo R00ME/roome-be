@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
 	private static final String[] ALLOWED_ORIGINS = {
-			"http://localhost:5173",
+//			"http://localhost:5173",
 			"https://roome.io.kr"
 	};
 

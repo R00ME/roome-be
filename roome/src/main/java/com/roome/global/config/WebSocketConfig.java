@@ -47,12 +47,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // 웹소켓 엔드포인트 등록 및 CORS 설정
         registry.addEndpoint("/ws")
                 .setAllowedOrigins(
-                        "https://desqb38rc2v50.cloudfront.net",
                         "http://localhost:5173",
-                        "http://localhost:3000",
-                        "http://localhost:63342",
-                        "https://www.roome.io.kr",
-                        "https://dev.roome.io.kr"
+                        "https://www.roome.io.kr"
                 ) // SecurityConfig와 동일한 CORS 설정 사용
                 .withSockJS();
     }
