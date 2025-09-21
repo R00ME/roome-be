@@ -147,15 +147,15 @@ public class AuthController {
 			}
 
 			// 액세스 토큰 검증
-//      if (!jwtTokenProvider.validateAccessToken(accessToken)) {
-//        log.warn("[회원탈퇴] 유효하지 않은 액세스 토큰: {}", maskToken(accessToken));
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//            .body(new MessageResponse("유효하지 않은 액세스 토큰입니다."));
-//      }
+            if (!jwtTokenProvider.validateToken(accessToken)) {
+                log.warn("[회원탈퇴] 유효하지 않은 액세스 토큰: {}", maskToken(accessToken));
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new MessageResponse("유효하지 않은 액세스 토큰입니다."));
+            }
 
 			// 유저 ID 추출
 			try {
-//        userId = tokenService.getUserIdFromToken(accessToken);
+                userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
 				log.info("[회원탈퇴] 사용자 ID: {} 탈퇴 시작", userId);
 			} catch (InvalidJwtTokenException | InvalidUserIdFormatException |
                      MissingUserIdFromTokenException e) {
