@@ -20,7 +20,7 @@ public class AutoEventScheduler {
 	private final AutoEventRepository AutoEventRepository;
 
 	// 토요일 오후 6시마다
-	@Scheduled(cron = "0 30 11 * * Sun")
+	@Scheduled(cron = "0 0 18 * * Sat")
 	public void createTestEvent() {
 		log.info("🔹 [테스트] 주간 선착순 이벤트 자동 생성 시작");
 
@@ -37,7 +37,7 @@ public class AutoEventScheduler {
 	}
 
     @Transactional
-	@Scheduled(cron = "0 45 11 * *  Sun")
+	@Scheduled(cron = "0 30 18 * *  Sun")
 	public void updateEndedTestEvents() {
 		List<AutoEvent> ongoingEvents = AutoEventRepository.findByStatus(EventStatus.ONGOING);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(10); // 5분 이상 지난 이벤트 종료
