@@ -15,6 +15,7 @@ import com.roome.domain.user.entity.User;
 import com.roome.domain.user.repository.UserRepository;
 import com.roome.global.security.jwt.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,42 +23,61 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AutoEventService {
 
-	private final AutoEventRepository AutoEventRepository;
+	private final AutoEventRepository autoEventRepository;
 	private final EventParticipationRepository eventParticipationRepository;
 	private final UserRepository userRepository;
 	private final PointService pointService;
 
-	@Transactional
-	public void joinEvent(Long userId, Long eventId) {
-		AutoEvent event = AutoEventRepository.findById(eventId)
-				.orElseThrow(EventNotFoundException::new);
+    @Transactional
+    public void joinEvent(Long userId, Long eventId) {
+        log.info("👉 [이벤트 참여 요청] userId={}, eventId={}", userId, eventId);
 
-		if (!event.isEventOpen()) {
-			throw new EventNotStartedException();
-		}
+        AutoEvent event = autoEventRepository.findById(eventId)
+                .orElseThrow(() -> {
+                    log.warn("❌ 이벤트 없음: eventId={}", eventId);
+                    return new EventNotFoundException();
+                });
+        log.info("✅ 이벤트 조회 성공: eventId={}, status={}, eventTime={}",
+                event.getId(), event.getStatus(), event.getEventTime());
 
-		User user = userRepository.findById(userId)
-				.orElseThrow(UserNotFoundException::new);
+        if (!event.isEventOpen()) {
+            log.warn("❌ 이벤트 아직 시작 전: now={}, eventTime={}",
+                    LocalDateTime.now(), event.getEventTime());
+            throw new EventNotStartedException();
+        }
 
-		if (eventParticipationRepository.existsByUserIdAndEventId(user.getId(), eventId)) {
-			throw new AlreadyParticipatedException();
-		}
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("❌ 유저 없음: userId={}", userId);
+                    return new UserNotFoundException();
+                });
+        log.info("✅ 유저 조회 성공: userId={}", user.getId());
 
-		long participantCount = eventParticipationRepository.countByEventId(eventId);
-		if (participantCount >= event.getMaxParticipants()) {
-			throw new EventFullException();
-		}
+        if (eventParticipationRepository.existsByUserIdAndEventId(user.getId(), eventId)) {
+            log.warn("❌ 중복 참여 시도: userId={}, eventId={}", userId, eventId);
+            throw new AlreadyParticipatedException();
+        }
 
-		eventParticipationRepository.save(new EventParticipation(user, event, LocalDateTime.now()));
+        long participantCount = eventParticipationRepository.countByEventId(eventId);
+        log.info("현재 참여자 수={}, 최대 참여 가능 인원={}", participantCount, event.getMaxParticipants());
+        if (participantCount >= event.getMaxParticipants()) {
+            log.warn("❌ 정원 초과: userId={}, eventId={}", userId, eventId);
+            throw new EventFullException();
+        }
 
-		pointService.earnPoints(user, PointReason.FIRST_COME_EVENT);
-	}
+        eventParticipationRepository.save(new EventParticipation(user, event, LocalDateTime.now()));
+        log.info("✅ 이벤트 참여 저장 완료: userId={}, eventId={}", user.getId(), event.getId());
+
+        pointService.earnPoints(user, PointReason.FIRST_COME_EVENT);
+        log.info("✅ 포인트 지급 완료: userId={}, reason={}", user.getId(), PointReason.FIRST_COME_EVENT);
+    }
 
 	@Transactional(readOnly = true)
 	public AutoEvent getOngoingEvent() {
-		return AutoEventRepository.findTopByStatusOrderByEventTimeDesc(EventStatus.ONGOING)
+		return autoEventRepository.findTopByStatusOrderByEventTimeDesc(EventStatus.ONGOING)
 				.orElseThrow(EventNotFoundException::new);
 	}
 }
