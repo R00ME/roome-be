@@ -4,6 +4,7 @@ import com.roome.domain.cdcomment.entity.CdComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -29,5 +30,7 @@ public interface CdCommentRepository extends JpaRepository<CdComment, Long> {
 	// 특정 myCdId 리스트로 댓글 조회 및 삭제
 	List<CdComment> findByMyCdIdIn(List<Long> myCdIds);
 
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("DELETE FROM CdComment c WHERE c.myCd.id IN :myCdIds")
     void deleteByMyCdIdIn(List<Long> myCdIds);
 }
