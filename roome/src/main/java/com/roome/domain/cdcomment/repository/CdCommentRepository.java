@@ -33,4 +33,6 @@ public interface CdCommentRepository extends JpaRepository<CdComment, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM CdComment c WHERE c.myCd.id IN :myCdIds")
     void deleteByMyCdIdIn(List<Long> myCdIds);
+
+    List<CdComment> findByUserId(Long userId);
 }

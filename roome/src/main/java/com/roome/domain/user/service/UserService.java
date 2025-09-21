@@ -214,6 +214,13 @@ public class UserService {
 			log.debug("[회원탈퇴] CD 데이터 삭제 완료: {}개", myCds.size());
 		}
 
+        // 내가 다른 사람 CD에 쓴 댓글 삭제
+        List<CdComment> commentsByMe = cdCommentRepository.findByUserId(userId);
+        if (!commentsByMe.isEmpty()) {
+            cdCommentRepository.deleteAll(commentsByMe);
+            log.debug("[회원탈퇴] 내가 작성한 댓글 삭제 완료: {}개", commentsByMe.size());
+        }
+
 		// 4. CD 카운트 삭제
 		roomRepository.findByUserId(userId).ifPresent(room -> {
 			myCdCountRepository.findByRoom(room).ifPresent(count -> {
