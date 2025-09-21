@@ -65,6 +65,8 @@ spring:
           useUnicode: true
         format_sql: false
         dialect: org.hibernate.dialect.MariaDBDialect
+        jdbc:
+          time_zone: Asia/Seoul
 
 # jwt 접두사는 코드(@ConfigurationProperties) 기준에 맞춰 조정하세요.
 jwt:
