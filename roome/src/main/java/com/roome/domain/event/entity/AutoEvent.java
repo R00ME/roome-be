@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "first_come_event")
+@Table(name = "auto_event")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FirstComeEvent {
+public class AutoEvent {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +40,8 @@ public class FirstComeEvent {
 	private List<EventParticipation> participants = new ArrayList<>();
 
 	@Builder
-	public FirstComeEvent(String eventName, int rewardPoints, int maxParticipants,
-						  LocalDateTime eventTime, EventStatus status) {
+	public AutoEvent(String eventName, int rewardPoints, int maxParticipants,
+                     LocalDateTime eventTime, EventStatus status) {
 		this.eventName = eventName;
 		this.rewardPoints = rewardPoints;
 		this.maxParticipants = maxParticipants;

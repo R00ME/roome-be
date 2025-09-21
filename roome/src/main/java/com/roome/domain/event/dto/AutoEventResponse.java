@@ -1,6 +1,6 @@
 package com.roome.domain.event.dto;
 
-import com.roome.domain.event.entity.FirstComeEvent;
+import com.roome.domain.event.entity.AutoEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-public class FirstComeEventResponse {
+public class AutoEventResponse {
 
 	private final Long id;
 	private final String eventName;
@@ -16,8 +16,8 @@ public class FirstComeEventResponse {
 	private final int maxParticipants;
 	private final LocalDateTime eventTime;
 
-	public static FirstComeEventResponse fromEntity(FirstComeEvent event) {
-		return new FirstComeEventResponse(
+	public static AutoEventResponse fromEntity(AutoEvent event) {
+		return new AutoEventResponse(
 				event.getId(),
 				event.getEventName(),
 				event.getRewardPoints(),

@@ -1,8 +1,8 @@
 package com.roome.domain.event.controller;
 
-import com.roome.domain.event.dto.FirstComeEventResponse;
-import com.roome.domain.event.entity.FirstComeEvent;
-import com.roome.domain.event.service.FirstComeEventService;
+import com.roome.domain.event.dto.AutoEventResponse;
+import com.roome.domain.event.entity.AutoEvent;
+import com.roome.domain.event.service.AutoEventService;
 import com.roome.global.security.jwt.principal.CustomUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/events")
 @RequiredArgsConstructor
-public class FirstComeEventController {
+public class AutoEventController {
 
-	private final FirstComeEventService firstComeEventService;
+	private final AutoEventService autoEventService;
 
 	@Operation(summary = "선착순 이벤트 참여", description = "특정 이벤트에 참여한다.")
 	@ApiResponses(value = {
@@ -33,7 +33,7 @@ public class FirstComeEventController {
 	public ResponseEntity<Void> joinEvent(
 			@AuthenticationPrincipal CustomUser user,
 			@PathVariable Long eventId) {
-		firstComeEventService.joinEvent(user.getId(), eventId);
+		autoEventService.joinEvent(user.getId(), eventId);
 		return ResponseEntity.noContent().build(); // 204 No Content 반환
 	}
 
@@ -43,9 +43,9 @@ public class FirstComeEventController {
 			@ApiResponse(responseCode = "404", description = "진행 중인 이벤트 없음")
 	})
 	@GetMapping("/ongoing")
-	public ResponseEntity<FirstComeEventResponse> getOngoingEvent() {
-		FirstComeEvent event = firstComeEventService.getOngoingEvent();
-		return ResponseEntity.ok(FirstComeEventResponse.fromEntity(event));
+	public ResponseEntity<AutoEventResponse> getOngoingEvent() {
+		AutoEvent event = autoEventService.getOngoingEvent();
+		return ResponseEntity.ok(AutoEventResponse.fromEntity(event));
 	}
 
 }

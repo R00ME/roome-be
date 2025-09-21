@@ -8,6 +8,8 @@ import com.roome.domain.cd.entity.CdGenre;
 import com.roome.domain.cd.entity.CdGenreType;
 import com.roome.domain.cd.repository.CdGenreTypeRepository;
 import com.roome.domain.cd.repository.CdRepository;
+import com.roome.domain.cdcomment.repository.CdCommentRepository;
+import com.roome.domain.cdtemplate.repository.CdTemplateRepository;
 import com.roome.domain.furniture.entity.FurnitureCapacity;
 import com.roome.domain.furniture.service.FurnitureService;
 import com.roome.domain.mycd.dto.MyCdCreateRequest;
@@ -61,6 +63,8 @@ public class MyCdService {
 	private final FurnitureService furnitureService;
 	private final FurnitureCapacity furnitureCapacity;
 	private final ApplicationEventPublisher eventPublisher; // 이벤트 발행을 위해 추가
+    private final CdTemplateRepository cdTemplateRepository;
+    private final CdCommentRepository cdCommentRepository;
 
 	@Qualifier("myCdRedisTemplate")
 	private final RedisTemplate<String, MyCdResponse> redisTemplate;
@@ -231,6 +235,8 @@ public class MyCdService {
 			}
 		}
 
+        cdCommentRepository.deleteByMyCdIdIn(myCdIds);
+        cdTemplateRepository.deleteByMyCdIdIn(myCdIds);
 		// 실제 삭제 수행
 		myCdRepository.deleteByUserIdAndIds(userId, myCdIds);
 
@@ -245,6 +251,4 @@ public class MyCdService {
 		eventPublisher.publishEvent(new CdCollectionEvent.CdRemovedEvent(this, userId));
 		log.debug("Published CD removed event for user: {}", userId);
 	}
-
-
 }

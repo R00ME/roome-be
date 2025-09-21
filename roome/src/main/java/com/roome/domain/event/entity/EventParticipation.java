@@ -26,13 +26,13 @@ public class EventParticipation {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "event_id", nullable = false)
-	private FirstComeEvent event;
+	private AutoEvent event;
 
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 
 	@Builder
-	public EventParticipation(User user, FirstComeEvent event, LocalDateTime createdAt) {
+	public EventParticipation(User user, AutoEvent event, LocalDateTime createdAt) {
 		this.user = user;
 		this.event = event;
 		this.createdAt = LocalDateTime.now();

@@ -44,10 +44,8 @@ public class WebSocketDocumentationController {
 		connection.put("authentication", "Bearer JWT token in Authorization header");
 
 		List<String> allowedOrigins = Arrays.asList(
-				"https://desqb38rc2v50.cloudfront.net",
-				"http://localhost:5173",
-				"http://localhost:3000",
-				"http://localhost:63342"
+                "https://www.roome.io.kr",
+				"http://localhost:5173"
 		);
 		connection.put("allowed_origins", allowedOrigins);
 

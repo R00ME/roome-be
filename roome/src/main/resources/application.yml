@@ -80,9 +80,6 @@ server:
         - path-pattern: /api/**
           allowed-origins:
             - https://roome.io.kr
-            - https://dev.roome.io.kr
-            - http://localhost:5173
-            - http://localhost:3000
           allowed-methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
           allowed-headers: ["*"]
           allow-credentials: true
@@ -113,7 +110,7 @@ aladin:
 
 app:
   oauth2:
-    redirectUris: http://localhost:5173,https://dev.roome.io.kr,https://roome.io.kr
+    redirectUris: https://roome.io.kr
 
 management:
   endpoints:
@@ -141,10 +138,20 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+  mvc:
+    cors:
+      mappings:
+        - path-pattern: /api/**
+          allowed-origins:
+            - http://localhost:5173
+            - http://localhost:5174
+          allowed-methods: [ GET, POST, PUT, PATCH, DELETE, OPTIONS ]
+          allowed-headers: [ "*" ]
+          allow-credentials: true
 
-#app:
-#  oauth2:
-#    redirectUri: http://localhost:5173
+app:
+  oauth2:
+    redirectUris: http://localhost:5173
 
 aladin:
   api:
