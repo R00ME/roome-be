@@ -2,9 +2,6 @@ package com.roome.domain.event.repository;
 
 import com.roome.domain.event.entity.EventParticipation;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,7 +11,7 @@ public interface EventParticipationRepository extends JpaRepository<EventPartici
 
 	boolean existsByUserIdAndEventId(Long userId, Long eventId); // 특정 유저의 참여 여부 확인
 
-    @Modifying
-    @Query("DELETE FROM EventParticipation ep WHERE ep.user.id = :userId")
-    int deleteByUserId(@Param("userId") Long userId);
+    //    @Modifying
+    //    @Query("DELETE FROM EventParticipation ep WHERE ep.user.id = :userId")
+    int deleteByUserId(Long userId);
 }
