@@ -10,4 +10,6 @@ public interface EventParticipationRepository extends JpaRepository<EventPartici
 	long countByEventId(Long eventId); // 특정 이벤트의 참여자 수 조회
 
 	boolean existsByUserIdAndEventId(Long userId, Long eventId); // 특정 유저의 참여 여부 확인
+
+    int deleteByUserId(Long userId);
 }

@@ -4,6 +4,7 @@ import com.roome.domain.cdcomment.entity.CdComment;
 import com.roome.domain.cdcomment.repository.CdCommentRepository;
 import com.roome.domain.cdtemplate.entity.CdTemplate;
 import com.roome.domain.cdtemplate.repository.CdTemplateRepository;
+import com.roome.domain.event.repository.EventParticipationRepository;
 import com.roome.domain.furniture.entity.Furniture;
 import com.roome.domain.furniture.repository.FurnitureRepository;
 import com.roome.domain.guestbook.entity.Guestbook;
@@ -60,6 +61,7 @@ public class UserService {
 	private final RecommendedUserRepository recommendedUserRepository;
 	private final RoomThemeUnlockRepository roomThemeUnlockRepository;
 	private final RedisService redisService;
+    private final EventParticipationRepository eventParticipationRepository;
 
 	@Transactional(rollbackFor = Exception.class, noRollbackFor = BusinessException.class)
 	public void deleteUser(Long userId) {
@@ -88,6 +90,8 @@ public class UserService {
 
 		// 7. 포인트 및 포인트 내역 삭제
 		deletePointData(userId);
+
+        deleteEventParticipation(userId);
 
 		// 9. Room 관련 데이터 삭제
 		Optional<Room> roomOpt = roomRepository.findByUserId(userId);
@@ -241,4 +245,9 @@ public class UserService {
 			log.debug("[회원탈퇴] 포인트 삭제 완료: pointId={}", point.getId());
 		});
 	}
+
+    private void deleteEventParticipation(Long userId) {
+        int deletedCount = eventParticipationRepository.deleteByUserId(userId);
+        log.debug("[회원탈퇴] 이벤트 참여 내역 삭제 완료: userId={}, 삭제된 개수={}", userId, deletedCount);
+    }
 }
