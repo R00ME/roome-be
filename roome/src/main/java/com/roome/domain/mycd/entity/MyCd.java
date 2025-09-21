@@ -36,5 +36,4 @@ public class MyCd {
 				.cd(cd)
 				.build();
 	}
-
 }

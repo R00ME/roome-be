@@ -28,4 +28,6 @@ public interface CdCommentRepository extends JpaRepository<CdComment, Long> {
 
 	// 특정 myCdId 리스트로 댓글 조회 및 삭제
 	List<CdComment> findByMyCdIdIn(List<Long> myCdIds);
+
+    void deleteByMyCdIdIn(List<Long> myCdIds);
 }
