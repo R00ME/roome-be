@@ -19,4 +19,6 @@ public interface CdTemplateRepository extends JpaRepository<CdTemplate, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM CdTemplate t WHERE t.myCd.id IN :myCdIds")
     void deleteByMyCdIdIn(List<Long> myCdIds);
+
+    List<CdTemplate> findByMyCdIdIn(List<Long> myCdIds);
 }

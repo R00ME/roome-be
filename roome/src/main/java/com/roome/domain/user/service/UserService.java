@@ -2,6 +2,8 @@ package com.roome.domain.user.service;
 
 import com.roome.domain.cdcomment.entity.CdComment;
 import com.roome.domain.cdcomment.repository.CdCommentRepository;
+import com.roome.domain.cdtemplate.entity.CdTemplate;
+import com.roome.domain.cdtemplate.repository.CdTemplateRepository;
 import com.roome.domain.furniture.entity.Furniture;
 import com.roome.domain.furniture.repository.FurnitureRepository;
 import com.roome.domain.guestbook.entity.Guestbook;
@@ -50,6 +52,7 @@ public class UserService {
 	private final CdCommentRepository cdCommentRepository;
 	private final GuestbookRepository guestbookRepository;
 	private final MyCdCountRepository myCdCountRepository;
+    private final CdTemplateRepository cdTemplateRepository;
 	private final MyBookCountRepository myBookCountRepository;
 	private final PointRepository pointRepository;
 	private final PointHistoryRepository pointHistoryRepository;
@@ -192,6 +195,12 @@ public class UserService {
 
 		if (!myCds.isEmpty()) {
 			List<Long> myCdIds = myCds.stream().map(MyCd::getId).toList();
+
+            List<CdTemplate> cdTemplates = cdTemplateRepository.findByMyCdIdIn(myCdIds);
+            if (!cdTemplates.isEmpty()) {
+                cdTemplateRepository.deleteAll(cdTemplates);
+                log.debug("[회원탈퇴] CD 템플릿 삭제 완료: {}개", cdTemplates.size());
+            }
 
 			// 2. myCd에 종속된 모든 댓글 삭제 (다른 사용자가 작성한 댓글도 포함)
 			List<CdComment> cdComments = cdCommentRepository.findByMyCdIdIn(myCdIds);
