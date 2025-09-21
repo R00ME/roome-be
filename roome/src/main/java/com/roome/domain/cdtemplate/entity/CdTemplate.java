@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -21,6 +23,7 @@ public class CdTemplate extends BaseEntity {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "my_cd_id", nullable = false, unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
 	private MyCd myCd;
 
 	@ManyToOne(fetch = FetchType.LAZY)
