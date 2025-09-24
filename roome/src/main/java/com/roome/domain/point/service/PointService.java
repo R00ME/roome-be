@@ -43,23 +43,23 @@ public class PointService {
 	private static final Duration CACHE_DURATION = Duration.ofMinutes(10); // 캐싱 유지 시간
 	private static final Map<PointReason, Integer> POINT_EARN_MAP = Map.of(
 			PointReason.GUESTBOOK_REWARD, 10,
-			PointReason.FIRST_COME_EVENT, 200,
-			PointReason.DAILY_ATTENDANCE, 400,
-			PointReason.POINT_PURCHASE_100, 100,
-			PointReason.POINT_PURCHASE_550, 550,
-			PointReason.POINT_PURCHASE_1200, 1200,
-			PointReason.POINT_PURCHASE_4000, 4000
+			PointReason.FIRST_COME_EVENT, 50,
+			PointReason.DAILY_ATTENDANCE, 50
+//			PointReason.POINT_PURCHASE_100, 100,
+//			PointReason.POINT_PURCHASE_550, 550,
+//			PointReason.POINT_PURCHASE_1200, 1200,
+//			PointReason.POINT_PURCHASE_4000, 4000
 	);
 	private static final Map<PointReason, Integer> POINT_USAGE_MAP = Map.of(
 			PointReason.THEME_PURCHASE, 400,
 			PointReason.BOOK_UNLOCK_LV2, 500,
 			PointReason.BOOK_UNLOCK_LV3, 1500,
 			PointReason.CD_UNLOCK_LV2, 500,
-			PointReason.CD_UNLOCK_LV3, 1500,
-			PointReason.POINT_REFUND_100, 100,
-			PointReason.POINT_REFUND_550, 550,
-			PointReason.POINT_REFUND_1200, 1200,
-			PointReason.POINT_REFUND_4000, 4000
+			PointReason.CD_UNLOCK_LV3, 1500
+//			PointReason.POINT_REFUND_100, 100,
+//			PointReason.POINT_REFUND_550, 550,
+//			PointReason.POINT_REFUND_1200, 1200,
+//			PointReason.POINT_REFUND_4000, 4000
 	);
 	private final PointRepository pointRepository;
 	private final PointHistoryRepository pointHistoryRepository;
