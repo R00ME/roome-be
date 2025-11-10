@@ -44,6 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 		// db 조회 / 회원가입 처리
 		UserResult userResult = saveOrUpdate(userInfo);
+        pointService.earnPoints(userResult.user, PointReason.WELCOME_REWARD);
 
 		// 반환 -> 이후 principal 객체 역할
 		return new CustomOAuth2User(userResult.user, attributes, userResult.user.getId(), userResult.isNewUser());
@@ -63,7 +64,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 							.status(Status.ONLINE) // 상태 기본값 설정 -> 회원 가입 후 자동 로그인 -> ONLINE
 							.userRole(UserRole.USER)
 							.build());
-                    pointService.earnPoints(newUser, PointReason.WELCOME_REWARD);
                     return new UserResult(newUser, true);
 				});
 	}
