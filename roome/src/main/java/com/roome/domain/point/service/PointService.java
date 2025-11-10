@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.MANDATORY)
+@Transactional
 @Slf4j
 public class PointService {
 
