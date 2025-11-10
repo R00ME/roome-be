@@ -1,5 +1,7 @@
 package com.roome.global.security.oauth.service;
 
+import com.roome.domain.point.entity.PointReason;
+import com.roome.domain.point.service.PointService;
 import com.roome.domain.user.entity.Status;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.entity.UserRole;
@@ -23,6 +25,7 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 	private final UserRepository userRepository;
+    private final PointService pointService;
 
 		private record UserResult(User user, boolean isNewUser) {}
 
@@ -60,7 +63,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 							.status(Status.ONLINE) // 상태 기본값 설정 -> 회원 가입 후 자동 로그인 -> ONLINE
 							.userRole(UserRole.USER)
 							.build());
-					return new UserResult(newUser, true);
+                    pointService.earnPoints(newUser, PointReason.WELCOME_REWARD);
+                    return new UserResult(newUser, true);
 				});
 	}
 }

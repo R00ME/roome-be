@@ -75,5 +75,4 @@ public class Point {
 		this.totalUsed += amount;
 		this.updatedAt = LocalDateTime.now();
 	}
-
 }

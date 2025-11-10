@@ -140,4 +140,8 @@ public class User extends BaseTimeEntity {
 		this.gender = gender;
 		this.birthDate = birthDate;
 	}
+
+    public void assignPoint(Point point) {
+        this.point = point;
+    }
 }

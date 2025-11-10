@@ -42,6 +42,7 @@ public class PointService {
 	private static final String BALANCE_CACHE_PREFIX = "point_balance:";
 	private static final Duration CACHE_DURATION = Duration.ofMinutes(10); // 캐싱 유지 시간
 	private static final Map<PointReason, Integer> POINT_EARN_MAP = Map.of(
+            PointReason.WELCOME_REWARD, 400,
 			PointReason.GUESTBOOK_REWARD, 10,
 			PointReason.FIRST_COME_EVENT, 50,
 			PointReason.DAILY_ATTENDANCE, 50
