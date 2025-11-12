@@ -1,5 +1,7 @@
 package com.roome.global.security.oauth.service;
 
+import com.roome.domain.point.entity.PointReason;
+import com.roome.domain.point.service.PointService;
 import com.roome.domain.user.entity.Status;
 import com.roome.domain.user.entity.User;
 import com.roome.domain.user.entity.UserRole;
@@ -9,6 +11,7 @@ import com.roome.global.security.oauth.model.CustomOAuth2User;
 import com.roome.global.security.oauth.userinfo.OAuth2UserInfo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -17,12 +20,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 	private final UserRepository userRepository;
+    private final PointService pointService;
 
 		private record UserResult(User user, boolean isNewUser) {}
 
@@ -47,9 +52,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	}
 
 	public UserResult saveOrUpdate(OAuth2UserInfo userInfo) {
-		return userRepository.findByEmail(userInfo.getEmail())
+		return userRepository.findByEmail(
+                userInfo.getEmail())
 				.map(user -> new UserResult(user, false))
 				.orElseGet(() -> {
+                    log.info("[saveOrUpdate] 신규 유저 회원가입 진행: {}", userInfo.getEmail());
 					User newUser = userRepository.save(User.builder()
 							.email(userInfo.getEmail())
 							.provider(userInfo.getProvider())
@@ -60,7 +67,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 							.status(Status.ONLINE) // 상태 기본값 설정 -> 회원 가입 후 자동 로그인 -> ONLINE
 							.userRole(UserRole.USER)
 							.build());
-					return new UserResult(newUser, true);
+                    pointService.earnPoints(newUser, PointReason.WELCOME_REWARD);
+                    return new UserResult(newUser, true);
 				});
 	}
 }

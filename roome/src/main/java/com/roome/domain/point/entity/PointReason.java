@@ -4,6 +4,9 @@ import com.roome.domain.furniture.exception.BookshelfMaxLevelException;
 import com.roome.domain.furniture.exception.CdRackMaxLevelException;
 
 public enum PointReason {
+
+    // 회원가입 시 보상
+    WELCOME_REWARD, // 최초 회원가입 시 (+400P)
 	// 포인트 적립
 	GUESTBOOK_REWARD,  // 방명록 작성 보상 (+10P, 1일 1회)
 	FIRST_COME_EVENT,  // 선착순 이벤트 보상 (랜덤 지급)

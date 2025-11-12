@@ -103,18 +103,18 @@ public class User extends BaseTimeEntity {
 	}
 
 	public void updateProfile(String nickname, String bio) {
-		boolean updated = false;
+//		boolean updated = false;
 		if (nickname != null && !nickname.equals(this.nickname)) {
 			this.nickname = nickname;
-			updated = true;
+//			updated = true;
 		}
 		if (bio != null && !bio.equals(this.bio)) {
 			this.bio = bio;
-			updated = true;
+//			updated = true;
 		}
-		if (updated) {
-			this.lastLogin = LocalDateTime.now();
-		}
+//		if (updated) {
+//			this.lastLogin = LocalDateTime.now();
+//		}
 	}
 
 	public void updateStatus(Status status) {
@@ -140,4 +140,8 @@ public class User extends BaseTimeEntity {
 		this.gender = gender;
 		this.birthDate = birthDate;
 	}
+
+    public void assignPoint(Point point) {
+        this.point = point;
+    }
 }
