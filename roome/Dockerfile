@@ -1,4 +1,4 @@
- 1. JDK 17이 포함된 경량 Linux 환경을 사용
+# 1. JDK 17이 포함된 경량 Linux 환경을 사용
 FROM openjdk:17-jdk-slim
 
 # 2. 작성자 정보
