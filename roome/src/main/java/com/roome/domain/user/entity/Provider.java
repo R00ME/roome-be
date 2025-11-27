@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Provider {
+    LOCAL("Local"),
 	GOOGLE("Google"),
 	KAKAO("Kakao"),
 	NAVER("Naver");

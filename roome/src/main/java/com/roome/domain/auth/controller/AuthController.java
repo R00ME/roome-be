@@ -1,5 +1,6 @@
 package com.roome.domain.auth.controller;
 
+import com.roome.domain.auth.dto.request.SignupRequest;
 import com.roome.domain.auth.dto.response.LoginResponse;
 import com.roome.domain.auth.dto.response.MessageResponse;
 import com.roome.domain.auth.service.AuthService;
@@ -33,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -52,6 +54,12 @@ public class AuthController {
     private final UserService userService;
     private final TokenService tokenService;
 
+    @PostMapping("/signup")
+    public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest){
+        User newUser = authService.signup(signupRequest);
+        URI location = URI.create("/api/users/" + newUser.getId());
+        return  ResponseEntity.created(location).build();
+    }
 	@Operation(summary = "사용자 정보 조회", description = "Access Token으로 사용자 정보를 조회합니다.", security = @SecurityRequirement(name = "bearerAuth"))
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공"),
 			@ApiResponse(responseCode = "401", description = "인증 실패 또는 유효하지 않은 토큰")})

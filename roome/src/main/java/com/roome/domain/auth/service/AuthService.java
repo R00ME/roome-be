@@ -1,7 +1,13 @@
 package com.roome.domain.auth.service;
 
-import com.roome.global.security.jwt.service.RefreshTokenService;
+import com.roome.domain.auth.dto.request.SignupRequest;
+import com.roome.domain.user.entity.Provider;
+import com.roome.domain.user.entity.Status;
+import com.roome.domain.user.entity.User;
+import com.roome.domain.user.entity.UserRole;
+import com.roome.domain.user.repository.UserRepository;
 import com.roome.global.security.jwt.provider.JwtTokenProvider;
+import com.roome.global.security.jwt.service.RefreshTokenService;
 import com.roome.global.security.jwt.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,9 +16,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +31,37 @@ public class AuthService {
 	private final RedisTemplate<String, Long> blacklistRedisTemplate;
 	private final RefreshTokenService refreshTokenService;
 	private final TokenService tokenService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public User signup(SignupRequest signupRequest) {
+        // 이미 가입된 이메일인지 확인
+        Optional<User> existing = userRepository.findByEmail(signupRequest.email());
+
+        if (existing.isPresent()) {
+            User user = existing.get();
+            if (user.getProvider() != Provider.LOCAL) {
+                throw new RuntimeException("해당 이메일은 소셜 계정입니다.");
+            }
+            throw new RuntimeException("이미 가입된 이메일입니다.");
+        }
+
+        // 비밀번호 암호화
+        String encodedPw = passwordEncoder.encode(signupRequest.password());
+
+        // User 생성
+        User user = User.builder()
+                .email(signupRequest.email())
+                .password(encodedPw)
+                .provider(Provider.LOCAL)
+                .providerId(null)
+                .userRole(UserRole.USER)
+                .status(Status.ONLINE)
+                .nickname(signupRequest.nickname())
+                .build();
+
+        return userRepository.save(user);
+    }
 
 	public void logout(Long userId, HttpServletRequest request, HttpServletResponse response) {
 

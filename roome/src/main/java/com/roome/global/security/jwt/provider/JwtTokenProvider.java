@@ -88,7 +88,7 @@ public class JwtTokenProvider implements InitializingBean {
 				.setSubject(String.valueOf(userId))
 				.setIssuedAt(now)
 				.setExpiration(expiry)
-				.signWith(SignatureAlgorithm.HS256, refreshSecret)
+				.signWith(refreshKey, SignatureAlgorithm.HS256)
 				.compact();
 	}
 
