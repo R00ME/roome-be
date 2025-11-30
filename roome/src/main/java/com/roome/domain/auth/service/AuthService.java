@@ -9,7 +9,6 @@ import com.roome.domain.user.entity.UserRole;
 import com.roome.domain.user.repository.UserRepository;
 import com.roome.global.exception.BusinessException;
 import com.roome.global.exception.ErrorCode;
-import com.roome.global.exception.ErrorResponse;
 import com.roome.global.security.jwt.provider.JwtTokenProvider;
 import com.roome.global.security.jwt.service.RefreshTokenService;
 import com.roome.global.security.jwt.service.TokenService;

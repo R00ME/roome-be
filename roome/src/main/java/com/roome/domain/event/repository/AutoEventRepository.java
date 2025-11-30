@@ -1,7 +1,7 @@
 package com.roome.domain.event.repository;
 
-import com.roome.domain.event.entity.EventStatus;
 import com.roome.domain.event.entity.AutoEvent;
+import com.roome.domain.event.entity.EventStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

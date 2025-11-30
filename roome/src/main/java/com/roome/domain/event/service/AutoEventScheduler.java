@@ -1,7 +1,7 @@
 package com.roome.domain.event.service;
 
-import com.roome.domain.event.entity.EventStatus;
 import com.roome.domain.event.entity.AutoEvent;
+import com.roome.domain.event.entity.EventStatus;
 import com.roome.domain.event.repository.AutoEventRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
