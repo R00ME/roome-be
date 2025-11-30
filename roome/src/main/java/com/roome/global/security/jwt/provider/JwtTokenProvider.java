@@ -88,7 +88,7 @@ public class JwtTokenProvider implements InitializingBean {
 				.setSubject(String.valueOf(userId))
 				.setIssuedAt(now)
 				.setExpiration(expiry)
-				.signWith(SignatureAlgorithm.HS256, refreshSecret)
+				.signWith(refreshKey, SignatureAlgorithm.HS256)
 				.compact();
 	}
 
@@ -110,9 +110,6 @@ public class JwtTokenProvider implements InitializingBean {
 						.collect(Collectors.toList());
 
 		CustomUser principal = new CustomUser(userId, email, authorities);
-
-		log.info("🧩 Claims authorities: {}", claims.get("auth"));
-
 		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 	}
 

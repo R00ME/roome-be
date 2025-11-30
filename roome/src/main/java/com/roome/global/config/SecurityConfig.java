@@ -6,7 +6,6 @@ import com.roome.global.security.oauth.handler.OAuth2AuthenticationFailureHandle
 import com.roome.global.security.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.roome.global.security.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -19,8 +18,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.http.HttpMethod.PATCH;
 
 @Configuration
 @EnableWebSecurity
@@ -76,6 +73,7 @@ public class SecurityConfig {
 										.requestMatchers("/api/authenticate").permitAll()
 						                .requestMatchers("/login/oauth2/code/**").permitAll()
 										.requestMatchers("/oauth2/**").permitAll()
+                                        .requestMatchers("/api/auth/login", "/api/auth/signup").permitAll()
 										.requestMatchers("/api/auth/token/temp").permitAll()
 										.requestMatchers("/api/auth/token/refresh").permitAll()
                                         .requestMatchers("/actuator/prometheus").permitAll()

@@ -1,7 +1,7 @@
 package com.roome.domain.apiUsage.service;
 
-import com.roome.domain.apiUsage.repository.UserApiUsageRepository;
 import com.roome.domain.apiUsage.entity.UserApiUsage;
+import com.roome.domain.apiUsage.repository.UserApiUsageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;

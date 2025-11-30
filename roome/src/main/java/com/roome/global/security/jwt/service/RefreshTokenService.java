@@ -52,5 +52,4 @@ public class RefreshTokenService {
 	public void deleteRefreshToken(Long userId) {
 		refreshTokenRedisTemplate.delete("refreshToken:" + userId);
 	}
-
 }

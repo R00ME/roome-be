@@ -1,14 +1,14 @@
 package com.roome.domain.event.service;
 
+import com.roome.domain.event.entity.AutoEvent;
 import com.roome.domain.event.entity.EventParticipation;
 import com.roome.domain.event.entity.EventStatus;
-import com.roome.domain.event.entity.AutoEvent;
 import com.roome.domain.event.exception.AlreadyParticipatedException;
 import com.roome.domain.event.exception.EventFullException;
 import com.roome.domain.event.exception.EventNotFoundException;
 import com.roome.domain.event.exception.EventNotStartedException;
-import com.roome.domain.event.repository.EventParticipationRepository;
 import com.roome.domain.event.repository.AutoEventRepository;
+import com.roome.domain.event.repository.EventParticipationRepository;
 import com.roome.domain.point.entity.PointReason;
 import com.roome.domain.point.service.PointService;
 import com.roome.domain.user.entity.User;
