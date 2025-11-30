@@ -76,6 +76,7 @@ public class SecurityConfig {
 										.requestMatchers("/api/authenticate").permitAll()
 						                .requestMatchers("/login/oauth2/code/**").permitAll()
 										.requestMatchers("/oauth2/**").permitAll()
+                                        .requestMatchers("/api/auth/login", "/api/auth/signup").permitAll()
 										.requestMatchers("/api/auth/token/temp").permitAll()
 										.requestMatchers("/api/auth/token/refresh").permitAll()
                                         .requestMatchers("/actuator/prometheus").permitAll()

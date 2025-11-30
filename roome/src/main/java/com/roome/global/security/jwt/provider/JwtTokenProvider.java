@@ -110,9 +110,6 @@ public class JwtTokenProvider implements InitializingBean {
 						.collect(Collectors.toList());
 
 		CustomUser principal = new CustomUser(userId, email, authorities);
-
-		log.info("🧩 Claims authorities: {}", claims.get("auth"));
-
 		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 	}
 

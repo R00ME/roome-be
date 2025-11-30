@@ -18,6 +18,7 @@ public enum ErrorCode {
     INVALID_LOGIN(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 일치하지 않습니다."),
     DISABLED_ACCOUNT(HttpStatus.FORBIDDEN, "비활성화된 계정입니다."),
     MISSING_AUTHORIZATION_CODE(HttpStatus.BAD_REQUEST, "로그인 요청에는 authorization code가 필요합니다."),
+    PASSWORD_DISMATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
 
     // JWT 관련 예외
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT 토큰이 유효하지 않거나, 입력값이 비어 있습니다."),
